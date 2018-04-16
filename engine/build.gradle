@@ -1,0 +1,30 @@
+plugins {
+    id 'java-gradle-plugin'
+}
+
+
+group 'com.giteshdalal.serve'
+version '1.0.0'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile('com.fasterxml.jackson.core:jackson-databind:2.9.5')
+    compile('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.5')
+    compile('org.apache.velocity:velocity-engine-core:2.0')
+}
+
+gradlePlugin {
+    plugins {
+        enginePlugin {
+            id = 'com.giteshdalal.serve.engine-plugin'
+            implementationClass = 'com.giteshdalal.serve.EnginePlugin'
+        }
+    }
+}
