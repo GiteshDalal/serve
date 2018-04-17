@@ -1,0 +1,37 @@
+package $config.resourcePackage;
+
+import java.util.*;
+import ${config.resourcePackage}.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@SuppressWarnings(value = { "unused" })
+public class ${model.name}Resource #if( $model.parent )extends ${model.parent}Resource #end{
+
+#foreach($att in $model.attributes)
+#if(!$att.includeInResource)
+	@JsonIgnore
+#end
+	private#if( $att.type != "Localised" ) ${att.type}#else String#end $att.name;
+#end
+
+	// Constructor ==========
+
+	public ${model.name}Resource() {
+		super();
+	}
+
+	// Methods ==============
+
+#foreach($att in $model.attributes)
+#if($att.includeInResource)
+	public#if( $att.type != "Localised" ) ${att.type}#else String#end get${att.name.substring(0,1).toUpperCase()}${att.name.substring(1)}() {
+		return this.$att.name;
+	}
+
+  	public void set${att.name.substring(0,1).toUpperCase()}${att.name.substring(1)}(final #if( $att.type != "Localised" ) ${att.type}#else String#end $att.name) {
+		this.$att.name = $att.name;
+	}
+
+#end
+#end
+} 

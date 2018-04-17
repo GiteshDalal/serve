@@ -1,12 +1,8 @@
-plugins {
-    id 'java-gradle-plugin'
-}
-
+apply plugin: 'java-gradle-plugin'
 
 group 'com.giteshdalal.serve'
 version '1.0.0'
 
-apply plugin: 'java'
 
 sourceCompatibility = 1.8
 
@@ -14,10 +10,16 @@ repositories {
     mavenCentral()
 }
 
+configurations {
+	includeJar
+}
+
 dependencies {
-    compile('com.fasterxml.jackson.core:jackson-databind:2.9.5')
-    compile('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.5')
-    compile('org.apache.velocity:velocity-engine-core:2.0')
+    includeJar('com.fasterxml.jackson.core:jackson-databind:2.9.5')
+    includeJar('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.5')
+    includeJar('commons-io:commons-io:2.6')
+    includeJar('org.apache.velocity:velocity-engine-core:2.0')
+    configurations.compile.extendsFrom(configurations.includeJar)
 }
 
 gradlePlugin {
@@ -26,5 +28,11 @@ gradlePlugin {
             id = 'com.giteshdalal.serve.engine-plugin'
             implementationClass = 'com.giteshdalal.serve.EnginePlugin'
         }
+    }
+}
+
+jar {
+    from {
+    	configurations.includeJar.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }

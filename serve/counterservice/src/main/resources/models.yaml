@@ -1,0 +1,48 @@
+configuration:
+  modelPackage: com.giteshdalal.serve.model.generated
+  resourcePackage: com.giteshdalal.serve.resource.generated
+  repositoryPackage: com.giteshdalal.serve.repository.generated
+  
+models: 
+#List of Models - Used to create Entity, Repository and Resource
+#==================================
+- name: Item
+  hasResource: true #OPTIONAL - Default value is true
+  hasRepo: false #OPTIONAL - Default value is true
+  annotations: #OPTIONAL
+  - MappedSuperclass
+  
+  attributes:
+  - name: id
+    type: Long
+    includeInResource: true #OPTIONAL - Default value is true
+    includeInModel: true #OPTIONAL - Default value is true
+    annotations: #OPTIONAL
+    - Id
+    - TableGenerator(name="ITEM_GEN", pkColumnValue="ITEM_SEQ", initialValue=100000)
+    - GeneratedValue(strategy=GenerationType.TABLE, generator="ITEM_GEN")
+
+  - name: description
+    type: Localised
+
+  - name: created
+    type: Date
+
+  - name: lastModified
+    type: Date
+
+  - name: comments
+    type: List<String>
+    annotations:
+    - ElementCollection
+
+#==================================
+- name: Customer
+  hasResource: true
+  hasRepo: true
+  parent: Item
+  attributes:
+  - name: pk
+    type: Long
+    
+    

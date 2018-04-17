@@ -5,8 +5,8 @@ import java.io.File;
 public interface EnginePluginConstants {
 
     String GENSRC = "gensrc";
-
     String RESOURCES = "src" + File.separator + "main" + File.separator + "resources";
+    String TEMPLATES = RESOURCES + File.separator + "templates";
 
     String SIGNATURE = "\n" + "[GITESHDALAL]    \n"
             + "[GITESHDALAL]      ____ _ ___ ____ ____ _  _    ___  ____ _    ____ _   \n"
@@ -32,4 +32,6 @@ public interface EnginePluginConstants {
     String MODEL_JAVA = "Model.java";
     String RESOURCE_JAVA = "Resource.java";
     String REPOSITORY_JAVA = "Repository.java";
+
+	String YML_SEARCH_REGEX = ".*models[.]((yml)|(yaml))";
 }

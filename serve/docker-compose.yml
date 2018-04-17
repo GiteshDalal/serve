@@ -4,30 +4,27 @@ services:
     image: serve_discovery
     build: 
       context: ./discoveryservice
-      shm_size: '512mb'
+      shm_size: '512M'
     container_name: serve_container_discovery
-    mem_limit: 512M
     ports:
     - "8761:8761"
   config:
     image: serve_config
     build: 
       context: ./configservice
-      shm_size: '512mb'
+      shm_size: '512M'
     container_name: serve_container_config
     depends_on:
       - discovery
-    mem_limit: 512M
     ports:
     - "8888:8888"
   counter:
     image: serve_counter
     build: 
       context: ./counterservice
-      shm_size: '512mb'
+      shm_size: '512M'
     container_name: serve_container_counter
     depends_on:
       - config
-    mem_limit: 512M
     ports:
     - "8080:8080"

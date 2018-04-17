@@ -1,0 +1,57 @@
+package $config.modelPackage;
+
+import java.util.*;
+import javax.persistence.*;
+import com.giteshdalal.serve.model.*;
+import ${config.modelPackage}.*;
+
+/**
+ * @author gitesh
+ *
+ */
+#if( !$model.annotations.contains("MappedSuperclass") )@Entity(name="${model.name}")#end
+#foreach($annotation in $model.annotations)
+@$annotation
+#end
+@SuppressWarnings(value = { "unused" })
+public class ${model.name}Model #if( $model.parent )extends ${model.parent}Model #end{
+
+	public static final String NAME = "${model.name}";
+
+#foreach($att in $model.attributes)
+#if($att.includeInModel)
+#foreach($annotation in $att.annotations)
+	@$annotation
+#end
+#if($att.type == "Date")
+	@Temporal(TemporalType.TIMESTAMP)
+#elseif($att.type == "Localised")
+	@OneToOne
+	@JoinColumn
+#end
+	private $att.type $att.name;
+	
+#end
+#end
+
+	// Constructor ==========
+
+	public ${model.name}Model() {
+		super();
+	}
+
+	// Methods ==============
+	
+#foreach($att in $model.attributes)
+#if($att.includeInModel)
+	public $att.type get${att.name.substring(0,1).toUpperCase()}${att.name.substring(1)}() {
+		return this.$att.name;
+	}
+
+  	public void set${att.name.substring(0,1).toUpperCase()}${att.name.substring(1)}(final $att.type $att.name) {
+		this.$att.name = $att.name;
+	}
+
+#end
+#end
+}

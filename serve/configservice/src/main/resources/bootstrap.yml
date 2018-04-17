@@ -7,7 +7,7 @@ spring:
     config:
       server:
         git:
-          uri: ${HOME}/work/study/spring/configurations-repository
+          uri: https://github.com/GiteshDalal/serve-configurations.git
           
       discovery:
         enabled: true

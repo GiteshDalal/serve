@@ -10,8 +10,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.giteshdalal.serve.descriptor.ModelFileDescriptor;
+
+import org.apache.commons.io.FileUtils;
 import org.gradle.api.GradleException;
-import org.gradle.internal.impldep.org.codehaus.plexus.util.FileUtils;
 
 /**
  * @author gitesh

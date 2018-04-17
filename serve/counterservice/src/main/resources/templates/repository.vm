@@ -1,0 +1,12 @@
+package $config.repositoryPackage;
+
+import java.util.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+import ${config.modelPackage}.*;
+
+@Repository
+@SuppressWarnings(value = { "unused" })
+public interface ${model.name}Repository extends JpaRepository<${model.name}Model, Long> {
+
+} 
