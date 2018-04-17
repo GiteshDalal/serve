@@ -1,7 +1,5 @@
 configuration:
-  modelPackage: com.giteshdalal.serve.model.generated
-  resourcePackage: com.giteshdalal.serve.resource.generated
-  repositoryPackage: com.giteshdalal.serve.repository.generated
+  group: com.giteshdalal.counterservice
   
 models: 
 #List of Models - Used to create Entity, Repository and Resource

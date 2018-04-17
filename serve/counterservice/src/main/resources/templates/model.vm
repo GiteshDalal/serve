@@ -2,14 +2,16 @@ package $config.modelPackage;
 
 import java.util.*;
 import javax.persistence.*;
-import com.giteshdalal.serve.model.*;
+import ${config.group}.model.*;
 import ${config.modelPackage}.*;
 
 /**
  * @author gitesh
  *
  */
-#if( !$model.annotations.contains("MappedSuperclass") )@Entity(name="${model.name}")#end
+#if( !$model.annotations.contains("MappedSuperclass") )
+@Entity(name="${model.name}")
+#end
 #foreach($annotation in $model.annotations)
 @$annotation
 #end
