@@ -1,4 +1,4 @@
 rootProject.name = 'serve'
-include 'counterservice'
+include 'productservice'
 include 'configservice'
 include 'discoveryservice'

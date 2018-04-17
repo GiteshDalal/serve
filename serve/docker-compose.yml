@@ -18,12 +18,12 @@ services:
       - discovery
     ports:
     - "8888:8888"
-  counter:
-    image: serve_counter
+  product:
+    image: serve_product
     build: 
-      context: ./counterservice
+      context: ./productservice
       shm_size: '512M'
-    container_name: serve_container_counter
+    container_name: serve_container_product
     depends_on:
       - config
     ports:
