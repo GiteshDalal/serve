@@ -1,4 +1,4 @@
-package com.giteshdalal.counterservice.controller;
+package com.giteshdalal.productservice.controller;
 
 import java.util.concurrent.atomic.AtomicLong;
 

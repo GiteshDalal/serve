@@ -1,4 +1,4 @@
-package com.giteshdalal.counterservice;
+package com.giteshdalal.productservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,9 +6,9 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class CounterApplication {
+public class ProductApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(CounterApplication.class, args);
+        SpringApplication.run(ProductApplication.class, args);
     }
 }

@@ -10,9 +10,13 @@ buildscript {
 	    classpath files("../engine/build/libs/engine-1.0.0.jar")
     }
 }
+plugins {
+	id 'io.franzbecker.gradle-lombok' version '1.12'
+}
 
 subprojects {
 	
+	apply plugin: 'io.franzbecker.gradle-lombok'
     apply plugin: 'java'
     apply plugin: 'eclipse'
     apply plugin: 'idea'

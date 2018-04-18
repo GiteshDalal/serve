@@ -1,5 +1,5 @@
 configuration:
-  group: com.giteshdalal.counterservice
+  group: com.giteshdalal.productservice
   
 models: 
 #List of Models - Used to create Entity, Repository and Resource
@@ -7,6 +7,7 @@ models:
 - name: Item
   hasResource: true #OPTIONAL - Default value is true
   hasRepo: false #OPTIONAL - Default value is true
+  idType: Long #OPTIONAL - Default calue is Long
   annotations: #OPTIONAL
   - MappedSuperclass
   

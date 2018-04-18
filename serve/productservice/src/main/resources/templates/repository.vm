@@ -7,6 +7,6 @@ import ${config.modelPackage}.*;
 
 @Repository
 @SuppressWarnings(value = { "unused" })
-public interface ${model.name}Repository extends JpaRepository<${model.name}Model, Long> {
+public interface ${model.name}Repository extends JpaRepository<${model.name}Model, ${model.idType}> {
 
 } 

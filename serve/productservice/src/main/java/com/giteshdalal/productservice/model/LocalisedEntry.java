@@ -1,4 +1,4 @@
-package com.giteshdalal.counterservice.model;
+package com.giteshdalal.productservice.model;
 
 import java.io.Serializable;
 

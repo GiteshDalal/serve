@@ -4,6 +4,7 @@ import java.util.List;
 
 public class ModelDescriptor {
 	private String name;
+	private String idType = "Long";
 	private Boolean hasResource = Boolean.TRUE;
 	private Boolean hasRepo = Boolean.TRUE;
 	private String parent;
@@ -16,6 +17,14 @@ public class ModelDescriptor {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getIdType() {
+		return idType;
+	}
+
+	public void setIdType(String idType) {
+		this.idType = idType;
 	}
 
 	public Boolean getHasResource() {
