@@ -1,7 +1,7 @@
 ---
 spring:
   application:
-    name: product-service
+    name: template-service
 
   cloud:
     config:

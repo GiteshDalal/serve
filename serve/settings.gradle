@@ -1,4 +1,5 @@
 rootProject.name = 'serve'
-include 'productservice'
 include 'configservice'
 include 'discoveryservice'
+include 'edgeservice'
+include 'productservice'

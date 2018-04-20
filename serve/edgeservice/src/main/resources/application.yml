@@ -1,0 +1,21 @@
+---
+server:
+  port: 8080
+
+zuul:
+  prefix: /api
+  routes:
+    products: 
+      path: /products/**
+      serviceId: product-service      
+
+eureka:
+  client:
+    registerWithEureka: false
+    enabled: true
+    eureka-server-port: 8761
+    
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: DEBUG

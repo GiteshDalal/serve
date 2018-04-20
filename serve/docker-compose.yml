@@ -17,7 +17,7 @@ services:
     depends_on:
       - discovery
     ports:
-    - "8888:8888"
+    - "8088:8088"
   product:
     image: serve_product
     build: 
@@ -26,5 +26,15 @@ services:
     container_name: serve_container_product
     depends_on:
       - config
+    ports:
+    - "8091:8091"
+  edge:
+    image: serve_edge
+    build: 
+      context: ./edgeservice
+      shm_size: '512M'
+    container_name: serve_container_edge
+    depends_on:
+      - product
     ports:
     - "8080:8080"
