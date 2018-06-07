@@ -12,7 +12,7 @@ models:
   - MappedSuperclass
   
   attributes:
-  - name: id
+  - name: uid
     type: Long
     includeInResource: true #OPTIONAL - Default value is true
     includeInModel: true #OPTIONAL - Default value is true
@@ -36,12 +36,17 @@ models:
     - ElementCollection
 
 #==================================
-- name: Customer
+- name: Product
   hasResource: true
   hasRepo: true
   parent: Item
   attributes:
-  - name: pk
-    type: Long
+  - name: code
+    type: String
     
+  - name: name
+    type: Localised
+    
+  - name: published
+    type: boolean
     

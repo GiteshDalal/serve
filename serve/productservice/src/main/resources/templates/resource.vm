@@ -3,12 +3,13 @@ package $config.resourcePackage;
 import lombok.*;
 import java.util.*;
 import ${config.resourcePackage}.*;
+import org.springframework.hateoas.ResourceSupport;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Data
-#if( $model.parent )@EqualsAndHashCode(callSuper=true)#end
+@EqualsAndHashCode(callSuper=true)
 @SuppressWarnings(value = { "unused" })
-public class ${model.name}Resource #if( $model.parent )extends ${model.parent}Resource #end{
+public class ${model.name}Resource extends#if( $model.parent ) ${model.parent}Resource #else ResourceSupport #end{
 
 #foreach($att in $model.attributes)
 #if(!$att.includeInResource)

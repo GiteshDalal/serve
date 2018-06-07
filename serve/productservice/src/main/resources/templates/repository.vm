@@ -2,11 +2,12 @@ package $config.repositoryPackage;
 
 import java.util.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.stereotype.Repository;
 import ${config.modelPackage}.*;
 
 @Repository
 @SuppressWarnings(value = { "unused" })
-public interface ${model.name}Repository extends JpaRepository<${model.name}Model, ${model.idType}> {
+public interface ${model.name}Repository extends JpaRepository<${model.name}Model, ${model.idType}>, QuerydslPredicateExecutor<${model.name}Model> {
 
 } 

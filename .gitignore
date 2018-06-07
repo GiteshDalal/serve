@@ -6,6 +6,7 @@ bin
 .classpath
 .project
 gensrc
+querydsl
 
 # Ignore Gradle GUI config
 gradle-app.setting
