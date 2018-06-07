@@ -24,7 +24,7 @@ public class ${model.name}Resource extends#if( $model.parent ) ${model.parent}Re
 #if(!$att.includeInResource)
 	@JsonIgnore
 #end
-	private#if( $att.type != "Localised" ) ${att.type}#else String#end $att.name;
+	private ${att.type} $att.name;
 #end
 
 }

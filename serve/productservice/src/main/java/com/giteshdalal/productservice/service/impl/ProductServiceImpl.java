@@ -22,11 +22,19 @@ public class ProductServiceImpl implements ProductService {
 	@Autowired
 	private ProductRepository repo;
 
+	@Autowired
+	private ModelMapper mapper;
+
 	@Override
 	public Page<ProductResource> findProducts(Predicate predicate, Pageable pageable) {
 		Page<ProductModel> page = repo.findAll(predicate, pageable);
-		ModelMapper modelMapper = new ModelMapper();
-		return page.map(model -> modelMapper.map(model, ProductResource.class));
+		return page.map(model -> mapper.map(model, ProductResource.class));
+	}
+
+	@Override
+	public ProductResource addProduct(ProductResource product) {
+		ProductModel entity = mapper.map(product, ProductModel.class);
+		return mapper.map(repo.save(entity), ProductResource.class);
 	}
 
 }

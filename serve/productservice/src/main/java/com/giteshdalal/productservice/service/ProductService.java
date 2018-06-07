@@ -14,4 +14,6 @@ public interface ProductService {
 
 	Page<ProductResource> findProducts(Predicate predicate, Pageable pageable);
 
+	ProductResource addProduct(ProductResource product);
+
 }

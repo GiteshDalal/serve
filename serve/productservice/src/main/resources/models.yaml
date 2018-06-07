@@ -22,7 +22,7 @@ models:
     - GeneratedValue(strategy=GenerationType.TABLE, generator="ITEM_GEN")
 
   - name: description
-    type: Localised
+    type: String
 
   - name: created
     type: Date
@@ -45,7 +45,7 @@ models:
     type: String
     
   - name: name
-    type: Localised
+    type: String
     
   - name: published
     type: boolean

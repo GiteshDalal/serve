@@ -35,9 +35,6 @@ public class ${model.name}Model #if( $model.parent )extends ${model.parent}Model
 #end
 #if($att.type == "Date")
 	@Temporal(TemporalType.TIMESTAMP)
-#elseif($att.type == "Localised")
-	@OneToOne
-	@JoinColumn
 #end
 	private $att.type $att.name;
 	
