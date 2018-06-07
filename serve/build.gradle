@@ -36,13 +36,15 @@ subprojects {
 	}
 	
 	afterEvaluate {
-		println "After Evaluating $project"
+		println "Evaluated $project"
 	    project.tasks.compileQuerydsl.options.compilerArgs = [
 	            "-proc:only",
 	            "-processor",
 	            project.querydsl.processors() + ',lombok.launch.AnnotationProcessorHider$AnnotationProcessor'
 	    ]
 	}
+	
+	project.tasks.compileQuerydsl.dependsOn(project.tasks.serve)
 
     repositories {
         mavenCentral()
