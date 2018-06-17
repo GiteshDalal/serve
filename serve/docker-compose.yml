@@ -4,7 +4,7 @@ services:
     image: serve_discovery
     build: 
       context: ./discoveryservice
-      shm_size: '512M'
+      shm_size: '256M'
     container_name: serve_container_discovery
     ports:
     - "8761:8761"
@@ -12,17 +12,27 @@ services:
     image: serve_config
     build: 
       context: ./configservice
-      shm_size: '512M'
+      shm_size: '256M'
     container_name: serve_container_config
     depends_on:
       - discovery
     ports:
     - "8088:8088"
+  auth:
+    image: serve_auth
+    build: 
+      context: ./authservice
+      shm_size: '256M'
+    container_name: serve_container_auth
+    depends_on:
+      - config
+    ports:
+    - "8090:8090"
   product:
     image: serve_product
     build: 
       context: ./productservice
-      shm_size: '512M'
+      shm_size: '256M'
     container_name: serve_container_product
     depends_on:
       - config
@@ -32,9 +42,10 @@ services:
     image: serve_edge
     build: 
       context: ./edgeservice
-      shm_size: '512M'
+      shm_size: '256M'
     container_name: serve_container_edge
     depends_on:
       - product
+      - auth
     ports:
     - "8080:8080"

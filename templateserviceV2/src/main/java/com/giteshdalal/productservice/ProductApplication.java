@@ -7,10 +7,6 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
 
-/**
- * @author gitesh
- *
- */
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableSpringDataWebSupport
