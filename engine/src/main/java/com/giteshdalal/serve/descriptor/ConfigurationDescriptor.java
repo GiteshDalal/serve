@@ -1,44 +1,31 @@
 package com.giteshdalal.serve.descriptor;
 
+import com.giteshdalal.serve.EnginePluginConstants;
+
 /**
  * @author gitesh
  *
  */
 public class ConfigurationDescriptor {
-	private String annutation;
-	private String modelPackage;
-	private String resourcePackage;
-	private String repositoryPackage;
+	private String group;
 
-	public String getAnnutation() {
-		return annutation;
+	public String getGroup() {
+		return group;
 	}
 
-	public void setAnnutation(String annutation) {
-		this.annutation = annutation;
+	public void setGroup(String group) {
+		this.group = group;
 	}
 
 	public String getModelPackage() {
-		return modelPackage;
-	}
-
-	public void setModelPackage(String modelPackage) {
-		this.modelPackage = modelPackage;
-	}
-
-	public String getresourcePackage() {
-		return resourcePackage;
-	}
-
-	public void setresourcePackage(String resourcePackage) {
-		this.resourcePackage = resourcePackage;
+		return this.group + EnginePluginConstants.MODEL_GENERATED;
 	}
 
 	public String getRepositoryPackage() {
-		return repositoryPackage;
+		return this.group + EnginePluginConstants.REPOSITORY_GENERATED;
 	}
 
-	public void setRepositoryPackage(String repositoryPackage) {
-		this.repositoryPackage = repositoryPackage;
+	public String getResourcePackage() {
+		return this.group + EnginePluginConstants.RESOURCE_GENERATED;
 	}
 }

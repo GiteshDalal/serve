@@ -37,7 +37,7 @@ public class ResourceGenerator {
 				final Template template = Velocity.getTemplate(EnginePluginConstants.RESOURCE_TEMPLATE_FILE);
 
 				final File file = EnginePluginUtil.createNewFile(model.getName(), EnginePluginConstants.RESOURCE_JAVA,
-						configuration.getresourcePackage(), srcPath);
+						configuration.getResourcePackage(), srcPath);
 
 				try (final BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
 					template.merge(context, writer);

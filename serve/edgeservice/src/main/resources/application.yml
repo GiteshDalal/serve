@@ -1,0 +1,27 @@
+---
+server:
+  port: 8080
+
+zuul:
+  sensitive-headers:
+  - Cookie
+  - Set-Cookie
+  prefix: /api
+  routes:
+    auth:
+      path: /auth/**
+      serviceId: auth-service
+    products: 
+      path: /products/**
+      serviceId: product-service  
+
+eureka:
+  client:
+    registerWithEureka: false
+    enabled: true
+    eurekaServerPort: 8761
+    
+logging:
+  level:
+    ROOT: INFO
+    org.springframework.web: DEBUG

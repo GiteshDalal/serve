@@ -1,0 +1,6 @@
+rootProject.name = 'serve'
+include 'authservice'
+include 'configservice'
+include 'discoveryservice'
+include 'edgeservice'
+include 'productservice'

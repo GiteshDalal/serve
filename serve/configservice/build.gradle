@@ -1,0 +1,7 @@
+group 'com.giteshdalal' 
+version '1.0'
+
+dependencies {
+    compile('org.springframework.cloud:spring-cloud-config-server')
+	compile('org.springframework.cloud:spring-cloud-starter-netflix-eureka-server')
+}
