@@ -1,23 +1,23 @@
----
 server:
   port: 8090
-  
 management:
   endpoints:
     web:
       exposure:
         include:
-        - "*"
-        
+        - '*'
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/serve_security?createDatabaseIfNotExist=true&useSSL=false
     username: root
     password: infrrd@123
-    
   jpa:
     show-sql: true
     hibernate:
       ddl-auto: create
     properties:
       hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+logging:
+  level:
+    org.springframework.security.oauth2: DEBUG
+    com.giteshdalal.authservice: INFO

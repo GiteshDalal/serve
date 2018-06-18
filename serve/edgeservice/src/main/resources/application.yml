@@ -9,7 +9,7 @@ zuul:
   prefix: /api
   routes:
     auth:
-      path: /authorize/**
+      path: /auth/**
       serviceId: auth-service
     products: 
       path: /products/**

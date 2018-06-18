@@ -5,6 +5,8 @@ import java.util.HashSet;
 
 import javax.security.auth.login.AccountException;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -26,6 +28,7 @@ import com.giteshdalal.authservice.service.UserServiceImpl;
 @SpringBootApplication
 @EnableDiscoveryClient
 public class AuthApplication {
+	private final Log logger = LogFactory.getLog(getClass());
 
 	@Value("${security.oauth2.validity.access_token:6000}")
 	private int accessTokenValiditySeconds;
@@ -70,11 +73,12 @@ public class AuthApplication {
 			client.setAccessTokenValiditySeconds(accessTokenValiditySeconds);
 			client.setRefreshTokenValiditySeconds(refreshTokenValiditySeconds);
 			client.grantAuthority("ROLE_TRUSTED_CLIENT");
-			client.setScopes(new HashSet<>(Arrays.asList("read", "write")));
+			client.setScopes(new HashSet<>(Arrays.asList("oauth2")));
 			client.setClientSecret("client_password");
-			client.setAuthorizedGrantTypes(new HashSet<>(Arrays.asList("client_credentials", "refresh_token")));
+			client.setAuthorizedGrantTypes(
+					new HashSet<>(Arrays.asList("authorization_code", "client_credentials", "refresh_token")));
 			client.setRegisteredRedirectUri(new HashSet<>(Arrays.asList("http://localhost:1234/api")));
-			if (username.equals("client_admin")) {
+			if (client.getClientId().equals("client_admin")) {
 				client.getAuthorizedGrantTypes().add("password");
 			}
 			client.setSeceretRequired(true);
@@ -84,8 +88,8 @@ public class AuthApplication {
 			} catch (ClientRegistrationException e) {
 				e.printStackTrace();
 			}
-			System.out.println(String.format("[%s] : [%s]", acct.getUsername(), "password"));
-			System.out.println(String.format("[%s] : [%s]", client.getClientId(), "client_password"));
+			logger.info(String.format("User Credentials: %s/%s", acct.getUsername(), "password"));
+			logger.info(String.format("Client Credentials: %s/%s", client.getClientId(), "client_password"));
 		});
 	}
 

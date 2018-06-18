@@ -14,7 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
  * @author gitesh
- *
+ * 
+ *         To see /oauth/authorize controller configuration
+ * @see org.springframework.security.oauth2.provider.endpoint.AuthorizationEndpoint
  */
 @Configuration
 @EnableWebSecurity(debug = true)
@@ -35,9 +37,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.formLogin().disable() // disable form authentication
-				.anonymous().disable() // disable anonymous user
-				.authorizeRequests().anyRequest().denyAll(); // denying all access
+		http.anonymous().disable() // disable anonymous access
+				.authorizeRequests().antMatchers("/oauth/authorize").hasRole("USER") // allow user access
+				.anyRequest().denyAll() // denying other requests
+				.and().formLogin().permitAll(); // enabling login for anonymous
 	}
 
 	@Bean
