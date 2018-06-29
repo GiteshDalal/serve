@@ -13,7 +13,7 @@ public class CounterController {
 
     private static AtomicLong count = new AtomicLong(0);
 
-    @Value("${counter.prefixMessage: Hello Default}")
+    @Value("${counter.prefix-message: Hello Default}")
     private String prefixMessage;
 
     @GetMapping(path = "/count")
