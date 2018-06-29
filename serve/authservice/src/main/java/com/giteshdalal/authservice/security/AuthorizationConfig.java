@@ -1,5 +1,7 @@
 package com.giteshdalal.authservice.security;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +16,12 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.E
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
+import org.springframework.security.oauth2.provider.token.TokenEnhancer;
+import org.springframework.security.oauth2.provider.token.TokenEnhancerChain;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
@@ -28,13 +35,13 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @EnableAuthorizationServer
 public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
-	@Value("${security.oauth2.keystore.file:keystore.jks}")
+	@Value("${security.oauth2.keystore.file}")
 	private String keystore;
 
-	@Value("${security.oauth2.keystore.key:serve_key}")
+	@Value("${security.oauth2.keystore.key}")
 	private String key;
 
-	@Value("${security.oauth2.keystore.password:password}")
+	@Value("${security.oauth2.keystore.password}")
 	private String keystorePass;
 
 	@Autowired
@@ -49,7 +56,20 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 		endpoints.authenticationManager(this.authenticationManager) // AuthenticationManager
 				.tokenServices(tokenServices()) // DefaultTokenServices
 				.tokenStore(tokenStore()) // JwtTokenStore
-				.accessTokenConverter(accessTokenConverter()); // JwtAccessTokenConverter
+				.requestFactory(requestFactory()) //OAuth2RequestFactory
+				.accessTokenConverter(accessTokenConverter()); // AccessTokenConverter
+	}
+
+	@Bean
+	public OAuth2RequestFactory requestFactory() {
+		DefaultOAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
+		//requestFactory.setCheckUserScopes(true);
+		return requestFactory;
+	}
+
+	@Bean
+	public TokenEnhancer tokenEnhancer() {
+		return new AuthorizationTokenEnhancer();
 	}
 
 	@Bean
@@ -69,11 +89,13 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Bean
 	@Primary
-	public DefaultTokenServices tokenServices() {
+	public AuthorizationServerTokenServices tokenServices() {
+		TokenEnhancerChain tokenEnhancerChain = new TokenEnhancerChain();
+		tokenEnhancerChain.setTokenEnhancers(Arrays.asList(tokenEnhancer(), accessTokenConverter()));
 		DefaultTokenServices defaultTokenServices = new DefaultTokenServices();
 		defaultTokenServices.setTokenStore(tokenStore());
 		defaultTokenServices.setSupportRefreshToken(true);
-		defaultTokenServices.setTokenEnhancer(accessTokenConverter());
+		defaultTokenServices.setTokenEnhancer(tokenEnhancerChain);
 		return defaultTokenServices;
 	}
 
@@ -82,8 +104,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 		oauthServer
 				// we're allowing access to the token only for clients with
 				// 'ROLE_TRUSTED_CLIENT' authority
-				.tokenKeyAccess("hasAuthority('ROLE_TRUSTED_CLIENT')")
-				.checkTokenAccess("hasAuthority('ROLE_TRUSTED_CLIENT')");
+				.tokenKeyAccess("hasAuthority('ROLE_TRUSTED_CLIENT')").checkTokenAccess("permitAll()");
 	}
 
 	@Override

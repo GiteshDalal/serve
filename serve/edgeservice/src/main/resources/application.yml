@@ -8,19 +8,17 @@ zuul:
   - Set-Cookie
   prefix: /api
   routes:
-    auth:
-      path: /auth/**
-      serviceId: auth-service
     products: 
       path: /products/**
-      serviceId: product-service  
+      serviceId: product-service
 
 eureka:
   client:
     registerWithEureka: false
     enabled: true
-    eurekaServerPort: 8761
-    
+    service-url:
+      defaultZone: http://discovery:8761/eureka/,http://localhost:8761/eureka/
+
 logging:
   level:
     ROOT: INFO

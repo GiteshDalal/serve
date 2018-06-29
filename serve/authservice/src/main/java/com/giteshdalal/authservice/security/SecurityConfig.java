@@ -37,10 +37,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.anonymous().disable() // disable anonymous access
-				.authorizeRequests().antMatchers("/oauth/authorize").hasRole("USER") // allow user access
-				.anyRequest().denyAll() // denying other requests
-				.and().formLogin().permitAll(); // enabling login for anonymous
+		http.authorizeRequests().antMatchers("/oauth/token_key", "/oauth/check_token").permitAll() // expose public key
+				.and().authorizeRequests().antMatchers("/oauth/authorize").hasRole("USER") // allow user access
+				.and().authorizeRequests().anyRequest().authenticated() // denying all other requests
+				.and().formLogin().permitAll(); // enabling login for authentication
 	}
 
 	@Bean
