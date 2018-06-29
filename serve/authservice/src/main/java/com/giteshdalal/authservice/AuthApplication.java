@@ -2,6 +2,7 @@ package com.giteshdalal.authservice;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Set;
 
 import javax.security.auth.login.AccountException;
 
@@ -30,14 +31,14 @@ import com.giteshdalal.authservice.service.UserServiceImpl;
 public class AuthApplication {
 	private final Log logger = LogFactory.getLog(getClass());
 
-	@Value("${security.oauth2.validity.access_token:6000}")
+	@Value("${security.oauth2.validity.access-token}")
 	private int accessTokenValiditySeconds;
 
-	@Value("${security.oauth2.validity.refresh_token:18000}")
+	@Value("${security.oauth2.validity.refresh-token}")
 	private int refreshTokenValiditySeconds;
 
-	@Value("${security.oauth2.resource_id:oauth_id}")
-	private String resourceId;
+	@Value("${security.oauth2.resource-ids}")
+	private Set<String> resourceIds;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AuthApplication.class, args);
@@ -69,11 +70,11 @@ public class AuthApplication {
 
 			ClientModel client = new ClientModel();
 			client.setClientId("client_" + username);
-			client.setResourceIds(new HashSet<>(Arrays.asList(resourceId)));
+			client.setResourceIds(resourceIds);
 			client.setAccessTokenValiditySeconds(accessTokenValiditySeconds);
 			client.setRefreshTokenValiditySeconds(refreshTokenValiditySeconds);
 			client.grantAuthority("ROLE_TRUSTED_CLIENT");
-			client.setScopes(new HashSet<>(Arrays.asList("oauth2")));
+			client.setScopes(new HashSet<>(Arrays.asList("read", "write")));
 			client.setClientSecret("client_password");
 			client.setAuthorizedGrantTypes(
 					new HashSet<>(Arrays.asList("authorization_code", "client_credentials", "refresh_token")));
