@@ -2,4 +2,8 @@
 spring:
   application:
     name: edge-service
+  profiles:
+    active: dev,local
+  main:
+    banner-mode: "off"
 

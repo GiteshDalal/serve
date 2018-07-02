@@ -2,9 +2,23 @@
 spring:
   application:
     name: auth-service
+  profiles:
+    active: dev,local
+  main:
+    banner-mode: "off"
 
+---
+spring:
+  profiles: local
   cloud:
     config:
       discovery:
-        enabled: true
+        enabled: true 
         service-id: config-service
+
+---
+spring:
+  profiles: docker
+  cloud:
+    config:
+      uri: http://config:8088

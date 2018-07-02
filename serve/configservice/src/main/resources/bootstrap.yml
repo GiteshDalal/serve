@@ -2,6 +2,10 @@
 spring:
   application:
     name: config-service
+  profiles:
+    active: dev,local
+  main:
+    banner-mode: "off"
     
   cloud:
     config:

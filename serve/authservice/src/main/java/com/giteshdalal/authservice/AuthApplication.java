@@ -37,7 +37,7 @@ public class AuthApplication {
 	@Value("${security.oauth2.validity.refresh-token}")
 	private int refreshTokenValiditySeconds;
 
-	@Value("${security.oauth2.resource-ids}")
+	@Value("#{'${security.oauth2.resource-ids}'.split(',')}")
 	private Set<String> resourceIds;
 
 	public static void main(String[] args) {

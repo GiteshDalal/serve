@@ -10,7 +10,7 @@ services:
     container_name: serve_container_db
     restart: on-failure
     ports:
-    - "3300"
+    - "3300:3306"
   discovery:
     image: serve_discovery
     build: 
@@ -18,6 +18,8 @@ services:
       dockerfile: ./discoveryservice/Dockerfile
     container_name: serve_container_discovery
     restart: on-failure
+    environment:
+      SPRING_PROFILES_ACTIVE: dev,docker
     ports:
     - "8761:8761"
   config:
@@ -27,10 +29,12 @@ services:
       dockerfile: ./configservice/Dockerfile
     container_name: serve_container_config
     restart: on-failure
+    environment:
+      SPRING_PROFILES_ACTIVE: dev,docker
     depends_on:
       - discovery
     ports:
-    - "8088"
+    - "8088:8088"
   edge:
     image: serve_edge
     build: 
@@ -38,6 +42,8 @@ services:
       dockerfile: ./edgeservice/Dockerfile
     container_name: serve_container_edge
     restart: on-failure
+    environment:
+      SPRING_PROFILES_ACTIVE: dev,docker
     depends_on:
       - config
     ports:
@@ -49,6 +55,8 @@ services:
       dockerfile: ./authservice/Dockerfile
     container_name: serve_container_auth
     restart: on-failure
+    environment:
+      SPRING_PROFILES_ACTIVE: dev,docker
     depends_on:
       - config
       - db
@@ -61,7 +69,9 @@ services:
       dockerfile: ./productservice/Dockerfile
     container_name: serve_container_product
     restart: on-failure
+    environment:
+      SPRING_PROFILES_ACTIVE: dev,docker
     depends_on:
       - auth
     ports:
-    - "8091"
+    - "8091:8091"

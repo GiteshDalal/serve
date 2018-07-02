@@ -1,4 +1,13 @@
 ---
+spring:
+  profiles: dev
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
+
 server:
   port: 8091
   
@@ -8,25 +17,47 @@ management:
       exposure:
         include:
         - "*"
-  
+
+security:
+  oauth2:
+    resource-id: ProductService
+    client-id: client_user
+    client-secret: client_password
+    service-id: auth-service
+       
+---
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/serve?createDatabaseIfNotExist=true&useSSL=false
+    username: root
+    password: infrrd@123
+ 
+logging:
+  level:
+    com.giteshdalal.productservice: debug
+    
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery:8761/eureka/,http://localhost:8761/eureka/
-
+      defaultZone: http://localhost:8761/eureka/
+      
+---
 spring:
+  profiles: docker
   datasource:
-    url: jdbc:mysql://db:3300/serve?createDatabaseIfNotExist=true&useSSL=false
+    url: jdbc:mysql://db:3306/serve?useSSL=false
     username: root
     password: root_password
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
-      
+
 logging:
   level:
-    org.springframework.security: debug
-    com.giteshdalal.productservice: info
+    com.giteshdalal.productservice: error
+
+eureka:
+  instance:
+    hostname: product
+  client:
+    service-url:
+      defaultZone: http://discovery:8761/eureka/
+    

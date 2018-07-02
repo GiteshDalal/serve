@@ -1,4 +1,7 @@
 ---
+spring:
+  profiles: dev
+  
 server:
   port: 8761
 
@@ -6,6 +9,26 @@ eureka:
   client: # Not a client, don't register with yourself
     registerWithEureka: false
     fetchRegistry: false
-    
   server:
     waitTimeInMsWhenSyncEmpty: 0
+    
+---
+spring:
+  profiles: local
+    
+logging:
+  level:
+    ROOT: debug
+    
+---
+spring:
+  profiles: docker
+  
+eureka:
+  instance:
+    hostname: discovery
+    
+logging:
+  level:
+    ROOT: error
+    
