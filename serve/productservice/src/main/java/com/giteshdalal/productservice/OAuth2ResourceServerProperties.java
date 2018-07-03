@@ -14,15 +14,27 @@ import lombok.Data;
 @ConfigurationProperties(prefix = "serve.oauth2")
 public class OAuth2ResourceServerProperties {
 
+	/**
+	 * Id to identify this resource server
+	 */
 	@NotEmpty
 	private String resourceId;
 
+	/**
+	 * OAuth2 Server Service Id
+	 */
 	@NotEmpty
-	private String authServiceId;
+	private String authServerServiceId;
 
+	/**
+	 * Client Id to communicate with OAuth2 Server
+	 */
 	@NotEmpty
 	private String clientId;
 
+	/**
+	 * Client Id secret to communicate with OAuth2 Server
+	 */
 	@NotEmpty
 	private String clientSecret;
 }

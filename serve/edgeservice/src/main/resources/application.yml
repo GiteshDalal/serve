@@ -1,0 +1,47 @@
+---
+spring:
+  profiles: dev
+
+zuul:
+  sensitive-headers:
+  - Cookie
+  - Set-Cookie
+  prefix: /api
+  routes:
+    products: 
+      path: /products/**
+      serviceId: product-service
+
+eureka:
+  client:
+    registerWithEureka: false
+    enabled: true
+
+---
+spring:
+  profiles: local
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    com.giteshdalal: debug
+    org.springframework.cloud.netflix: debug
+
+---
+spring:
+  profiles: docker
+
+eureka:
+  instance:
+    hostname: edge
+  client:
+    service-url:
+      defaultZone: http://discovery:8761/eureka/
+
+logging:
+  level:
+    ROOT: error

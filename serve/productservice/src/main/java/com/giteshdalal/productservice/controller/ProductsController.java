@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,15 +43,20 @@ public class ProductsController {
 	@GetMapping
 	public HttpEntity<PagedResources<Resource<ProductResource>>> getProducts(Pageable pageable,
 			@QuerydslPredicate(root = ProductModel.class) Predicate predicate,
-			@RequestParam MultiValueMap<String, String> parameters, 
-			PagedResourcesAssembler<ProductResource> assembler, Locale locale) {
+			@RequestParam MultiValueMap<String, String> parameters, PagedResourcesAssembler<ProductResource> assembler,
+			Locale locale) {
 		Page<ProductResource> products = productService.findProducts(predicate, pageable);
 		return new ResponseEntity<>(assembler.toResource(products), HttpStatus.OK);
 	}
 
+	@GetMapping("/{uid}")
+	public HttpEntity<ProductResource> getProductById(@PathVariable("uid") Long uid, Locale locale) {
+		ProductResource product = productService.findProductByUid(uid);
+		return new ResponseEntity<>(product, HttpStatus.OK);
+	}
+
 	@PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })
 	public HttpEntity<ProductResource> addProduct(@RequestBody ProductResource product, Locale locale) {
-		System.out.println(product);
 		ProductResource newProduct = productService.addProduct(product);
 		return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
 	}

@@ -16,4 +16,6 @@ public interface ProductService {
 
 	ProductResource addProduct(ProductResource product);
 
+	ProductResource findProductByUid(Long uid);
+
 }

@@ -46,7 +46,8 @@ public class ResourceSecurityConfig extends ResourceServerConfigurerAdapter {
 	@Bean
 	@Primary
 	public ResourceServerTokenServices tokenServices() {
-		List<ServiceInstance> authServerInstances = discoveryClient.getInstances(this.properties.getAuthServiceId());
+		List<ServiceInstance> authServerInstances = discoveryClient
+				.getInstances(this.properties.getAuthServerServiceId());
 		ServiceInstance instance = authServerInstances.get(new Random().nextInt(authServerInstances.size()));
 		RemoteAuthTokenServices tokenServices = new RemoteAuthTokenServices();
 		tokenServices.setClientId(this.properties.getClientId());
