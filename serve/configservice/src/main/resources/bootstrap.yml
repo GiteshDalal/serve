@@ -6,9 +6,11 @@ spring:
     active: dev,local
   main:
     banner-mode: "off"
-    
   cloud:
     config:
       server:
         git:
           uri: https://github.com/GiteshDalal/serve-configurations.git
+ 
+server:
+  port: 8088

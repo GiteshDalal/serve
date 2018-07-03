@@ -6,7 +6,10 @@ spring:
     active: dev,local
   main:
     banner-mode: "off"
-    
+
   cloud:
     config:
       enabled: false
+
+server:
+  port: 8761

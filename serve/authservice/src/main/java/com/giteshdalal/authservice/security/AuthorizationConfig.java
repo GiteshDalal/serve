@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -27,6 +26,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
+import com.giteshdalal.authservice.OAuth2Properties;
+
 /**
  * @author gitesh
  *
@@ -35,14 +36,7 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
 @EnableAuthorizationServer
 public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
-	@Value("${security.oauth2.keystore.file}")
-	private String keystore;
-
-	@Value("${security.oauth2.keystore.key}")
-	private String key;
-
-	@Value("${security.oauth2.keystore.password}")
-	private String keystorePass;
+	private final OAuth2Properties properties;
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -51,19 +45,24 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 	@Qualifier("clientServiceImpl")
 	public ClientDetailsService clientDetailsService;
 
+	@Autowired
+	public AuthorizationConfig(OAuth2Properties properties) {
+		this.properties = properties;
+	}
+
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints.authenticationManager(this.authenticationManager) // AuthenticationManager
 				.tokenServices(tokenServices()) // DefaultTokenServices
 				.tokenStore(tokenStore()) // JwtTokenStore
-				.requestFactory(requestFactory()) //OAuth2RequestFactory
+				.requestFactory(requestFactory()) // OAuth2RequestFactory
 				.accessTokenConverter(accessTokenConverter()); // AccessTokenConverter
 	}
 
 	@Bean
 	public OAuth2RequestFactory requestFactory() {
 		DefaultOAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
-		//requestFactory.setCheckUserScopes(true);
+		// requestFactory.setCheckUserScopes(true);
 		return requestFactory;
 	}
 
@@ -75,10 +74,10 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 	@Bean
 	public JwtAccessTokenConverter accessTokenConverter() {
 		JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
-		ClassPathResource keyStoreResource = new ClassPathResource(keystore);
-		char[] secret = keystorePass.toCharArray();
+		ClassPathResource keyStoreResource = new ClassPathResource(properties.getKeystore().getFile());
+		char[] secret = properties.getKeystore().getPassword().toCharArray();
 		KeyStoreKeyFactory keyStoreKeyFactory = new KeyStoreKeyFactory(keyStoreResource, secret);
-		converter.setKeyPair(keyStoreKeyFactory.getKeyPair(key));
+		converter.setKeyPair(keyStoreKeyFactory.getKeyPair(properties.getKeystore().getKey()));
 		return converter;
 	}
 
@@ -96,6 +95,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 		defaultTokenServices.setTokenStore(tokenStore());
 		defaultTokenServices.setSupportRefreshToken(true);
 		defaultTokenServices.setTokenEnhancer(tokenEnhancerChain);
+		defaultTokenServices.setClientDetailsService(clientDetailsService);
 		return defaultTokenServices;
 	}
 

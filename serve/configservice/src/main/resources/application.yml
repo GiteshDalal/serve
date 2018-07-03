@@ -1,23 +1,21 @@
 ---
 spring:
   profiles: dev
-  
-server:
-  port: 8088
-  
+
 ---
 spring:
   profiles: local
- 
+
 logging:
   level:
-    ROOT: debug
-    
+    com.giteshdalal: debug
+    org.springframework.cloud.config: debug
+
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
-      
+
 ---
 spring:
   profiles: docker

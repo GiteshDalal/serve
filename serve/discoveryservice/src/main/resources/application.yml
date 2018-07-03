@@ -1,9 +1,6 @@
 ---
 spring:
   profiles: dev
-  
-server:
-  port: 8761
 
 eureka:
   client: # Not a client, don't register with yourself
@@ -18,7 +15,7 @@ spring:
     
 logging:
   level:
-    ROOT: debug
+    org.springframework.cloud.netflix: debug
     
 ---
 spring:

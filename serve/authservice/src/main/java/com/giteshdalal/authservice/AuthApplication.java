@@ -2,13 +2,9 @@ package com.giteshdalal.authservice;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 
 import javax.security.auth.login.AccountException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,23 +18,22 @@ import com.giteshdalal.authservice.model.UserModel;
 import com.giteshdalal.authservice.service.ClientServiceImpl;
 import com.giteshdalal.authservice.service.UserServiceImpl;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author gitesh
  *
  */
 @SpringBootApplication
 @EnableDiscoveryClient
+@Slf4j
 public class AuthApplication {
-	private final Log logger = LogFactory.getLog(getClass());
 
-	@Value("${security.oauth2.validity.access-token}")
-	private int accessTokenValiditySeconds;
-
-	@Value("${security.oauth2.validity.refresh-token}")
-	private int refreshTokenValiditySeconds;
-
-	@Value("#{'${security.oauth2.resource-ids}'.split(',')}")
-	private Set<String> resourceIds;
+	private final OAuth2Properties properties;
+	
+	public AuthApplication(OAuth2Properties properties) {
+		this.properties = properties;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(AuthApplication.class, args);
@@ -70,9 +65,9 @@ public class AuthApplication {
 
 			ClientModel client = new ClientModel();
 			client.setClientId("client_" + username);
-			client.setResourceIds(resourceIds);
-			client.setAccessTokenValiditySeconds(accessTokenValiditySeconds);
-			client.setRefreshTokenValiditySeconds(refreshTokenValiditySeconds);
+			client.setResourceIds(this.properties.getResourceIds());
+			client.setAccessTokenValiditySeconds(this.properties.getValidity().getAccessToken());
+			client.setRefreshTokenValiditySeconds(this.properties.getValidity().getRefreshToken());
 			client.grantAuthority("ROLE_TRUSTED_CLIENT");
 			client.setScopes(new HashSet<>(Arrays.asList("read", "write")));
 			client.setClientSecret("client_password");
@@ -89,8 +84,8 @@ public class AuthApplication {
 			} catch (ClientRegistrationException e) {
 				e.printStackTrace();
 			}
-			logger.info(String.format("User Credentials: %s/%s", acct.getUsername(), "password"));
-			logger.info(String.format("Client Credentials: %s/%s", client.getClientId(), "client_password"));
+			log.info(String.format("User Credentials: %s/%s", acct.getUsername(), "password"));
+			log.info(String.format("Client Credentials: %s/%s", client.getClientId(), "client_password"));
 		});
 	}
 

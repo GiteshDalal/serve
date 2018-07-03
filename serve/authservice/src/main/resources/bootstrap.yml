@@ -7,6 +7,15 @@ spring:
   main:
     banner-mode: "off"
 
+server:
+  port: 8090
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - '*'
 ---
 spring:
   profiles: local

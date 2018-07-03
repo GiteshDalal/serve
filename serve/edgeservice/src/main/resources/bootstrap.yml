@@ -7,3 +7,27 @@ spring:
   main:
     banner-mode: "off"
 
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - '*'
+---
+spring:
+  profiles: local
+  cloud:
+    config:
+      discovery:
+        enabled: true 
+        service-id: config-service
+
+---
+spring:
+  profiles: docker
+  cloud:
+    config:
+      uri: http://config:8088
