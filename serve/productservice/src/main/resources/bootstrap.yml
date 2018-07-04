@@ -25,6 +25,12 @@ spring:
       discovery:
         enabled: true 
         service-id: config-service
+    vault:
+      host: localhost
+      port: 8200
+      scheme: http
+      authentication: TOKEN
+      token: 47d1d790-0cce-384f-5a28-3cf2eb9e5489
 
 ---
 spring:
@@ -32,3 +38,9 @@ spring:
   cloud:
     config:
       uri: http://config:8088
+    vault:
+      host: vault
+      port: 8200
+      scheme: http
+      authentication: TOKEN
+      token: 47d1d790-0cce-384f-5a28-3cf2eb9e5489

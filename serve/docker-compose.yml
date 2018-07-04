@@ -11,6 +11,33 @@ services:
     restart: on-failure
     ports:
     - "3300:3306"
+  vault:
+    image: vault
+    container_name: serve_container_vault
+    cap_add:
+      - IPC_LOCK
+    environment: 
+      # This token will be used by vault to authenticate requests
+      VAULT_DEV_ROOT_TOKEN_ID: 47d1d790-0cce-384f-5a28-3cf2eb9e5489
+    ports:
+      - "8200"
+  vault-init:
+    image: vault
+    volumes:
+      - './vault:/config'
+      - './wait-for:/wait-for'
+    container_name: serve_container_vault_init
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: 47d1d790-0cce-384f-5a28-3cf2eb9e5489 # This token will be used by vault to authenticate on VAULT_ADDR
+      VAULT_ADDR: 'http://vault:8200' # This will be used to connect to vault server
+      CONFIG_DIR: '/config' # Used inside init.sh to locate data files
+    command: 
+      - 'sh'
+      - '-c'
+      - '/wait-for vault:8200 -t 4 && /config/init.sh'
+    restart: on-failure
+    depends_on:
+      - vault
   discovery:
     image: serve_discovery
     build: 
@@ -46,6 +73,7 @@ services:
       SPRING_PROFILES_ACTIVE: dev,docker
     depends_on:
       - config
+      - vault
     ports:
     - "8080:8080"
   auth:
