@@ -64,7 +64,7 @@ public class ClientModel implements ClientDetails {
 	@Getter
 	@Setter
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> roles;
+	private List<String> clientRoles;
 
 	@Setter
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -117,16 +117,16 @@ public class ClientModel implements ClientDetails {
 	}
 
 	public void grantAuthority(String authority) {
-		if (this.roles == null) {
-			this.roles = new ArrayList<>();
+		if (this.clientRoles == null) {
+			this.clientRoles = new ArrayList<>();
 		}
-		roles.add(authority);
+		clientRoles.add(authority);
 	}
 
 	@Override
 	public Collection<GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		roles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+		clientRoles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
 		return authorities;
 	}
 

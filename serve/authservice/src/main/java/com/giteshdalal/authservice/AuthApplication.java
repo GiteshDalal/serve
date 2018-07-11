@@ -14,9 +14,12 @@ import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 
 import com.giteshdalal.authservice.model.ClientModel;
+import com.giteshdalal.authservice.model.PrivilegeModel;
+import com.giteshdalal.authservice.model.RoleModel;
 import com.giteshdalal.authservice.model.UserModel;
-import com.giteshdalal.authservice.service.ClientServiceImpl;
-import com.giteshdalal.authservice.service.UserServiceImpl;
+import com.giteshdalal.authservice.service.AuthorityService;
+import com.giteshdalal.authservice.service.impl.ClientServiceImpl;
+import com.giteshdalal.authservice.service.impl.UserServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,17 +48,33 @@ public class AuthApplication {
 	}
 
 	@Bean
-	CommandLineRunner init(UserServiceImpl userService, ClientServiceImpl clientService) {
+	CommandLineRunner init(UserServiceImpl userService, ClientServiceImpl clientService, AuthorityService authorityService) {
 		return (evt) -> Arrays.asList("user,admin,john,robert,ana".split(",")).forEach(username -> {
+			PrivilegeModel publishPrivilege = new PrivilegeModel();
+			publishPrivilege.setName("PUBLISH");
+			
+			authorityService.savePrilivege(publishPrivilege);
+			
+			RoleModel userRole = new RoleModel();
+			userRole.setName("ROLE_USER");
+			userRole.addPrivilege(publishPrivilege);
+			
+			authorityService.saveRole(userRole);
+
+			RoleModel adminRole = new RoleModel();
+			adminRole.setName("ROLE_ADMIN");
+			
+			authorityService.saveRole(adminRole);
+			
 			UserModel acct = new UserModel();
 			acct.setUsername(username);
 			if (username.equals("admin")) {
-				acct.grantAuthority("ROLE_ADMIN");
+				acct.grantAuthority(adminRole);
 			}
 			acct.setPassword("password");
 			acct.setFirstName(username);
 			acct.setLastName("LastName");
-			acct.grantAuthority("ROLE_USER");
+			acct.grantAuthority(userRole);
 			acct.setEmail(String.format("[%s]@giteshdalal.com", username));
 			try {
 				userService.register(acct);
@@ -69,7 +88,7 @@ public class AuthApplication {
 			client.setAccessTokenValiditySeconds(this.properties.getValidity().getAccessToken());
 			client.setRefreshTokenValiditySeconds(this.properties.getValidity().getRefreshToken());
 			client.grantAuthority("ROLE_TRUSTED_CLIENT");
-			client.setScopes(new HashSet<>(Arrays.asList("read", "write")));
+			client.setScopes(new HashSet<>(Arrays.asList("publish","read", "write")));
 			client.setClientSecret("client_password");
 			client.setAuthorizedGrantTypes(
 					new HashSet<>(Arrays.asList("authorization_code", "client_credentials", "refresh_token")));

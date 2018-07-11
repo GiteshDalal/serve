@@ -57,6 +57,7 @@ subprojects {
 	    compile("com.querydsl:querydsl-root:$querydslVersion")
 	    compile("com.querydsl:querydsl-jpa:$querydslVersion")
 	    compile("com.querydsl:querydsl-apt:$querydslVersion:jpa")
+	    compile("com.fasterxml.jackson.module:jackson-module-jsonSchema")
         testCompile('org.springframework.boot:spring-boot-starter-test')
     }
 	

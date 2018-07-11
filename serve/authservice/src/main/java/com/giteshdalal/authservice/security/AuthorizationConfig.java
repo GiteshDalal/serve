@@ -16,7 +16,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
-import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
+import org.springframework.security.oauth2.provider.OAuth2RequestValidator;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
@@ -56,14 +56,20 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 				.tokenServices(tokenServices()) // DefaultTokenServices
 				.tokenStore(tokenStore()) // JwtTokenStore
 				.requestFactory(requestFactory()) // OAuth2RequestFactory
+				.requestValidator(requestValidator())// OAuth2RequestValidator
 				.accessTokenConverter(accessTokenConverter()); // AccessTokenConverter
 	}
 
 	@Bean
 	public OAuth2RequestFactory requestFactory() {
-		DefaultOAuth2RequestFactory requestFactory = new DefaultOAuth2RequestFactory(clientDetailsService);
-		// requestFactory.setCheckUserScopes(true);
+		ServeOAuth2RequestFactory requestFactory = new ServeOAuth2RequestFactory(clientDetailsService);
+		requestFactory.setCheckUserScopes(true);
 		return requestFactory;
+	}
+
+	@Bean
+	public OAuth2RequestValidator requestValidator() {
+		return new ServeOAuth2RequestValidator();
 	}
 
 	@Bean

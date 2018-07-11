@@ -1,4 +1,4 @@
-package com.giteshdalal.authservice.service;
+package com.giteshdalal.authservice.service.impl;
 
 import java.util.Optional;
 
