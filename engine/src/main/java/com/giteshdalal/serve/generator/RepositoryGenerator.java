@@ -16,6 +16,10 @@ import com.giteshdalal.serve.descriptor.ConfigurationDescriptor;
 import com.giteshdalal.serve.descriptor.ModelDescriptor;
 import com.giteshdalal.serve.descriptor.ModelFileDescriptor;
 
+/**
+ * @author gitesh
+ *
+ */
 public class RepositoryGenerator {
 
     public int generateFiles(final ModelFileDescriptor fileDescriptor, final String srcPath,

@@ -28,6 +28,10 @@ gradlePlugin {
             id = 'com.giteshdalal.serve.engine-plugin'
             implementationClass = 'com.giteshdalal.serve.EnginePlugin'
         }
+        serviceGeneratorPlugin {
+            id = 'com.giteshdalal.serve.service-generator-plugin'
+            implementationClass = 'com.giteshdalal.serve.ServiceGeneratorPlugin'
+        }
     }
 }
 

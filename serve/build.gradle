@@ -17,6 +17,7 @@ buildscript {
 plugins {
 	id 'io.franzbecker.gradle-lombok' version '1.12'
 }
+apply plugin: com.giteshdalal.serve.ServiceGeneratorPlugin
 
 subprojects {
 	

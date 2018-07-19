@@ -14,6 +14,10 @@ import com.giteshdalal.serve.generator.RepositoryGenerator;
 import com.giteshdalal.serve.generator.ResourceGenerator;
 import com.giteshdalal.serve.util.EnginePluginUtil;
 
+/**
+ * @author gitesh
+ *
+ */
 public class GenerateFilesTask extends DefaultTask {
 
 	private File gensrc;
@@ -73,7 +77,7 @@ public class GenerateFilesTask extends DefaultTask {
 
 		// Step 2. Generate Files
 		System.out.println(EnginePluginConstants.SIGNATURE);
-		final List<File> inputFiles = EnginePluginUtil.findInputFilesIn(this.getResources(), this.getYmlSearchRegex());
+		final List<File> inputFiles = EnginePluginUtil.findFiles(this.getResources(), this.getYmlSearchRegex());
 		if (inputFiles.isEmpty()) {
 			throw new GradleException("[SERVE][ERROR] No files found using regex: " + this.getYmlSearchRegex());
 		}

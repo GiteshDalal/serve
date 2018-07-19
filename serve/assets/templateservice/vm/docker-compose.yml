@@ -1,0 +1,13 @@
+  ${service.name.toLowerCase()}:
+    image: serve_${service.name.toLowerCase()}
+    build: 
+      context: .
+      dockerfile: ./${service.name.toLowerCase()}service/Dockerfile
+    container_name: serve_container_${service.name.toLowerCase()}
+    restart: on-failure
+    environment:
+      SPRING_PROFILES_ACTIVE: dev,docker
+    depends_on:
+      - auth
+    ports:
+    - "${service.port}:${service.port}"

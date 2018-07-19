@@ -16,6 +16,10 @@ import com.giteshdalal.serve.descriptor.ModelDescriptor;
 import com.giteshdalal.serve.descriptor.ModelFileDescriptor;
 import com.giteshdalal.serve.util.EnginePluginUtil;
 
+/**
+ * @author gitesh
+ *
+ */
 public class ModelGenerator {
 
     public int generateFiles(final ModelFileDescriptor fileDescriptor, final String srcPath,

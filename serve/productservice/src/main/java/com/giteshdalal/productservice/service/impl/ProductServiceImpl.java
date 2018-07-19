@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import com.giteshdalal.productservice.exception.NotFoundServeException;
+import com.giteshdalal.productservice.exception.NotFoundProductServiceException;
 import com.giteshdalal.productservice.model.generated.ProductModel;
 import com.giteshdalal.productservice.repository.ServeProductRepository;
 import com.giteshdalal.productservice.resource.generated.ProductResource;
@@ -41,7 +41,7 @@ public class ProductServiceImpl implements ProductService {
 	@Override
 	public ProductResource findProductByUid(Long uid) {
 		ProductModel entity = repo.findById(uid)
-				.orElseThrow(() -> new NotFoundServeException("Product with uid [" + uid + "] doesn't exist"));
+				.orElseThrow(() -> new NotFoundProductServiceException("Product with uid [" + uid + "] doesn't exist"));
 		return mapper.map(entity, ProductResource.class);
 	}
 

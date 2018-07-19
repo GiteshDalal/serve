@@ -2,6 +2,10 @@ package com.giteshdalal.serve.descriptor;
 
 import java.util.List;
 
+/**
+ * @author gitesh
+ *
+ */
 public class ModelDescriptor {
 	private String name;
 	private String idType = "Long";

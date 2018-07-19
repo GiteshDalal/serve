@@ -1,0 +1,39 @@
+configuration:
+  group: ${service.group.toLowerCase()}.${service.name.toLowerCase()}service
+  
+models: 
+#List of Models - Used to create Entity, Repository and Resource
+#==================================
+- name: Item
+  hasResource: true #OPTIONAL - Default value is true
+  hasRepo: false #OPTIONAL - Default value is true
+  idType: Long #OPTIONAL - Default calue is Long
+  annotations: #OPTIONAL
+  - MappedSuperclass
+  
+  attributes:
+  - name: uid
+    type: Long
+    includeInResource: true #OPTIONAL - Default value is true
+    includeInModel: true #OPTIONAL - Default value is true
+    annotations: #OPTIONAL
+    - Id
+    - TableGenerator(name="ITEM_GEN", pkColumnValue="ITEM_SEQ", initialValue=100000)
+    - GeneratedValue(strategy=GenerationType.TABLE, generator="ITEM_GEN")
+
+  - name: description
+    type: String
+
+  - name: created
+    type: Date
+
+  - name: lastModified
+    type: Date
+
+  - name: comments
+    type: List<String>
+    annotations:
+    - ElementCollection
+
+#==================================
+
