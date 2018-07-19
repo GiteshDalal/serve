@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import com.giteshdalal.authservice.model.ClientModel;
 import com.giteshdalal.authservice.model.PrivilegeModel;
 import com.giteshdalal.authservice.model.RoleModel;
@@ -40,6 +42,11 @@ public class AuthApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AuthApplication.class, args);
+	}
+	
+	@Bean
+	public JsonSchemaGenerator schemaGenerator() {
+		return new JsonSchemaGenerator(new ObjectMapper());
 	}
 
 	@Bean

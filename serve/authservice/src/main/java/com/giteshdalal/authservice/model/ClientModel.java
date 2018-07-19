@@ -73,8 +73,9 @@ public class ClientModel implements ClientDetails {
 	@ElementCollection(fetch = FetchType.EAGER)
 	@MapKeyColumn(name = "name")
 	@Column(name = "value")
+	@Setter
 	@CollectionTable(name = "additionalInformation", joinColumns = @JoinColumn(name = "additionalInformation_id"))
-	Map<String, String> additionalInformation;
+	private Map<String, String> additionalInformation;
 
 	@Override
 	public String getClientId() {
