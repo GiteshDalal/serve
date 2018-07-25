@@ -37,10 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/oauth/token_key", "/oauth/check_token").permitAll() // expose public key
-				.and().authorizeRequests().antMatchers("/oauth/authorize").hasRole("USER") // allow user access
+		http.authorizeRequests().antMatchers("/", "/index", "/assets/**", "/oauth/token_key", "/oauth/check_token")
+				.permitAll().and().authorizeRequests().antMatchers("/oauth/authorize").hasRole("USER") // allow user
 				.and().authorizeRequests().anyRequest().authenticated() // denying all other requests
-				.and().formLogin().permitAll(); // enabling login for authentication
+				.and().formLogin().loginPage("/login").permitAll() // enabling login for authentication
+				.and().logout().permitAll(); // allow everyone logout
 	}
 
 	@Bean

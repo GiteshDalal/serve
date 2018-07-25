@@ -1,0 +1,146 @@
+html, body {
+	height: 100%;
+	margin: 0;
+	background-color: #2B2D42;
+}
+
+.backdrop {
+	background-image: url("/assets/img/backdrop.png");
+	background-repeat: space;
+}
+
+h1{
+	font-size: 2em;
+}
+
+h2{
+	font-size: 1.6em;
+}
+
+h3{
+	font-size: 1.4em;
+}
+
+.serve {
+	position: relative;
+	max-width: 480px;
+	margin: 0 auto;
+	text-align: center;
+	color: #F05D5E;
+	font-family: 'Arvo', serif;
+	height: 100%;
+}
+
+.rel{
+	position: relative;
+}
+
+dev, .content{
+	box-sizing: border-box;
+	padding: calc(10vh) 5px 5px 5px;
+}
+
+.shadow {
+	box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.4);
+	border-radius: 5px;
+}
+
+.panel {
+	text-align: left;
+	border-radius: 5px;
+	background-color: #fff;
+	color: #2B2D42;
+	padding: 56px;
+	margin: 4px;
+	overflow: auto;
+}
+
+input {
+	border: 2px solid #2B2D42;
+	border-radius: 4px;
+	font-size: 20px;
+	color: #2B2D42;
+	font-family: 'Arvo', serif;
+    -webkit-transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
+}
+
+input[type=text], input[type=password] {
+	width: 100%;
+	padding: 12px 20px;
+	margin: 8px 0;
+	display: inline-block;
+	box-sizing: border-box;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+	background-color: #F5F6F3;
+	outline: none;
+}
+
+input[type=submit] {
+	font-size: 16px;
+	float: right;
+	padding: 14px 20px;
+	margin: 20px 0 0 10px;
+	border-radius: 4px;
+	cursor: pointer;
+	background-color: #fff;
+}
+
+input[type=submit]:hover {
+	background-color: #2B2D42;
+	color: #fff;
+}
+
+input[type=submit].cancel{
+	border: 2px solid #F05D5E;
+	color: #F05D5E;	
+}
+
+input[type=submit].cancel:hover {
+	background-color: #F05D5E;
+	color: #fff;
+}
+
+.logo-small {
+	width: 80px;
+	position: absolute;
+	top: -60px;
+	right: -40px;
+}
+
+.msg{
+	padding-bottom: 20px;
+	color: #F05D5E;
+}
+
+.error{
+	text-transform: uppercase;
+	padding: 20px;
+	font-size: 32px;
+	font-weight: 700;
+}
+
+.btn{
+	float: right;
+	padding: 14px 20px;
+	margin: 10px 0 0 0;
+	border-radius: 4px;
+	border: 2px solid #2B2D42;
+	border-radius: 4px;
+	color: #2B2D42;
+	text-decoration: none;
+    -webkit-transition: background-color 0.2s ease-in-out;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.btn:hover {
+	background-color: #2B2D42;
+	color: #fff;
+}
+
+.btn[target='_blank']:after{
+  content: " \2197";
+}
+

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="Gitesh Dalal">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serve - OAuth Server</title>
+<link th:href="@{/assets/img/faviconv1.ico}" rel="icon" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css?family=Arvo:400,700" rel="stylesheet">
+<link th:href="@{/assets/css/serve.css}" rel="stylesheet">
+</head>
+<body class="backdrop">
+	<div class="serve">
+		<div class="content">
+			<section class="panel">
+				<div class="rel">
+					<h1>SERVE</h1>
+					<img class="logo-small" th:src="@{/assets/img/icon.png}" alt="Serve Logo"/>
+				</div>
+				<h2>OAuth Server</h2>
+				<p>It supports OAuth2 authentication and by default it's being used by all of the Serve framework microservices to authenticate requests.</p>
+				<p>Following grant types are supported: </p>
+				<ul>
+					<li>authorization_code</li>
+					<li>password</li>
+				</ul>
+				<a th:href="@{'https://github.com/GiteshDalal/serve/wiki'}" target="_blank" class="btn">More info</a>
+			</section>
+		</div>
+	</div>
+</body>
+</html>

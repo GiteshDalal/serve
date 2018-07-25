@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="Gitesh Dalal">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serve - Authorize</title>
+<link th:href="@{/assets/img/faviconv1.ico}" rel="icon" type="image/x-icon">
+<link href="https://fonts.googleapis.com/css?family=Arvo:400,700" rel="stylesheet">
+<link th:href="@{/assets/css/serve.css}" rel="stylesheet">
+</head>
+<body class="backdrop">
+	<div class="serve">
+		<div class="content">
+			<section class="panel">
+				<div class="rel">
+					<h2>Authorize</h2>
+					<img class="logo-small" th:src="@{/assets/img/icon.png}" alt="Serve Logo"/>
+				</div>
+				<p>Do you authorize <strong th:text="${authorizationRequest.clientId}"></strong> to access your protected resources?</p>
+				<form id="confirmationForm" name="confirmationForm"	th:action="@{/oauth/authorize}" method="post">
+					<input name="user_oauth_approval" value="true" type="hidden" />
+					<input th:if="${_csrf != null}" type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+					<ul th:if="${scopes != null}">
+						<li th:each="scope : ${scopes}">
+							<div class="form-group">
+								<span th:text="*{key}"></span>
+								<input type="radio" th:field="*{key}" th:name="*{key}" th:value="${#bools.isTrue(scope.value)}" th:checked="${#bools.isTrue(scope.value)}"/>
+								<label th:for="${#ids.prev('key')}">Approve</label>
+								<input type="radio" th:field="*{key}" th:name="*{key}" th:value="${#bools.isFalse(scope.value)}" th:checked="${#bools.isFalse(scope.value)}" />
+								<label th:for="${#ids.prev('key')}" >Deny</label>
+							</div>
+						</li>
+					</ul>
+					<input name="authorize" value="Authorize" type="submit" />
+				</form>
+				<form id="denialForm" name="denialForm" th:if="${scopes == null}" th:action="@{/oauth/authorize}" method="post">
+					<input name="user_oauth_approval" value="false" type="hidden" />
+					<input th:if="${_csrf != null}" type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+					<input class="cancel" name="deny" value="Deny" type="submit" />
+				</form>
+			</section>
+		</div>
+	</div>
+</body>
+</html>
