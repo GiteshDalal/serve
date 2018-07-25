@@ -16,3 +16,37 @@ gradle-app.setting
 
 # Cache of project
 .gradletasknamecache
+
+
+*~
+*.sw[mnpcod]
+*.log
+*.tmp
+*.tmp.*
+*.sublime-project
+*.sublime-workspace
+apps/*/.vscode/
+apps/*/npm-debug.log*
+
+apps/*/log.txt
+apps/*/.idea/
+apps/*/.ionic/
+apps/*/.sourcemaps/
+apps/*/.sass-cache/
+apps/*/.tmp/
+apps/*/.versions/
+apps/*/coverage/
+apps/*/dist/
+apps/*/node_modules/
+apps/*/tmp/
+apps/*/temp/
+apps/*/platforms/
+apps/*/plugins/
+apps/*/plugins/android.json
+apps/*/plugins/ios.json
+apps/*/www/
+$RECYCLE.BIN/
+
+.DS_Store
+Thumbs.db
+UserInterfaceState.xcuserstate
