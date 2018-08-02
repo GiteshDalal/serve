@@ -1,22 +1,20 @@
 package com.giteshdalal.serve;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import org.gradle.api.DefaultTask;
-import org.gradle.api.GradleException;
-import org.gradle.api.tasks.TaskAction;
-
 import com.giteshdalal.serve.descriptor.ModelFileDescriptor;
 import com.giteshdalal.serve.generator.ModelGenerator;
 import com.giteshdalal.serve.generator.RepositoryGenerator;
 import com.giteshdalal.serve.generator.ResourceGenerator;
 import com.giteshdalal.serve.util.EnginePluginUtil;
+import org.gradle.api.DefaultTask;
+import org.gradle.api.GradleException;
+import org.gradle.api.tasks.TaskAction;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * @author gitesh
- *
  */
 public class GenerateFilesTask extends DefaultTask {
 
@@ -68,7 +66,7 @@ public class GenerateFilesTask extends DefaultTask {
 			if (this.getGensrc().exists()) {
 				EnginePluginUtil.emptyDirectory(this.getGensrc());
 			} else {
-				System.out.println("[SERVE][INIT] gensrc folder doesn't exist...");
+				System.err.println("[SERVE][INIT] " + this.getGensrc() + " folder doesn't exist...");
 				return;
 			}
 		} catch (IOException e) {
@@ -76,7 +74,7 @@ public class GenerateFilesTask extends DefaultTask {
 		}
 
 		// Step 2. Generate Files
-		System.out.println(EnginePluginConstants.SIGNATURE);
+		System.err.println(EnginePluginConstants.SIGNATURE);
 		final List<File> inputFiles = EnginePluginUtil.findFiles(this.getResources(), this.getYmlSearchRegex());
 		if (inputFiles.isEmpty()) {
 			throw new GradleException("[SERVE][ERROR] No files found using regex: " + this.getYmlSearchRegex());
@@ -86,7 +84,7 @@ public class GenerateFilesTask extends DefaultTask {
 	}
 
 	private void generateFilesFor(final List<ModelFileDescriptor> modelFileList) {
-		System.out.println("[SERVE][INIT] Generating files in : " + this.getGensrc().getPath());
+		System.err.println("[SERVE][INIT] Generating files in : " + this.getGensrc().getPath());
 		int counter = 0;
 
 		// Step 2.1 Generate MODEL Files
@@ -110,6 +108,6 @@ public class GenerateFilesTask extends DefaultTask {
 					this.getTemplates().getAbsolutePath());
 		}
 
-		System.out.println("[SERVE][INIT] Number of files generated : " + counter);
+		System.err.println("[SERVE][INIT] Number of files generated : " + counter);
 	}
 }
