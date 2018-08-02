@@ -20,25 +20,28 @@ plugins {
 apply plugin: com.giteshdalal.serve.ServiceGeneratorPlugin
 
 subprojects {
-    idea {
-        module {
-            sourceDirs += file('generated/')
-        }
-    }
-
     apply plugin: 'io.franzbecker.gradle-lombok'
     apply plugin: 'com.ewerk.gradle.plugins.querydsl'
     apply plugin: 'java'
     apply plugin: 'eclipse'
+    apply plugin: 'idea'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: com.giteshdalal.serve.EnginePlugin
-    apply plugin: 'idea'
 
     sourceCompatibility = 1.8
 
+    sourceSets {
+        main {
+            java {
+                srcDir "$buildDir/generated-sources/apt"
+            }
+        }
+    }
+    
     querydsl {
         jpa = true
+        querydslSourcesDir = "$buildDir/generated-sources/apt"
     }
 
     afterEvaluate {
