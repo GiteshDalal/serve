@@ -10,23 +10,13 @@
 
 package $config.repositoryPackage;
 
-import java.util.*;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.querydsl.QuerydslPredicateExecutor;
-import org.springframework.data.querydsl.binding.QuerydslBinderCustomizer;
-import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.stereotype.Repository;
+
 import com.giteshdalal.productservice.model.generated.*;
-import com.querydsl.core.types.dsl.StringPath;
+import com.giteshdalal.productservice.repository.BaseServeRepository;
 
 @Repository
 @SuppressWarnings(value = { "unused" })
-public interface ${model.name}Repository extends JpaRepository<${model.name}Model, ${model.idType}>, QuerydslPredicateExecutor<${model.name}Model>,
-		QuerydslBinderCustomizer<Q${model.name}Model> {
-
-	@Override
-	default void customize(QuerydslBindings bindings, QProductModel model) {
-		bindings.bind(String.class).first((StringPath path, String value) -> path.containsIgnoreCase(value));
-	}
-
+public interface ${model.name}Repository extends BaseServeRepository<${model.name}Model, Q${model.name}Model, ${model.idType}> {
+	
 }

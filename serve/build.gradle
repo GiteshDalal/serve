@@ -5,47 +5,55 @@ buildscript {
     }
     repositories {
         mavenCentral()
-        maven {url "https://plugins.gradle.org/m2/"}
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
         classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.9")
-	    classpath files("../engine/build/libs/engine-1.0.0.jar")
+        classpath files("../engine/build/libs/engine-1.0.0.jar")
     }
 }
 
 plugins {
-	id 'io.franzbecker.gradle-lombok' version '1.12'
+    id 'io.franzbecker.gradle-lombok' version '1.12'
 }
 apply plugin: com.giteshdalal.serve.ServiceGeneratorPlugin
 
 subprojects {
-	
-	apply plugin: 'io.franzbecker.gradle-lombok'
+    apply plugin: 'io.franzbecker.gradle-lombok'
     apply plugin: 'com.ewerk.gradle.plugins.querydsl'
     apply plugin: 'java'
     apply plugin: 'eclipse'
     apply plugin: 'idea'
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
-	apply plugin: com.giteshdalal.serve.EnginePlugin
-	
+    apply plugin: com.giteshdalal.serve.EnginePlugin
+
     sourceCompatibility = 1.8
-	
-	querydsl {
-	    jpa = true
-	}
-	
-	afterEvaluate {
-		println "Evaluated $project"
-	    project.tasks.compileQuerydsl.options.compilerArgs = [
-	            "-proc:only",
-	            "-processor",
-	            project.querydsl.processors() + ',lombok.launch.AnnotationProcessorHider$AnnotationProcessor'
-	    ]
-	}
-	
-	project.tasks.compileQuerydsl.dependsOn(project.tasks.serve)
+
+    sourceSets {
+        main {
+            java {
+                srcDir "$buildDir/generated-sources/apt"
+            }
+        }
+    }
+    
+    querydsl {
+        jpa = true
+        querydslSourcesDir = "$buildDir/generated-sources/apt"
+    }
+
+    afterEvaluate {
+        println "Evaluated $project"
+        project.tasks.compileQuerydsl.options.compilerArgs = [
+                "-proc:only",
+                "-processor",
+                project.querydsl.processors() + ',lombok.launch.AnnotationProcessorHider$AnnotationProcessor'
+        ]
+    }
+
+    project.tasks.compileQuerydsl.dependsOn(project.tasks.serve)
 
     repositories {
         mavenCentral()
@@ -55,13 +63,13 @@ subprojects {
         compile('org.projectlombok:lombok:1.16.20')
         compile('org.modelmapper:modelmapper:1.1.0')
         compile('org.springframework.boot:spring-boot-starter')
-	    compile("com.querydsl:querydsl-root:$querydslVersion")
-	    compile("com.querydsl:querydsl-jpa:$querydslVersion")
-	    compile("com.querydsl:querydsl-apt:$querydslVersion:jpa")
-	    compile("com.fasterxml.jackson.module:jackson-module-jsonSchema")
+        compile("com.querydsl:querydsl-root:$querydslVersion")
+        compile("com.querydsl:querydsl-jpa:$querydslVersion")
+        compile("com.querydsl:querydsl-apt:$querydslVersion:jpa")
+        compile("com.fasterxml.jackson.module:jackson-module-jsonSchema")
         testCompile('org.springframework.boot:spring-boot-starter-test')
     }
-	
+
     dependencyManagement {
         imports {
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:Finchley.M9"
