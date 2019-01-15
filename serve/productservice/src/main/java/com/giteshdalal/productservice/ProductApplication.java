@@ -4,6 +4,7 @@ import com.giteshdalal.productservice.controller.AbstractServeController;
 import com.giteshdalal.productservice.controller.ProductsController;
 import com.giteshdalal.productservice.model.generated.ProductModel;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.jackson.JsonNodeValueReader;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -51,6 +52,8 @@ public class ProductApplication {
 
 	@Bean
 	public ModelMapper modelMapperInstance() {
-		return new ModelMapper();
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().addValueReader(new JsonNodeValueReader());
+		return modelMapper;
 	}
 }

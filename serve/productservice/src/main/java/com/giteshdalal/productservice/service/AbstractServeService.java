@@ -1,18 +1,31 @@
 package com.giteshdalal.productservice.service;
 
-import java.util.Map;
 import java.util.Optional;
+
+import com.fasterxml.jackson.databind.JsonNode;
+
+import com.giteshdalal.productservice.exception.NotFoundProductServiceException;
+import com.giteshdalal.productservice.repository.BaseServeRepository;
+
+import com.querydsl.core.types.EntityPath;
+import com.querydsl.core.types.Predicate;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.giteshdalal.productservice.repository.BaseServeRepository;
-import com.querydsl.core.types.EntityPath;
-import com.querydsl.core.types.Predicate;
-
-public abstract class AbstractServeService<T, QT extends EntityPath<?>, RT, ID, REP extends BaseServeRepository<T, QT, ID>> {
+/**
+ * @author gitesh
+ *
+ * @param <T> - Generated Model Type
+ * @param <QT> - Generated QModel Type
+ * @param <RT> - Generated Respective Resource Type
+ * @param <ID> - Identifier Type
+ * @param <REP> - Implemented BaseServeRepository Class
+ */
+public abstract class AbstractServeService<T, QT extends EntityPath<?>, RT, ID, REP extends BaseServeRepository<T, QT, ID>>
+		implements BaseServeService<RT, ID> {
 
 	final Class<T> modelClass;
 	final Class<RT> resourceClass;
@@ -28,26 +41,38 @@ public abstract class AbstractServeService<T, QT extends EntityPath<?>, RT, ID, 
 		this.resourceClass = resourceClass;
 	}
 
+	@Override
 	public Page<RT> findAll(Predicate predicate, Pageable pageable) {
 		Page<T> page = repo.findAll(predicate, pageable);
 		return page.map(model -> this.mapToResource(model));
 	}
 
+	@Override
 	public Optional<RT> findByUid(ID uid) {
 		Optional<T> entity = repo.findById(uid);
 		return entity.isPresent() ? Optional.ofNullable(this.mapToResource(entity.get())) : Optional.empty();
 	}
 
+	@Override
 	public RT save(RT resource) {
 		T entity = this.mapToModel(resource);
 		entity = repo.save(entity);
 		return this.mapToResource(entity);
 	}
 
-	public void patch(ID uid, Map<String, Object> updates) {
-
+	@Override
+	public void patch(ID uid, JsonNode updates) {
+		Optional<T> e = repo.findById(uid);
+		if(e.isPresent()) {
+			T entity = e.get();
+			mapper.map(updates, entity);
+			repo.save(entity);
+		} else {
+			new NotFoundProductServiceException("Object with uid : '" + uid + "' not found!");
+		}
 	}
 
+	@Override
 	public void deleteByUid(ID uid) {
 		repo.deleteById(uid);
 	}

@@ -1,18 +1,17 @@
 package com.giteshdalal.productservice.service;
 
-import java.util.Map;
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import com.querydsl.core.types.Predicate;
 
 /**
  * @author gitesh
  *
- * @param <RT>
- * @param <ID>
+ * @param <RT> - Generated Resource Type
+ * @param <ID> - Identifier Type
  */
 public interface BaseServeService<RT, ID> {
 
@@ -22,7 +21,7 @@ public interface BaseServeService<RT, ID> {
 
 	RT save(RT resource);
 	
-	void patch(ID uid, Map<String, Object> updates);
+	void patch(ID uid, JsonNode updates);
 
 	void deleteByUid(ID uid);
 

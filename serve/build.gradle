@@ -1,22 +1,26 @@
 buildscript {
     ext {
+        lombockGradleVersion = '1.12'
+        lombockVersion = '1.16.20'
+        modelMapperVersion = '2.3.0'
         springBootVersion = '2.0.1.RELEASE'
+        cloudVersion = 'Finchley.M9'
+        queryPluginVersion = '1.0.10'
         querydslVersion = '4.1.4'
+        serveVersion = '1.0.0'
     }
     repositories {
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
+        classpath("io.franzbecker:gradle-lombok:${lombockGradleVersion}")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.9")
-        classpath files("../engine/build/libs/engine-1.0.0.jar")
+        classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:${queryPluginVersion}")
+        classpath files("../engine/build/libs/engine-${serveVersion}.jar")
     }
 }
 
-plugins {
-    id 'io.franzbecker.gradle-lombok' version '1.12'
-}
 apply plugin: com.giteshdalal.serve.ServiceGeneratorPlugin
 
 subprojects {
@@ -60,8 +64,9 @@ subprojects {
     }
 
     dependencies {
-        compile('org.projectlombok:lombok:1.16.20')
-        compile('org.modelmapper:modelmapper:1.1.0')
+        compile("org.projectlombok:lombok:$lombockVersion")
+        compile("org.modelmapper:modelmapper:$modelMapperVersion")
+        compile("org.modelmapper.extensions:modelmapper-jackson:$modelMapperVersion")
         compile('org.springframework.boot:spring-boot-starter')
         compile("com.querydsl:querydsl-root:$querydslVersion")
         compile("com.querydsl:querydsl-jpa:$querydslVersion")
@@ -72,7 +77,7 @@ subprojects {
 
     dependencyManagement {
         imports {
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:Finchley.M9"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:$cloudVersion"
         }
     }
 

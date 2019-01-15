@@ -1,8 +1,14 @@
 package com.giteshdalal.productservice.controller;
 
+import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.giteshdalal.productservice.exception.BadRequestProductServiceException;
+import com.giteshdalal.productservice.exception.NotFoundProductServiceException;
+import com.giteshdalal.productservice.service.BaseServeService;
+import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,10 +28,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.giteshdalal.productservice.exception.NotFoundProductServiceException;
-import com.giteshdalal.productservice.service.BaseServeService;
-import com.querydsl.core.types.Predicate;
 
 /**
  * @author gitesh
@@ -85,8 +87,14 @@ public abstract class AbstractServeController<RT, ID, S extends BaseServeService
 	}
 
 	@PatchMapping("/{uid}")
-	public HttpEntity<?> patch(@PathVariable("uid") ID uid, @RequestBody Map<String, Object> updates, Locale locale) {
-		service.patch(uid, updates);
+	public HttpEntity<?> patch(@PathVariable("uid") ID uid, HttpEntity<String> httpEntity, Locale locale) {
+		JsonNode jsonNode;
+		try {
+			jsonNode = new ObjectMapper().readTree(httpEntity.getBody());
+		} catch (IOException e) {
+			throw new BadRequestProductServiceException("Error translating request body: " + httpEntity.getBody(), e);
+		}
+		service.patch(uid, jsonNode);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
