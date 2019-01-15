@@ -29,25 +29,7 @@ public class ProductApplication {
 	private static final String ANNOTATIONS = "annotations";
 
 	public static void main(String[] args) {
-		registerControllerForModel(ProductModel.class, ProductsController.class);
 		SpringApplication.run(ProductApplication.class, args);
-	}
-
-	private static void registerControllerForModel(Class<?> modelClass, Class<? extends AbstractServeController> controllerClass) {
-		ServeQuerydslPredicate querydslPredicate = new ServeQuerydslPredicate(modelClass);
-		alterAnnotationValue(controllerClass, QuerydslPredicate.class, querydslPredicate);
-	}
-
-	private static void alterAnnotationValue(Class<?> targetClass, Class<? extends Annotation> targetAnnotation, Annotation targetValue) {
-		try {
-			Field annotations = Class.class.getDeclaredField(ANNOTATIONS);
-			annotations.setAccessible(true);
-
-			Map<Class<? extends Annotation>, Annotation> map = (Map<Class<? extends Annotation>, Annotation>) annotations.get(targetClass);
-			map.put(targetAnnotation, targetValue);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Bean
