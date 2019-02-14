@@ -4,22 +4,20 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import com.giteshdalal.authservice.model.PrivilegeModel;
 import com.giteshdalal.authservice.model.RoleModel;
 import com.giteshdalal.authservice.repository.PrivilegeRepository;
 import com.giteshdalal.authservice.repository.RoleRepository;
 import com.giteshdalal.authservice.service.AuthorityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 /**
  * @author gitesh
- *
  */
-@Service
+@Service("authorityService")
 public class AuthorityServiceImpl implements AuthorityService {
 
 	@Autowired

@@ -18,6 +18,9 @@ import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.SecurityContextAccessor;
 import org.springframework.security.oauth2.provider.TokenRequest;
 
+/**
+ * @author gitesh
+ */
 public class ServeOAuth2RequestFactory implements OAuth2RequestFactory {
 
 	public final static String ROLE_REGEX = "(ROLE_#)|(ROLE_[A-Z_-]+[:]#)";
@@ -36,19 +39,18 @@ public class ServeOAuth2RequestFactory implements OAuth2RequestFactory {
 
 	/**
 	 * @param securityContextAccessor
-	 *            the security context accessor to set
+	 * 		the security context accessor to set
 	 */
 	public void setSecurityContextAccessor(SecurityContextAccessor securityContextAccessor) {
 		this.securityContextAccessor = securityContextAccessor;
 	}
 
 	/**
-	 * Flag to indicate that scopes should be interpreted as valid authorities. No
-	 * scopes will be granted to a user unless they are permitted as a granted
-	 * authority to that user.
-	 * 
+	 * Flag to indicate that scopes should be interpreted as valid authorities. No scopes will be granted to a user unless they are
+	 * permitted as a granted authority to that user.
+	 *
 	 * @param checkUserScopes
-	 *            the checkUserScopes to set (default false)
+	 * 		the checkUserScopes to set (default false)
 	 */
 	public void setCheckUserScopes(boolean checkUserScopes) {
 		this.checkUserScopes = checkUserScopes;
@@ -59,14 +61,12 @@ public class ServeOAuth2RequestFactory implements OAuth2RequestFactory {
 		String clientId = authorizationParameters.get(OAuth2Utils.CLIENT_ID);
 		String state = authorizationParameters.get(OAuth2Utils.STATE);
 		String redirectUri = authorizationParameters.get(OAuth2Utils.REDIRECT_URI);
-		Set<String> responseTypes = OAuth2Utils
-				.parseParameterList(authorizationParameters.get(OAuth2Utils.RESPONSE_TYPE));
+		Set<String> responseTypes = OAuth2Utils.parseParameterList(authorizationParameters.get(OAuth2Utils.RESPONSE_TYPE));
 
 		Set<String> scopes = extractScopes(authorizationParameters, clientId);
 
-		AuthorizationRequest request = new AuthorizationRequest(authorizationParameters,
-				Collections.<String, String>emptyMap(), clientId, scopes, null, null, false, state, redirectUri,
-				responseTypes);
+		AuthorizationRequest request = new AuthorizationRequest(authorizationParameters, Collections.<String, String>emptyMap(),
+				clientId, scopes, null, null, false, state, redirectUri, responseTypes);
 
 		ClientDetails clientDetails = clientDetailsService.loadClientByClientId(clientId);
 		request.setResourceIdsAndAuthoritiesFromClientDetails(clientDetails);

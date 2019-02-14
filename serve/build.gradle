@@ -87,6 +87,12 @@ subprojects {
         }
     }
 
+    test {
+        testLogging {
+            showStandardStreams = true
+        }
+    }
+
     eclipse {
         classpath {
             containers.remove('org.eclipse.jdt.launching.JRE_CONTAINER')

@@ -2,7 +2,6 @@ package com.giteshdalal.authservice.model;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,16 +13,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.TableGenerator;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import lombok.Getter;
-import lombok.Setter;
-
 /**
  * @author gitesh
- *
  */
 @Entity(name = "User")
 public class UserModel implements UserDetails {
@@ -48,7 +45,8 @@ public class UserModel implements UserDetails {
 	private String username, email;
 
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "USER_ROLES", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "uid"), inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
+	@JoinTable(name = "USER_ROLES", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "uid"),
+			inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
 	private List<RoleModel> roles;
 
 	@Setter

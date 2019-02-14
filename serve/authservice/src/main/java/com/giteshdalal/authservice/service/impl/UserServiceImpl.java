@@ -1,28 +1,25 @@
 package com.giteshdalal.authservice.service.impl;
 
 import java.util.Optional;
-
 import javax.security.auth.login.AccountException;
 
+import com.giteshdalal.authservice.model.UserModel;
+import com.giteshdalal.authservice.repository.UserRepository;
+import com.giteshdalal.authservice.service.UserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.giteshdalal.authservice.model.UserModel;
-import com.giteshdalal.authservice.repository.UserRepository;
-
 /**
  * @author gitesh
- *
  */
-@Service("userServiceImpl")
-public class UserServiceImpl implements UserDetailsService {
+@Service("userService")
+public class UserServiceImpl implements UserService {
 
 	@Autowired
 	private UserRepository userRepo;
@@ -40,6 +37,7 @@ public class UserServiceImpl implements UserDetailsService {
 		}
 	}
 
+	@Override
 	public UserModel findUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<UserModel> user = userRepo.findOptionalByUsername(username);
 		if (user.isPresent()) {
@@ -49,6 +47,7 @@ public class UserServiceImpl implements UserDetailsService {
 		}
 	}
 
+	@Override
 	public UserModel register(UserModel user) throws AccountException {
 		if (StringUtils.isBlank(user.getUsername()) || StringUtils.isBlank(user.getEmail())) {
 			throw new AccountException("Username and Email can not be left blank");
@@ -63,6 +62,7 @@ public class UserServiceImpl implements UserDetailsService {
 		}
 	}
 
+	@Override
 	@Transactional
 	public void changePassword(String oldPassword, String newPassword) throws AccountException {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -75,14 +75,17 @@ public class UserServiceImpl implements UserDetailsService {
 		}
 	}
 
+	@Override
 	public boolean userExistsWithUsername(String username) {
 		return userRepo.existsByUsername(username);
 	}
 
+	@Override
 	public boolean userExistsWithEmail(String email) {
 		return userRepo.existsByEmail(email);
 	}
 
+	@Override
 	@Transactional
 	public void removeAuthenticatedAccount() throws UsernameNotFoundException {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();

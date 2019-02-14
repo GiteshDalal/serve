@@ -3,11 +3,6 @@ package com.giteshdalal.authservice;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
@@ -15,7 +10,14 @@ import com.giteshdalal.authservice.resource.ClientResource;
 import com.giteshdalal.authservice.resource.PrivilegeResource;
 import com.giteshdalal.authservice.resource.RoleResource;
 import com.giteshdalal.authservice.resource.UserResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author gitesh
+ */
 @RestController
 @PreAuthorize("hasRole('USER:OAUTH')")
 public class InfoEndpoint {

@@ -2,6 +2,7 @@ package com.giteshdalal.authservice.security;
 
 import java.util.Arrays;
 
+import com.giteshdalal.authservice.OAuth2Properties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -26,11 +27,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFactory;
 
-import com.giteshdalal.authservice.OAuth2Properties;
-
 /**
  * @author gitesh
- *
  */
 @Configuration
 @EnableAuthorizationServer
@@ -42,7 +40,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 	private AuthenticationManager authenticationManager;
 
 	@Autowired
-	@Qualifier("clientServiceImpl")
+	@Qualifier("clientService")
 	public ClientDetailsService clientDetailsService;
 
 	@Autowired
