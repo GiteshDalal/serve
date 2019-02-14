@@ -1,20 +1,21 @@
 package com.giteshdalal.authservice;
 
 import java.util.Set;
-
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
+/**
+ * @author gitesh
+ */
 @Component
 @Validated
 @ConfigurationProperties(prefix = "serve.oauth2")
@@ -29,8 +30,8 @@ public class OAuth2Properties {
 	private final TokenValidity validity = new TokenValidity();
 
 	/**
-	 * Comma, seperated list of resourceids which can be accessed using the
-	 * generated token. NOTE: Only used to generate testing user accounts.
+	 * Comma, seperated list of resourceids which can be accessed using the generated token. NOTE: Only used to generate testing user
+	 * accounts.
 	 */
 	@Getter
 	@Setter

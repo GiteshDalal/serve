@@ -12,6 +12,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 
+/**
+ * @author Serve Engine
+ * 
+ */
 @RestController
 @PreAuthorize("hasRole('USER:OAUTH')")
 public class InfoEndpoint {

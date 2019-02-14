@@ -2,14 +2,12 @@ package com.giteshdalal.authservice.repository;
 
 import java.util.Optional;
 
+import com.giteshdalal.authservice.model.UserModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.giteshdalal.authservice.model.UserModel;
-
 /**
  * @author gitesh
- *
  */
 @Repository
 public interface UserRepository extends JpaRepository<UserModel, Long> {

@@ -6,7 +6,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * @author gitesh
- *
  */
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {

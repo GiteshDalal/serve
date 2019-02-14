@@ -4,27 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import com.giteshdalal.authservice.model.ClientModel;
+import com.giteshdalal.authservice.repository.ClientRepository;
+import com.giteshdalal.authservice.service.ClientService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.ClientDetails;
-import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
-import org.springframework.security.oauth2.provider.ClientRegistrationService;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Service;
 
-import com.giteshdalal.authservice.model.ClientModel;
-import com.giteshdalal.authservice.repository.ClientRepository;
-
-@Service("clientServiceImpl")
-public class ClientServiceImpl implements ClientDetailsService, ClientRegistrationService {
+/**
+ * @author gitesh
+ */
+@Service("clientService")
+public class ClientServiceImpl implements ClientService {
 
 	@Autowired
 	private ClientRepository clientRepo;
 
-	@Autowired(required = true)
+	@Autowired
 	private PasswordEncoder passwordEncoder;
 
 	@Override
@@ -37,6 +38,7 @@ public class ClientServiceImpl implements ClientDetailsService, ClientRegistrati
 		}
 	}
 
+	@Override
 	public ClientModel findClientByClientId(String clientId) throws NoSuchClientException {
 		Optional<ClientModel> client = clientRepo.findOptionalByClientId(clientId);
 		if (client.isPresent()) {
@@ -46,12 +48,12 @@ public class ClientServiceImpl implements ClientDetailsService, ClientRegistrati
 		}
 	}
 
+	@Override
 	public ClientModel register(ClientModel client) throws ClientRegistrationException {
 		if (StringUtils.isBlank(client.getClientId()) || StringUtils.isBlank(client.getEmail())) {
 			throw new ClientRegistrationException("Client id and Email can not be left blank");
 		} else if (this.clientExistsWithClientId(client.getClientId())) {
-			throw new ClientRegistrationException(
-					String.format("Client id [%s] is already taken", client.getClientId()));
+			throw new ClientRegistrationException(String.format("Client id [%s] is already taken", client.getClientId()));
 		} else if (this.clientExistsWithEmail(client.getEmail())) {
 			throw new ClientRegistrationException(
 					String.format("Email [%s] is already associated with another client account.", client.getEmail()));
@@ -61,11 +63,13 @@ public class ClientServiceImpl implements ClientDetailsService, ClientRegistrati
 		}
 	}
 
-	private boolean clientExistsWithClientId(String clientId) {
+	@Override
+	public boolean clientExistsWithClientId(String clientId) {
 		return clientRepo.existsByClientId(clientId);
 	}
 
-	private boolean clientExistsWithEmail(String email) {
+	@Override
+	public boolean clientExistsWithEmail(String email) {
 		return clientRepo.existsByEmail(email);
 	}
 
@@ -87,6 +91,7 @@ public class ClientServiceImpl implements ClientDetailsService, ClientRegistrati
 		}
 	}
 
+	@Override
 	public void update(ClientModel clientDetails) throws NoSuchClientException {
 		// TODO Auto-generated method stub
 

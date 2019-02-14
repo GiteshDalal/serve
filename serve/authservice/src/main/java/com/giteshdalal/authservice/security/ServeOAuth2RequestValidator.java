@@ -10,12 +10,10 @@ import org.springframework.security.oauth2.provider.TokenRequest;
 
 /**
  * @author gitesh
- *
  */
 public class ServeOAuth2RequestValidator implements OAuth2RequestValidator {
 
-	public void validateScope(AuthorizationRequest authorizationRequest, ClientDetails client)
-			throws InvalidScopeException {
+	public void validateScope(AuthorizationRequest authorizationRequest, ClientDetails client) throws InvalidScopeException {
 		validateScope(authorizationRequest.getScope(), client.getScope());
 	}
 
@@ -31,8 +29,8 @@ public class ServeOAuth2RequestValidator implements OAuth2RequestValidator {
 				return;
 			}
 			requestScopes.forEach(s -> {
-				if (!clientScopes.stream().anyMatch(
-						cs -> s.matches(ServeOAuth2RequestFactory.ROLE_REGEX.replaceAll("#", cs.toUpperCase())))) {
+				if (!clientScopes.stream().anyMatch(cs -> s
+						.matches(ServeOAuth2RequestFactory.ROLE_REGEX.replaceAll("#", cs.toUpperCase())))) {
 					throw new InvalidScopeException(
 							"Empty scope (either the client or the user is not allowed the requested scopes)");
 				}

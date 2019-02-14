@@ -8,7 +8,6 @@ import lombok.Data;
 
 /**
  * @author gitesh
- *
  */
 @Data
 public class ClientResource {

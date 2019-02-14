@@ -4,15 +4,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import com.giteshdalal.authservice.model.PrivilegeModel;
+import com.giteshdalal.authservice.model.RoleModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.giteshdalal.authservice.model.PrivilegeModel;
-import com.giteshdalal.authservice.model.RoleModel;
-
 /**
  * @author gitesh
- *
  */
 public interface AuthorityService {
 

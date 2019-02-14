@@ -1,8 +1,14 @@
 package com.giteshdalal.productservice.controller;
 
+import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.giteshdalal.productservice.exception.BadRequestProductServiceException;
+import com.giteshdalal.productservice.exception.NotFoundProductServiceException;
+import com.giteshdalal.productservice.service.BaseServeService;
+import com.querydsl.core.types.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,18 +29,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.giteshdalal.productservice.exception.NotFoundProductServiceException;
-import com.giteshdalal.productservice.service.BaseServeService;
-import com.querydsl.core.types.Predicate;
-
 /**
  * @author gitesh
  *
- * @param <RT>
- * @param <ID>
- * @param <S>
+ * @param <RT> - Generated Resource Type
+ * @param <ID> - Identifier Type
+ * @param <S> - Service Implementation of BaseServeService
  */
-public class AbstractServeController<RT, ID, S extends BaseServeService<RT, ID>> {
+public abstract class AbstractServeController<RT, ID, S extends BaseServeService<RT, ID>> {
 
 	@Autowired
 	protected S service;
@@ -46,8 +48,32 @@ public class AbstractServeController<RT, ID, S extends BaseServeService<RT, ID>>
 		return new ResponseEntity<>(resource, HttpStatus.OK);
 	}
 
-	@GetMapping
-	public HttpEntity<PagedResources<Resource<RT>>> getAll(Pageable pageable, @QuerydslPredicate Predicate predicate,
+	/**
+	 * Needs to be implemented to set @QuerydslPredicate root to be respective generated Model class
+	 *
+	 * Example
+	 *
+	 * @Override
+	 * @GetMapping
+	 * public HttpEntity<PagedResources<Resource<ResourceType>>> getAllResources(Pageable pageable,
+	 * 		@QuerydslPredicate(root = <ModelType>.class) Predicate predicate,
+	 * 		@RequestParam MultiValueMap<String ,  String> parameters, PagedResourcesAssembler<ResourceType> assembler,
+	 * 		Locale locale) {
+	 * 		return this.getAll(pageable, predicate, parameters, assembler, locale);
+	 * }
+	 *
+	 * @param pageable - to allow pagination
+	 * @param predicate @QuerydslPredicate(root = <ModelType>.class) - to enable querydsl
+	 * @param parameters - parameters used to search
+	 * @param assembler - assembler needed for querydsl
+	 * @param locale
+	 * @return
+	 */
+	public abstract HttpEntity<PagedResources<Resource<RT>>>  getAllResources(Pageable pageable, @QuerydslPredicate Predicate predicate,
+			@RequestParam MultiValueMap<String, String> parameters, PagedResourcesAssembler<RT> assembler,
+			Locale locale);
+
+	protected HttpEntity<PagedResources<Resource<RT>>> getAll(Pageable pageable, @QuerydslPredicate Predicate predicate,
 			@RequestParam MultiValueMap<String, String> parameters, PagedResourcesAssembler<RT> assembler,
 			Locale locale) {
 		Page<RT> resources = service.findAll(predicate, pageable);
@@ -61,8 +87,14 @@ public class AbstractServeController<RT, ID, S extends BaseServeService<RT, ID>>
 	}
 
 	@PatchMapping("/{uid}")
-	public HttpEntity<?> patch(@PathVariable("uid") ID uid, @RequestBody Map<String, Object> updates, Locale locale) {
-		service.patch(uid, updates);
+	public HttpEntity<?> patch(@PathVariable("uid") ID uid, HttpEntity<String> httpEntity, Locale locale) {
+		JsonNode jsonNode;
+		try {
+			jsonNode = new ObjectMapper().readTree(httpEntity.getBody());
+		} catch (IOException e) {
+			throw new BadRequestProductServiceException("Error translating request body: " + httpEntity.getBody(), e);
+		}
+		service.patch(uid, jsonNode);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 
