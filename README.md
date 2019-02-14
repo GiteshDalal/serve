@@ -5,4 +5,4 @@ Microservices based eCommerce framework
 1. `engine` - gradle plugin for framework
 2. `serve` - microservices framework
 
-[Documentation](https://github.com/GiteshDalal/serve/wiki)
+### [Go to Wiki for detailed documentation](https://github.com/GiteshDalal/serve/wiki)
