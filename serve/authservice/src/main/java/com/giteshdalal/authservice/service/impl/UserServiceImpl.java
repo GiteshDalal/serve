@@ -58,6 +58,10 @@ public class UserServiceImpl implements UserService {
 					String.format("Email [%s] is already associated with another account.", user.getEmail()));
 		} else {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
+			user.setAccountNonExpired(true);
+			user.setAccountNonLocked(true);
+			user.setCredentialsNonExpired(true);
+			user.setEnabled(true);
 			return userRepo.save(user);
 		}
 	}
@@ -71,6 +75,7 @@ public class UserServiceImpl implements UserService {
 			throw new AccountException("Password is incorrect.");
 		} else {
 			user.setPassword(passwordEncoder.encode(newPassword));
+			user.setCredentialsNonExpired(true);
 			userRepo.save(user);
 		}
 	}
