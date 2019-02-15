@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,6 +20,7 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.DefaultAccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.ResourceServerTokenServices;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.DefaultResponseErrorHandler;
@@ -79,8 +81,7 @@ public class RemoteAuthTokenServices implements ResourceServerTokenServices {
 	}
 
 	@Override
-	public OAuth2Authentication loadAuthentication(String accessToken)
-			throws AuthenticationException, InvalidTokenException {
+	public OAuth2Authentication loadAuthentication(String accessToken) throws AuthenticationException, InvalidTokenException {
 
 		MultiValueMap<String, String> formData = new LinkedMultiValueMap<String, String>();
 		formData.add(tokenName, accessToken);
@@ -89,13 +90,13 @@ public class RemoteAuthTokenServices implements ResourceServerTokenServices {
 		Map<String, Object> map = postForMap(checkTokenEndpointUrl, formData, headers);
 
 		if (map.containsKey("error")) {
-			logger.debug("check_token returned error: " + map.get("error"));
-			throw new InvalidTokenException(accessToken);
+			logger.debug("check_token returned error: " + map);
+			throw new InvalidTokenException(String.valueOf(map.get("error_description")));
 		}
 
 		if (!Boolean.TRUE.toString().equalsIgnoreCase(map.get("active").toString())) {
-			logger.debug("check_token returned active attribute: " + map.get("active"));
-			throw new InvalidTokenException(accessToken);
+			logger.debug("check_token returned active attribute: " + map);
+			throw new InvalidTokenException("User account not enabled");
 		}
 
 		return tokenConverter.extractAuthentication(map);
@@ -109,8 +110,7 @@ public class RemoteAuthTokenServices implements ResourceServerTokenServices {
 	private String getAuthorizationHeader(String clientId, String clientSecret) {
 
 		if (clientId == null || clientSecret == null) {
-			logger.warn(
-					"Null Client ID or Client Secret detected. Endpoint that requires authentication will reject request with 401 error.");
+			logger.warn("Null Client ID or Client Secret detected. Endpoint that requires authentication will reject request with 401 error.");
 		}
 
 		String creds = String.format("%s:%s", clientId, clientSecret);
@@ -122,15 +122,13 @@ public class RemoteAuthTokenServices implements ResourceServerTokenServices {
 	}
 
 	private Map<String, Object> postForMap(String path, MultiValueMap<String, String> formData, HttpHeaders headers) {
-		if (headers.getContentType() == null) {
+		if (Objects.isNull(headers.getContentType())) {
 			headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		}
-		@SuppressWarnings("rawtypes")
-		Map map = restTemplate.exchange(path, HttpMethod.POST,
-				new HttpEntity<MultiValueMap<String, String>>(formData, headers), Map.class).getBody();
-		@SuppressWarnings("unchecked")
-		Map<String, Object> result = map;
-		return result;
+		if (CollectionUtils.isEmpty(headers.getAccept())) {
+			headers.add(HttpHeaders.ACCEPT, MediaType.APPLICATION_JSON_VALUE);
+		}
+		return restTemplate.exchange(path, HttpMethod.POST, new HttpEntity<>(formData, headers), Map.class).getBody();
 	}
 
 }
