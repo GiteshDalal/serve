@@ -28,16 +28,13 @@ public class UserServiceImpl implements UserService {
 	private PasswordEncoder passwordEncoder;
 
 	@Override
+	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		Optional<UserModel> user = userRepo.findOptionalByUsername(username);
-		if (user.isPresent()) {
-			return user.get();
-		} else {
-			throw new UsernameNotFoundException(String.format("Username [%s] not found", username));
-		}
+		return findUserByUsername(username);
 	}
 
 	@Override
+	@Transactional
 	public UserModel findUserByUsername(String username) throws UsernameNotFoundException {
 		Optional<UserModel> user = userRepo.findOptionalByUsername(username);
 		if (user.isPresent()) {

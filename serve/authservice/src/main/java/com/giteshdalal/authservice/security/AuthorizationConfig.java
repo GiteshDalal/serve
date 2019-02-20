@@ -18,6 +18,8 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.OAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.OAuth2RequestValidator;
+import org.springframework.security.oauth2.provider.approval.ApprovalStore;
+import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.DefaultTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
@@ -50,12 +52,21 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+		TokenStore tokenStore = tokenStore();
 		endpoints.authenticationManager(this.authenticationManager) // AuthenticationManager
 				.tokenServices(tokenServices()) // DefaultTokenServices
-				.tokenStore(tokenStore()) // JwtTokenStore
+				.tokenStore(tokenStore) // JwtTokenStore
+				.approvalStore(approvalStore(tokenStore)) // TokenApprovalStore
 				.requestFactory(requestFactory()) // OAuth2RequestFactory
 				.requestValidator(requestValidator())// OAuth2RequestValidator
 				.accessTokenConverter(accessTokenConverter()); // AccessTokenConverter
+	}
+
+	@Bean
+	public ApprovalStore approvalStore(TokenStore tokenStore) {
+		TokenApprovalStore approvalStore = new TokenApprovalStore();
+		approvalStore.setTokenStore(tokenStore);
+		return approvalStore;
 	}
 
 	@Bean

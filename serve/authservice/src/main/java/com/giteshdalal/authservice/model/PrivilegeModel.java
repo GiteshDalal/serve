@@ -3,6 +3,7 @@ package com.giteshdalal.authservice.model;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 
@@ -18,14 +19,14 @@ public class PrivilegeModel {
 	@Id
 	private String name;
 
-	@ManyToMany(mappedBy = "privileges")
+	@ManyToMany(mappedBy = "privileges", fetch = FetchType.LAZY)
 	private List<RoleModel> roles;
 
 	public void addRole(RoleModel role) {
-		if (roles == null) {
-			roles = new ArrayList<>();
+		if (getRoles() == null) {
+			setRoles(new ArrayList<>());
 		}
-		roles.add(role);
+		getRoles().add(role);
 	}
 
 }

@@ -2,6 +2,7 @@ package com.giteshdalal.authservice.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -21,26 +22,26 @@ public class RoleModel {
 	@Id
 	private String name;
 
-	@ManyToMany(mappedBy = "roles")
+	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
 	private List<UserModel> users;
 
-	@ManyToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "ROLE_PRIVILEGES", joinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"),
 			inverseJoinColumns = @JoinColumn(name = "privilege_name", referencedColumnName = "name"))
 	private List<PrivilegeModel> privileges;
 
 	public void addPrivilege(PrivilegeModel privilege) {
-		if (privileges == null) {
-			privileges = new ArrayList<>();
+		if (getPrivileges() == null) {
+			setPrivileges(new ArrayList<>());
 		}
-		privileges.add(privilege);
+		getPrivileges().add(privilege);
 	}
 
 	public void addUser(UserModel user) {
-		if (users == null) {
-			users = new ArrayList<>();
+		if (getUsers() == null) {
+			setUsers(new ArrayList<>());
 		}
-		users.add(user);
+		getUsers().add(user);
 	}
 
 }

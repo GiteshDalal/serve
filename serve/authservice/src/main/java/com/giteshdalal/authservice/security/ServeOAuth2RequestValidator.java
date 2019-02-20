@@ -2,6 +2,7 @@ package com.giteshdalal.authservice.security;
 
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.security.oauth2.common.exceptions.InvalidScopeException;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -23,8 +24,7 @@ public class ServeOAuth2RequestValidator implements OAuth2RequestValidator {
 
 	private void validateScope(Set<String> requestScopes, Set<String> clientScopes) {
 
-		if (clientScopes != null && !clientScopes.isEmpty()) {
-
+		if (CollectionUtils.isNotEmpty(clientScopes)) {
 			if (clientScopes.contains(ServeOAuth2RequestFactory.CLIENT_ADMIN)) {
 				return;
 			}
@@ -32,9 +32,11 @@ public class ServeOAuth2RequestValidator implements OAuth2RequestValidator {
 				if (!clientScopes.stream().anyMatch(cs -> s
 						.matches(ServeOAuth2RequestFactory.ROLE_REGEX.replaceAll("#", cs.toUpperCase())))) {
 					throw new InvalidScopeException(
-							"Empty scope (either the client or the user is not allowed the requested scopes)");
+							"Either the client or the user is not allowed the requested scopes");
 				}
 			});
+		} else if (CollectionUtils.isEmpty(requestScopes)) {
+			throw new InvalidScopeException("Client did not request for any scopes");
 		}
 	}
 

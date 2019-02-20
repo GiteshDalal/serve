@@ -23,17 +23,15 @@
 				<form id="confirmationForm" name="confirmationForm"	th:action="@{/oauth/authorize}" method="post">
 					<input name="user_oauth_approval" value="true" type="hidden" />
 					<input th:if="${_csrf != null}" type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-					<ul th:if="${scopes != null}">
-						<li th:each="scope : ${scopes}">
-							<div class="form-group">
-								<span th:text="*{key}"></span>
-								<input type="radio" th:field="*{key}" th:name="*{key}" th:value="${#bools.isTrue(scope.value)}" th:checked="${#bools.isTrue(scope.value)}"/>
+					<table th:if="${scopes != null}">
+						<tr th:each="scope : ${scopes}" class="form-group">
+							<td th:text="${#strings.replace(scope.key,'scope.ROLE_','')}"></td>
+							<td class="min">
+								<input type="checkbox" th:name="${scope.key}" th:id="${#ids.seq('key')}" value="true" checked="checked" <!--/* th:checked="${#bools.isTrue(scope.value)}" */--> />
 								<label th:for="${#ids.prev('key')}">Approve</label>
-								<input type="radio" th:field="*{key}" th:name="*{key}" th:value="${#bools.isFalse(scope.value)}" th:checked="${#bools.isFalse(scope.value)}" />
-								<label th:for="${#ids.prev('key')}" >Deny</label>
-							</div>
-						</li>
-					</ul>
+							</td>
+						</tr>
+					</table>
 					<input name="authorize" value="Authorize" type="submit" />
 				</form>
 				<form id="denialForm" name="denialForm" th:if="${scopes == null}" th:action="@{/oauth/authorize}" method="post">
