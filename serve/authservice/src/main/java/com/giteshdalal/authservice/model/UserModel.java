@@ -44,6 +44,8 @@ public class UserModel implements UserDetails {
 	@Column(unique = true, nullable = false)
 	private String username, email;
 
+	@Getter
+	@Setter
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "USER_ROLES", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "uid"),
 			inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
@@ -80,16 +82,16 @@ public class UserModel implements UserDetails {
 	}
 
 	public void grantAuthority(RoleModel role) {
-		if (this.roles == null) {
-			this.roles = new ArrayList<>();
+		if (getRoles() == null) {
+			setRoles(new ArrayList<>());
 		}
-		roles.add(role);
+		getRoles().add(role);
 	}
 
 	@Override
 	public List<GrantedAuthority> getAuthorities() {
 		List<GrantedAuthority> authorities = new ArrayList<>();
-		roles.forEach(role -> {
+		getRoles().forEach(role -> {
 			authorities.add(new SimpleGrantedAuthority(role.getName()));
 			role.getPrivileges().forEach(p -> {
 				authorities.add(new SimpleGrantedAuthority(role.getName() + ":" + p.getName()));

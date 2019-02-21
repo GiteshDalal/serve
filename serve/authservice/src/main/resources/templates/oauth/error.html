@@ -1,22 +1,28 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+	  xmlns:th="http://www.thymeleaf.org"
+>
 <head>
-<meta charset="UTF-8">
-<meta name="author" content="Gitesh Dalal">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Serve - Login</title>
-<link th:href="@{/assets/img/faviconv1.ico}" rel="icon" type="image/x-icon">
-<link href="https://fonts.googleapis.com/css?family=Arvo:400,700" rel="stylesheet">
-<link th:href="@{/assets/css/serve.css}" rel="stylesheet">
+	<meta charset="UTF-8">
+	<meta name="author" content="Gitesh Dalal">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Serve - OAuth Error</title>
+	<link th:href="@{/assets/img/faviconv1.ico}" rel="icon" type="image/x-icon">
+	<link href="https://fonts.googleapis.com/css?family=Arvo:400,700" rel="stylesheet">
+	<link th:href="@{/assets/css/serve.css}" rel="stylesheet">
 </head>
-<body>
-	<div class="serve">
-		<div class="centered">
-			<img width="270" th:src="@{/assets/img/icon.png}" alt="Serve Logo"/>
-			<div class="error" th:text="${errorSummary}"></div>
-		</div>
+<body class="backdrop">
+<div class="serve">
+	<div class="content">
+		<section class="panel">
+			<div class="rel">
+				<h2>OAuth Error!</h2>
+				<img class="logo-small" th:src="@{/assets/img/icon.png}" alt="Serve Logo"/>
+			</div>
+			<h3 th:text="${errorCode}"></h3>
+			<p class="error" th:text="${errorSummary}"></p>
+		</section>
 	</div>
+</div>
 </body>
 </html>

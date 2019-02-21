@@ -103,6 +103,15 @@ input[type=submit].cancel:hover {
 	color: #fff;
 }
 
+td {
+    width: auto;
+}
+
+td.min {
+    width: 1%;
+    white-space: nowrap;
+}
+
 .logo-small {
 	width: 80px;
 	position: absolute;
@@ -116,10 +125,7 @@ input[type=submit].cancel:hover {
 }
 
 .error{
-	text-transform: uppercase;
-	padding: 20px;
-	font-size: 32px;
-	font-weight: 700;
+	color: #F05D5E;
 }
 
 .btn{

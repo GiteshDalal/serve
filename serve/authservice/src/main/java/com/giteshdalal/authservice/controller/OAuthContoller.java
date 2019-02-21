@@ -37,13 +37,16 @@ public class OAuthContoller {
 		Object error = request.getAttribute("error");
 		// The error summary may contain malicious user input,
 		// it needs to be escaped to prevent XSS
-		String errorSummary;
+		String errorCode, errorSummary;
 		if (error instanceof OAuth2Exception) {
 			OAuth2Exception oauthError = (OAuth2Exception) error;
+			errorCode = String.valueOf(oauthError.getHttpErrorCode());
 			errorSummary = HtmlUtils.htmlEscape(oauthError.getSummary());
 		} else {
+			errorCode = "???";
 			errorSummary = "Unknown error";
 		}
+		model.put("errorCode", errorCode);
 		model.put("errorSummary", errorSummary);
 		return new ModelAndView("oauth/error", model);
 	}

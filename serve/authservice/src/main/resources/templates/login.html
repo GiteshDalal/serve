@@ -22,7 +22,7 @@
 				<div class="msg" th:if="${param.error}">Invalid username and password.</div>
 				<div class="msg" th:if="${param.logout}">You have been logged out.</div>
 				<label for="username">Username</label>
-				<input type="text" name="username" id="username" placeholder="_"/>
+				<input type="text" name="username" id="username" placeholder="_" autofocus />
 				<label for="password">Password</label>
 				<input type="password" name="password" id="password" placeholder="_"/>
 				<input type="submit" value="Sign In" />

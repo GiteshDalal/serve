@@ -39,10 +39,11 @@ public class AuthApplicationDataTest {
 	private static final String ROLE_USER = "ROLE_USER";
 	private static final String ROLE_TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
 	private static final List<String> CLIENT_SCOPES = Arrays.asList("publish", "read", "write");
+	private static final List<String> CLIENT_ADMIN_SCOPE =  Arrays.asList("CLIENT_ADMIN");
 	private static final List<String> CLIENT_GRANTS = Arrays.asList("authorization_code", "client_credentials", "refresh_token");
 	private static final List<String> CLIENT_REDIRECT_URIS = Collections.singletonList("http://localhost:1234/api");
-	private static final String CLIENT_EMAIL = "client.[%s]@giteshdalal.com";
-	private static final String USER_EMAIL = "[%s]@giteshdalal.com";
+	private static final String CLIENT_EMAIL = "client.%s@giteshdalal.com";
+	private static final String USER_EMAIL = "%s@giteshdalal.com";
 	private static final String HR = "********************************************************************";
 
 	@Autowired
@@ -67,6 +68,9 @@ public class AuthApplicationDataTest {
 			clients.add(createNewClient(username));
 		});
 
+		// client_new have no scopes assigned
+		clients.add(createNewClient("new"));
+
 		log.warn(HR);
 		users.forEach(u -> log.warn(String.format(">>>>>>   User/Secret: %s/%s", u.getUsername(), DEFAULT_PASSWORD)));
 		clients.forEach(c -> log.warn(String.format(">>>>>> Client/Secret: %s/%s", c.getClientId(), CLIENT_DEFAULT_PASSWORD)));
@@ -85,9 +89,16 @@ public class AuthApplicationDataTest {
 		client.setAuthorizedGrantTypes(new HashSet<>(CLIENT_GRANTS));
 		client.setRegisteredRedirectUri(new HashSet<>(CLIENT_REDIRECT_URIS));
 
-		// For admin
+		// For client_admin
 		if (client.getClientId().equals("client_admin")) {
 			client.getAuthorizedGrantTypes().add("password");
+			client.setScopes(new HashSet<>(CLIENT_ADMIN_SCOPE));
+		}
+
+		// For client_new
+		if (client.getClientId().equals("client_new")) {
+			client.getAuthorizedGrantTypes().add("password");
+			client.setScopes(null);
 		}
 		client.setSeceretRequired(true);
 		client.setEmail(String.format(CLIENT_EMAIL, username));
@@ -129,14 +140,26 @@ public class AuthApplicationDataTest {
 	}
 
 	private RoleModel getNewUserRoleModel() {
+		PrivilegeModel readPrivilege = new PrivilegeModel();
+		readPrivilege.setName("READ");
+		PrivilegeModel writePrivilege = new PrivilegeModel();
+		writePrivilege.setName("WRITE");
 		PrivilegeModel publishPrivilege = new PrivilegeModel();
 		publishPrivilege.setName("PUBLISH");
+		PrivilegeModel deletePrivilege = new PrivilegeModel();
+		deletePrivilege.setName("DELETE");
 
+		authorityService.savePrilivege(readPrivilege);
+		authorityService.savePrilivege(writePrivilege);
 		authorityService.savePrilivege(publishPrivilege);
+		authorityService.savePrilivege(deletePrivilege);
 
 		RoleModel userRole = new RoleModel();
 		userRole.setName(ROLE_USER);
+		userRole.addPrivilege(readPrivilege);
+		userRole.addPrivilege(writePrivilege);
 		userRole.addPrivilege(publishPrivilege);
+		userRole.addPrivilege(deletePrivilege);
 
 		authorityService.saveRole(userRole);
 		return userRole;
