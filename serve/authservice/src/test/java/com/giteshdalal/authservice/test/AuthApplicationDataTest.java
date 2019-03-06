@@ -39,7 +39,6 @@ public class AuthApplicationDataTest {
 	private static final String ROLE_USER = "ROLE_USER";
 	private static final String ROLE_TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
 	private static final List<String> CLIENT_SCOPES = Arrays.asList("publish", "read", "write");
-	private static final List<String> CLIENT_ADMIN_SCOPE =  Arrays.asList("CLIENT_ADMIN");
 	private static final List<String> CLIENT_GRANTS = Arrays.asList("authorization_code", "client_credentials", "refresh_token");
 	private static final List<String> CLIENT_REDIRECT_URIS = Collections.singletonList("http://localhost:1234/api");
 	private static final String CLIENT_EMAIL = "client.%s@giteshdalal.com";
@@ -89,12 +88,6 @@ public class AuthApplicationDataTest {
 		client.setAuthorizedGrantTypes(new HashSet<>(CLIENT_GRANTS));
 		client.setRegisteredRedirectUri(new HashSet<>(CLIENT_REDIRECT_URIS));
 
-		// For client_admin
-		if (client.getClientId().equals("client_admin")) {
-			client.getAuthorizedGrantTypes().add("password");
-			client.setScopes(new HashSet<>(CLIENT_ADMIN_SCOPE));
-		}
-
 		// For client_new
 		if (client.getClientId().equals("client_new")) {
 			client.getAuthorizedGrantTypes().add("password");
@@ -115,9 +108,6 @@ public class AuthApplicationDataTest {
 
 		UserModel acct = new UserModel();
 		acct.setUsername(username);
-		if (username.equals("admin")) {
-			acct.grantAuthority(getNewAdminRoleModel());
-		}
 		acct.setPassword(DEFAULT_PASSWORD);
 		acct.setFirstName(username);
 		acct.setLastName("testing");
@@ -129,14 +119,6 @@ public class AuthApplicationDataTest {
 			e.printStackTrace();
 		}
 		return acct;
-	}
-
-	private RoleModel getNewAdminRoleModel() {
-		RoleModel adminRole = new RoleModel();
-		adminRole.setName(ROLE_ADMIN);
-
-		authorityService.saveRole(adminRole);
-		return adminRole;
 	}
 
 	private RoleModel getNewUserRoleModel() {

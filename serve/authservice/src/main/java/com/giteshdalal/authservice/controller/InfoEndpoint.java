@@ -1,4 +1,4 @@
-package com.giteshdalal.authservice;
+package com.giteshdalal.authservice.controller;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ import com.giteshdalal.authservice.resource.PrivilegeResource;
 import com.giteshdalal.authservice.resource.RoleResource;
 import com.giteshdalal.authservice.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,14 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
  * @author gitesh
  */
 @RestController
-@PreAuthorize("hasRole('USER:OAUTH')")
 public class InfoEndpoint {
 
 	@Autowired
 	private JsonSchemaGenerator schemaGenerator;
 
-	@GetMapping("/info")
-	public Map<String, JsonSchema> getCount() throws JsonMappingException {
+	@GetMapping(value = "/info", produces = MediaType.APPLICATION_JSON_VALUE)
+	Map<String, JsonSchema> getMetaInfo() throws JsonMappingException {
 		Map<String, JsonSchema> schemas = new HashMap<>();
 		schemas.put("/users", schemaGenerator.generateSchema(UserResource.class));
 		schemas.put("/roles", schemaGenerator.generateSchema(RoleResource.class));
