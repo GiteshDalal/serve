@@ -131,10 +131,10 @@ public class AuthApplicationDataTest {
 		PrivilegeModel deletePrivilege = new PrivilegeModel();
 		deletePrivilege.setName("DELETE");
 
-		authorityService.savePrilivege(readPrivilege);
-		authorityService.savePrilivege(writePrivilege);
-		authorityService.savePrilivege(publishPrivilege);
-		authorityService.savePrilivege(deletePrivilege);
+		authorityService.savePrivilege(readPrivilege);
+		authorityService.savePrivilege(writePrivilege);
+		authorityService.savePrivilege(publishPrivilege);
+		authorityService.savePrivilege(deletePrivilege);
 
 		RoleModel userRole = new RoleModel();
 		userRole.setName(ROLE_USER);

@@ -34,7 +34,7 @@ import org.springframework.security.oauth2.provider.token.store.KeyStoreKeyFacto
  */
 @Configuration
 @EnableAuthorizationServer
-public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
+public class AuthorizationConfigAdapter extends AuthorizationServerConfigurerAdapter {
 
 	private final OAuth2Properties properties;
 
@@ -46,7 +46,7 @@ public class AuthorizationConfig extends AuthorizationServerConfigurerAdapter {
 	public ClientDetailsService clientDetailsService;
 
 	@Autowired
-	public AuthorizationConfig(OAuth2Properties properties) {
+	public AuthorizationConfigAdapter(OAuth2Properties properties) {
 		this.properties = properties;
 	}
 

@@ -21,7 +21,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Configuration
 @EnableWebSecurity(debug = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+public class SecurityConfigAdapter extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	@Qualifier("userService")
@@ -38,9 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/", "/index", "/assets/**", "/oauth/token_key", "/oauth/check_token").permitAll()
-				.and().authorizeRequests().antMatchers("/oauth/authorize").hasRole("USER") // allow user
-				.and().authorizeRequests().antMatchers("/info").hasRole("ADMIN") // allow admin
+		http.authorizeRequests().antMatchers("/", "/index", "/assets/**", "/oauth/token_key", "/oauth/check_token", "/api/**")
+				.permitAll().and().authorizeRequests().antMatchers("/oauth/authorize").hasRole("USER") // allow user
 				.and().authorizeRequests().anyRequest().authenticated() // denying all other requests
 				.and().formLogin().loginPage("/login").permitAll() // enabling login for authentication
 				.and().logout().permitAll(); // allow everyone logout

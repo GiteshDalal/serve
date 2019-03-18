@@ -16,6 +16,8 @@ import com.giteshdalal.authservice.service.AuthorityService;
 import com.giteshdalal.authservice.service.ClientService;
 import com.giteshdalal.authservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.jackson.JsonNodeValueReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -59,6 +61,13 @@ public class AuthApplication {
 	}
 
 	@Bean
+	public ModelMapper modelMapperInstance() {
+		ModelMapper modelMapper = new ModelMapper();
+		modelMapper.getConfiguration().addValueReader(new JsonNodeValueReader());
+		return modelMapper;
+	}
+
+	@Bean
 	public CommandLineRunner init(UserService userService, ClientService clientService, AuthorityService authorityService) {
 		return (evt) -> {
 			// admin user
@@ -90,8 +99,6 @@ public class AuthApplication {
 	}
 
 	private void createAdminUser(UserService userService, AuthorityService authorityService) {
-		RoleModel adminRole = new RoleModel();
-		adminRole.setName("ROLE_ADMIN");
 
 		PrivilegeModel readPrivilege = new PrivilegeModel();
 		readPrivilege.setName("READ");
@@ -102,10 +109,24 @@ public class AuthApplication {
 		PrivilegeModel deletePrivilege = new PrivilegeModel();
 		deletePrivilege.setName("DELETE");
 
-		authorityService.savePrilivege(readPrivilege);
-		authorityService.savePrilivege(writePrivilege);
-		authorityService.savePrilivege(publishPrivilege);
-		authorityService.savePrilivege(deletePrivilege);
+		authorityService.savePrivilege(readPrivilege);
+		authorityService.savePrivilege(writePrivilege);
+		authorityService.savePrivilege(publishPrivilege);
+		authorityService.savePrivilege(deletePrivilege);
+
+		RoleModel adminRole = new RoleModel();
+		adminRole.setName("ROLE_ADMIN");
+
+		authorityService.saveRole(adminRole);
+
+		RoleModel employeeRole = new RoleModel();
+		employeeRole.setName("ROLE_EMPLOYEE");
+		employeeRole.addPrivilege(readPrivilege);
+		employeeRole.addPrivilege(writePrivilege);
+		employeeRole.addPrivilege(publishPrivilege);
+		employeeRole.addPrivilege(deletePrivilege);
+
+		authorityService.saveRole(employeeRole);
 
 		RoleModel userRole = new RoleModel();
 		userRole.setName("ROLE_USER");
@@ -116,11 +137,12 @@ public class AuthApplication {
 
 		authorityService.saveRole(userRole);
 
-		authorityService.saveRole(adminRole);
 		UserModel acct = new UserModel();
-		acct.setUsername(ADMIN);
 		acct.grantAuthority(adminRole);
+		acct.grantAuthority(employeeRole);
 		acct.grantAuthority(userRole);
+
+		acct.setUsername(ADMIN);
 		acct.setPassword(adminPassword);
 		acct.setFirstName(ADMIN);
 		acct.setLastName("");
