@@ -1,7 +1,9 @@
 package com.giteshdalal.authservice.model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -49,7 +51,7 @@ public class UserModel implements UserDetails {
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "USER_ROLES", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "uid"),
 			inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
-	private List<RoleModel> roles;
+	private Set<RoleModel> roles;
 
 	@Setter
 	private boolean accountNonExpired, accountNonLocked, credentialsNonExpired, enabled;
@@ -83,7 +85,7 @@ public class UserModel implements UserDetails {
 
 	public void grantAuthority(RoleModel role) {
 		if (getRoles() == null) {
-			setRoles(new ArrayList<>());
+			setRoles(new HashSet<>());
 		}
 		getRoles().add(role);
 	}

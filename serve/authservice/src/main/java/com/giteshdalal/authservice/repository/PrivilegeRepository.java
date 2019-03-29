@@ -1,13 +1,13 @@
 package com.giteshdalal.authservice.repository;
 
 import com.giteshdalal.authservice.model.PrivilegeModel;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.giteshdalal.authservice.model.QPrivilegeModel;
 import org.springframework.stereotype.Repository;
 
 /**
  * @author gitesh
  */
 @Repository
-public interface PrivilegeRepository extends JpaRepository<PrivilegeModel, String> {
+public interface PrivilegeRepository extends BaseServeRepository<PrivilegeModel, QPrivilegeModel, String> {
 
 }

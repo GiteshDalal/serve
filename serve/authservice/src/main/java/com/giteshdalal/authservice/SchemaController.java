@@ -28,7 +28,7 @@ public class SchemaController {
 	@Autowired
 	private JsonSchemaGenerator schemaGenerator;
 
-	@PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE:READ')")
+	@PreAuthorize("hasRole('ADMIN')")
 	@RequestMapping(value = "/schema", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody
 	Map<String, JsonSchema> getMetaInfo() throws JsonMappingException {

@@ -10,6 +10,7 @@ import com.giteshdalal.authservice.model.PrivilegeModel;
 import com.giteshdalal.authservice.model.RoleModel;
 import com.giteshdalal.authservice.repository.PrivilegeRepository;
 import com.giteshdalal.authservice.repository.RoleRepository;
+import com.giteshdalal.authservice.resource.PrivilegeResource;
 import com.giteshdalal.authservice.resource.RoleResource;
 import com.giteshdalal.authservice.service.AuthorityService;
 import com.querydsl.core.types.Predicate;
@@ -70,13 +71,32 @@ public class AuthorityServiceImpl implements AuthorityService {
 	}
 
 	@Override
+	public Optional<PrivilegeModel> getPrivilegeByName(String name) {
+		return privilegeRepo.findById(name);
+	}
+
+	@Override
 	public Page<RoleResource> findAllRoles(Predicate predicate, Pageable pageable) {
-		return null;
+		Page<RoleModel> roles = roleRepo.findAll(predicate, pageable);
+		return roles.map(model -> mapRole(model));
+	}
+
+	@Override
+	public Page<PrivilegeResource> findAllPrivileges(Predicate predicate, Pageable pageable) {
+		Page<PrivilegeModel> roles = privilegeRepo.findAll(predicate, pageable);
+		return roles.map(model -> mapPrivilege(model));
 	}
 
 	@Override
 	public Optional<RoleResource> findRoleByName(String name) {
-		return Optional.empty();
+		Optional<RoleModel> entity = getRoleByName(name);
+		return entity.isPresent() ? Optional.ofNullable(mapRole(entity.get())) : Optional.empty();
+	}
+
+	@Override
+	public Optional<PrivilegeResource> findPrivilegeByName(String name) {
+		Optional<PrivilegeModel> entity = getPrivilegeByName(name);
+		return entity.isPresent() ? Optional.ofNullable(mapPrivilege(entity.get())) : Optional.empty();
 	}
 
 	@Override
@@ -84,9 +104,19 @@ public class AuthorityServiceImpl implements AuthorityService {
 		Optional<RoleModel> role = roleRepo.findById(resource.getName());
 		if (!role.isPresent()) {
 			RoleModel entity = mapper.map(resource, RoleModel.class);
-			return mapper.map(roleRepo.save(entity), RoleResource.class);
+			return mapRole(roleRepo.save(entity));
 		}
 		throw new BadRequestAuthServiceException("Role with name : '" + resource.getName() + "' already exists!");
+	}
+
+	@Override
+	public PrivilegeResource savePrivilege(PrivilegeResource resource) {
+		Optional<PrivilegeModel> privilege = privilegeRepo.findById(resource.getName());
+		if (!privilege.isPresent()) {
+			PrivilegeModel entity = mapper.map(resource, PrivilegeModel.class);
+			return mapPrivilege(privilegeRepo.save(entity));
+		}
+		throw new BadRequestAuthServiceException("Privilege with name : '" + resource.getName() + "' already exists!");
 	}
 
 	@Override
@@ -95,9 +125,20 @@ public class AuthorityServiceImpl implements AuthorityService {
 		if (role.isPresent()) {
 			RoleModel entity = mapper.map(resource, RoleModel.class);
 			entity.setName(role.get().getName());
-			return mapper.map(roleRepo.save(entity), RoleResource.class);
+			return mapRole(roleRepo.save(entity));
 		}
 		throw new NotFoundAuthServiceException("Role with name : '" + name + "' not found!");
+	}
+
+	@Override
+	public PrivilegeResource updatePrivilege(String name, PrivilegeResource resource) {
+		Optional<PrivilegeModel> privilege = privilegeRepo.findById(name);
+		if (privilege.isPresent()) {
+			PrivilegeModel entity = mapper.map(resource, PrivilegeModel.class);
+			entity.setName(privilege.get().getName());
+			return mapPrivilege(privilegeRepo.save(entity));
+		}
+		throw new NotFoundAuthServiceException("Privilege with name : '" + name + "' not found!");
 	}
 
 	@Override
@@ -105,12 +146,26 @@ public class AuthorityServiceImpl implements AuthorityService {
 		Optional<RoleModel> role = roleRepo.findById(name);
 		if (role.isPresent()) {
 			roleRepo.delete(role.get());
+			return;
 		}
 		throw new NotFoundAuthServiceException("Role with name : '" + name + "' not found!");
 	}
 
 	@Override
-	public Optional<PrivilegeModel> getPrivilegeByName(String name) {
-		return privilegeRepo.findById(name);
+	public void deletePrivilegeByName(String name) {
+		Optional<PrivilegeModel> privilege = privilegeRepo.findById(name);
+		if (privilege.isPresent()) {
+			privilegeRepo.delete(privilege.get());
+			return;
+		}
+		throw new NotFoundAuthServiceException("Privilege with name : '" + name + "' not found!");
+	}
+
+	private RoleResource mapRole(RoleModel roleModel) {
+		return mapper.map(roleModel, RoleResource.class);
+	}
+
+	private PrivilegeResource mapPrivilege(PrivilegeModel privilegeModel) {
+		return mapper.map(privilegeModel, PrivilegeResource.class);
 	}
 }

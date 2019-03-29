@@ -43,7 +43,8 @@ public class SecurityConfigAdapter extends WebSecurityConfigurerAdapter {
 				.permitAll().and().authorizeRequests().antMatchers("/oauth/authorize").hasRole("USER") // allow user
 				.and().authorizeRequests().anyRequest().authenticated() // denying all other requests
 				.and().formLogin().loginPage("/login").permitAll() // enabling login for authentication
-				.and().logout().permitAll(); // allow everyone logout
+				.and().logout().permitAll() // allow everyone logout
+				.and().csrf().ignoringAntMatchers("/api/**", "/actuator/**");
 	}
 
 	@Bean

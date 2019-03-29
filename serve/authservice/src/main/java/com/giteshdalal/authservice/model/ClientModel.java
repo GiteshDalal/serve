@@ -3,6 +3,7 @@ package com.giteshdalal.authservice.model;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,8 +35,8 @@ public class ClientModel implements ClientDetails {
 	public static final String NAME = "Client";
 
 	@Id
-	@TableGenerator(name = "clentSeqGen", table = "ID_GEN", pkColumnValue = "CLIENT_ID", initialValue = 100)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "clentSeqGen")
+	@TableGenerator(name = "clientSeqGen", table = "ID_GEN", pkColumnValue = "CLIENT_ID", initialValue = 100)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "clientSeqGen")
 	@Getter
 	@Setter
 	private Long uid;
@@ -61,7 +62,7 @@ public class ClientModel implements ClientDetails {
 	@Getter
 	@Setter
 	@ElementCollection(fetch = FetchType.EAGER)
-	private List<String> clientRoles;
+	private Set<String> clientRoles;
 
 	@Setter
 	@ElementCollection(fetch = FetchType.EAGER)
@@ -116,7 +117,7 @@ public class ClientModel implements ClientDetails {
 
 	public void grantAuthority(String authority) {
 		if (this.clientRoles == null) {
-			this.clientRoles = new ArrayList<>();
+			this.clientRoles = new HashSet<>();
 		}
 		clientRoles.add(authority);
 	}
