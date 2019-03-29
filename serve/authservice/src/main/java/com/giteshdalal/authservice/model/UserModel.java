@@ -50,7 +50,7 @@ public class UserModel implements UserDetails {
 	@Setter
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "USER_ROLES", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "uid"),
-			inverseJoinColumns = @JoinColumn(name = "role_name", referencedColumnName = "name"))
+			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "uid"))
 	private Set<RoleModel> roles;
 
 	@Setter

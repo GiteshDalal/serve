@@ -1,7 +1,6 @@
 package com.giteshdalal.authservice.controller;
 
 import java.util.Locale;
-
 import javax.security.auth.login.AccountException;
 
 import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;

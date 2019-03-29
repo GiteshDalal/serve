@@ -9,7 +9,6 @@ import javax.security.auth.login.AccountException;
 
 import com.giteshdalal.authservice.OAuth2Properties;
 import com.giteshdalal.authservice.model.ClientModel;
-import com.giteshdalal.authservice.model.PrivilegeModel;
 import com.giteshdalal.authservice.model.RoleModel;
 import com.giteshdalal.authservice.model.UserModel;
 import com.giteshdalal.authservice.service.AuthorityService;
@@ -31,7 +30,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Slf4j
 public class AuthApplicationDataTest {
 
-	private static final String TEST_USERS = "user,admin,john,robert,ana";
+	private static final String TEST_USERS = "user,john,robert,ana";
 	private static final String DEFAULT_PASSWORD = "serve";
 	private static final String CLIENT_DEFAULT_PASSWORD = "serveclient";
 
@@ -104,7 +103,7 @@ public class AuthApplicationDataTest {
 	}
 
 	private UserModel createNewUser(String username) {
-		RoleModel userRole = getNewUserRoleModel();
+		RoleModel userRole = authorityService.getRoleByName(ROLE_USER).get();
 
 		UserModel acct = new UserModel();
 		acct.setUsername(username);
@@ -113,37 +112,15 @@ public class AuthApplicationDataTest {
 		acct.setLastName("testing");
 		acct.grantAuthority(userRole);
 		acct.setEmail(String.format(USER_EMAIL, username));
+		acct.setEnabled(true);
+		acct.setCredentialsNonExpired(true);
+		acct.setAccountNonLocked(true);
+		acct.setAccountNonExpired(true);
 		try {
 			userService.register(acct);
 		} catch (AccountException e) {
 			e.printStackTrace();
 		}
 		return acct;
-	}
-
-	private RoleModel getNewUserRoleModel() {
-		PrivilegeModel readPrivilege = new PrivilegeModel();
-		readPrivilege.setName("READ");
-		PrivilegeModel writePrivilege = new PrivilegeModel();
-		writePrivilege.setName("WRITE");
-		PrivilegeModel publishPrivilege = new PrivilegeModel();
-		publishPrivilege.setName("PUBLISH");
-		PrivilegeModel deletePrivilege = new PrivilegeModel();
-		deletePrivilege.setName("DELETE");
-
-		authorityService.savePrivilege(readPrivilege);
-		authorityService.savePrivilege(writePrivilege);
-		authorityService.savePrivilege(publishPrivilege);
-		authorityService.savePrivilege(deletePrivilege);
-
-		RoleModel userRole = new RoleModel();
-		userRole.setName(ROLE_USER);
-		userRole.addPrivilege(readPrivilege);
-		userRole.addPrivilege(writePrivilege);
-		userRole.addPrivilege(publishPrivilege);
-		userRole.addPrivilege(deletePrivilege);
-
-		authorityService.saveRole(userRole);
-		return userRole;
 	}
 }

@@ -37,19 +37,19 @@ public interface AuthorityService {
 
 	Page<PrivilegeResource> findAllPrivileges(Predicate predicate, Pageable pageable);
 
-	Optional<RoleResource> findRoleByName(String name);
+	Optional<RoleResource> findRoleById(Long uid);
 
-	Optional<PrivilegeResource> findPrivilegeByName(String name);
+	Optional<PrivilegeResource> findPrivilegeById(Long uid);
 
 	RoleResource saveRole(RoleResource resource);
 
 	PrivilegeResource savePrivilege(PrivilegeResource resource);
 
-	RoleResource updateRole(String name, RoleResource resource);
+	RoleResource updateRole(Long uid, RoleResource resource);
 
-	PrivilegeResource updatePrivilege(String name, PrivilegeResource resource);
+	PrivilegeResource updatePrivilege(Long uid, PrivilegeResource resource);
 
-	void deleteRoleByName(String name);
+	void deleteRoleById(Long uid);
 
-	void deletePrivilegeByName(String name);
+	void deletePrivilegeByUid(Long uid);
 }

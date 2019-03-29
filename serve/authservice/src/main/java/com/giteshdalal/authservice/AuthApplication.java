@@ -1,5 +1,6 @@
 package com.giteshdalal.authservice;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -8,6 +9,7 @@ import javax.security.auth.login.AccountException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
+import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;
 import com.giteshdalal.authservice.model.ClientModel;
 import com.giteshdalal.authservice.model.PrivilegeModel;
 import com.giteshdalal.authservice.model.RoleModel;
@@ -20,6 +22,7 @@ import com.giteshdalal.authservice.service.AuthorityService;
 import com.giteshdalal.authservice.service.ClientService;
 import com.giteshdalal.authservice.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.modelmapper.jackson.JsonNodeValueReader;
@@ -105,56 +108,54 @@ public class AuthApplication {
 	}
 
 	private void createAdminUser(UserService userService, AuthorityService authorityService) {
+		List<PrivilegeResource> privileges = new ArrayList<>();
 
-		PrivilegeModel readPrivilege = new PrivilegeModel();
+		PrivilegeResource readPrivilege = new PrivilegeResource();
 		readPrivilege.setName("READ");
-		PrivilegeModel writePrivilege = new PrivilegeModel();
+		PrivilegeResource writePrivilege = new PrivilegeResource();
 		writePrivilege.setName("WRITE");
-		PrivilegeModel publishPrivilege = new PrivilegeModel();
+		PrivilegeResource publishPrivilege = new PrivilegeResource();
 		publishPrivilege.setName("PUBLISH");
-		PrivilegeModel deletePrivilege = new PrivilegeModel();
+		PrivilegeResource deletePrivilege = new PrivilegeResource();
 		deletePrivilege.setName("DELETE");
 
-		authorityService.savePrivilege(readPrivilege);
-		authorityService.savePrivilege(writePrivilege);
-		authorityService.savePrivilege(publishPrivilege);
-		authorityService.savePrivilege(deletePrivilege);
+		privileges.add(authorityService.savePrivilege(readPrivilege));
+		privileges.add(authorityService.savePrivilege(writePrivilege));
+		privileges.add(authorityService.savePrivilege(publishPrivilege));
+		privileges.add(authorityService.savePrivilege(deletePrivilege));
 
-		RoleModel adminRole = new RoleModel();
+		RoleResource adminRole = new RoleResource();
 		adminRole.setName("ROLE_ADMIN");
+		adminRole = authorityService.saveRole(adminRole);
 
-		authorityService.saveRole(adminRole);
-
-		RoleModel employeeRole = new RoleModel();
+		RoleResource employeeRole = new RoleResource();
 		employeeRole.setName("ROLE_EMPLOYEE");
-		employeeRole.addPrivilege(readPrivilege);
-		employeeRole.addPrivilege(writePrivilege);
-		employeeRole.addPrivilege(publishPrivilege);
-		employeeRole.addPrivilege(deletePrivilege);
+		employeeRole.setPrivileges(privileges);
+		employeeRole = authorityService.saveRole(employeeRole);
 
-		authorityService.saveRole(employeeRole);
-
-		RoleModel userRole = new RoleModel();
+		RoleResource userRole = new RoleResource();
 		userRole.setName("ROLE_USER");
-		userRole.addPrivilege(readPrivilege);
-		userRole.addPrivilege(writePrivilege);
-		userRole.addPrivilege(publishPrivilege);
-		userRole.addPrivilege(deletePrivilege);
+		userRole.setPrivileges(privileges);
+		userRole = authorityService.saveRole(userRole);
 
-		authorityService.saveRole(userRole);
-
-		UserModel acct = new UserModel();
-		acct.grantAuthority(adminRole);
-		acct.grantAuthority(employeeRole);
-		acct.grantAuthority(userRole);
-
+		UserResource acct = new UserResource();
+		List<RoleResource> userRoles = new ArrayList<>();
+		userRoles.add(adminRole);
+		userRoles.add(employeeRole);
+		userRoles.add(userRole);
+		acct.setRoles(userRoles);
 		acct.setUsername(ADMIN);
 		acct.setPassword(adminPassword);
 		acct.setFirstName(ADMIN);
 		acct.setLastName("");
 		acct.setEmail(ADMIN_EMAIL);
+		acct.setEnabled(true);
+		acct.setCredentialsNonExpired(true);
+		acct.setAccountNonLocked(true);
+		acct.setAccountNonExpired(true);
+
 		try {
-			userService.register(acct);
+			userService.saveUser(acct);
 		} catch (AccountException e) {
 			e.printStackTrace();
 		}
@@ -180,7 +181,8 @@ public class AuthApplication {
 		TypeMap<RoleModel, RoleResource> roleTypeMap = mapper.createTypeMap(RoleModel.class, RoleResource.class);
 		roleTypeMap.addMappings(m -> m.skip(RoleResource::setUsers));
 
-		TypeMap<PrivilegeModel, PrivilegeResource> privilegeTypeMap = mapper.createTypeMap(PrivilegeModel.class, PrivilegeResource.class);
+		TypeMap<PrivilegeModel, PrivilegeResource> privilegeTypeMap = mapper
+				.createTypeMap(PrivilegeModel.class, PrivilegeResource.class);
 		privilegeTypeMap.addMappings(m -> m.skip(PrivilegeResource::setRoles));
 	}
 }

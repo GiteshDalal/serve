@@ -42,9 +42,9 @@ public class PrivilegeController {
 
 	@GetMapping("/{uid}")
 	@PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE:READ')")
-	public HttpEntity<PrivilegeResource> getById(@PathVariable("uid") String name, Locale locale) {
-		PrivilegeResource resource = authorityService.findPrivilegeByName(name)
-				.orElseThrow(() -> new NotFoundAuthServiceException("Privilege with name : '" + name + "' not found!"));
+	public HttpEntity<PrivilegeResource> getById(@PathVariable("uid") Long uid, Locale locale) {
+		PrivilegeResource resource = authorityService.findPrivilegeById(uid)
+				.orElseThrow(() -> new NotFoundAuthServiceException("Privilege with id : '" + uid + "' not found!"));
 		return new ResponseEntity<>(resource, HttpStatus.OK);
 	}
 
@@ -67,16 +67,16 @@ public class PrivilegeController {
 
 	@PutMapping(value = "/{uid}", consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE:WRITE')")
-	public HttpEntity<PrivilegeResource> overwrite(@PathVariable("uid") String name, @RequestBody PrivilegeResource resource,
+	public HttpEntity<PrivilegeResource> overwrite(@PathVariable("uid") Long uid, @RequestBody PrivilegeResource resource,
 			Locale locale) {
-		PrivilegeResource updated = authorityService.updatePrivilege(name, resource);
+		PrivilegeResource updated = authorityService.updatePrivilege(uid, resource);
 		return new ResponseEntity<>(updated, HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/{uid}")
 	@PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE:DELETE')")
-	public HttpEntity<?> overwrite(@PathVariable("uid") String name, Locale locale) {
-		authorityService.deletePrivilegeByName(name);
+	public HttpEntity<?> overwrite(@PathVariable("uid") Long uid, Locale locale) {
+		authorityService.deletePrivilegeByUid(uid);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }

@@ -9,6 +9,7 @@ import lombok.Data;
  */
 @Data
 public class RoleResource {
+	private Long uid;
 	private String name;
 	private List<PrivilegeResource> privileges;
 	private List<UserResource> users;

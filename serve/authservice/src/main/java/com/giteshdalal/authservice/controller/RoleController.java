@@ -42,9 +42,9 @@ public class RoleController {
 
 	@GetMapping("/{uid}")
 	@PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE:READ')")
-	public HttpEntity<RoleResource> getById(@PathVariable("uid") String name, Locale locale) {
-		RoleResource resource = authorityService.findRoleByName(name)
-				.orElseThrow(() -> new NotFoundAuthServiceException("Role with name : '" + name + "' not found!"));
+	public HttpEntity<RoleResource> getById(@PathVariable("uid") Long uid, Locale locale) {
+		RoleResource resource = authorityService.findRoleById(uid)
+				.orElseThrow(() -> new NotFoundAuthServiceException("Role with id : '" + uid + "' not found!"));
 		return new ResponseEntity<>(resource, HttpStatus.OK);
 	}
 
@@ -67,15 +67,15 @@ public class RoleController {
 
 	@PutMapping(value = "/{uid}", consumes = { MediaType.APPLICATION_JSON_VALUE })
 	@PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE:WRITE')")
-	public HttpEntity<RoleResource> overwrite(@PathVariable("uid") String name, @RequestBody RoleResource resource, Locale locale) {
-		RoleResource updated = authorityService.updateRole(name, resource);
+	public HttpEntity<RoleResource> overwrite(@PathVariable("uid") Long uid, @RequestBody RoleResource resource, Locale locale) {
+		RoleResource updated = authorityService.updateRole(uid, resource);
 		return new ResponseEntity<>(updated, HttpStatus.CREATED);
 	}
 
 	@DeleteMapping("/{uid}")
 	@PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE:DELETE')")
-	public HttpEntity<?> overwrite(@PathVariable("uid") String name, Locale locale) {
-		authorityService.deleteRoleByName(name);
+	public HttpEntity<?> overwrite(@PathVariable("uid") Long uid, Locale locale) {
+		authorityService.deleteRoleById(uid);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 	}
 }
