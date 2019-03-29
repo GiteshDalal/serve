@@ -3,11 +3,17 @@ package com.giteshdalal.authservice.service.impl;
 import java.util.Optional;
 import javax.security.auth.login.AccountException;
 
+import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;
 import com.giteshdalal.authservice.model.UserModel;
 import com.giteshdalal.authservice.repository.UserRepository;
+import com.giteshdalal.authservice.resource.UserResource;
 import com.giteshdalal.authservice.service.UserService;
+import com.querydsl.core.types.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -20,6 +26,9 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service("userService")
 public class UserServiceImpl implements UserService {
+
+	@Autowired
+	protected ModelMapper mapper;
 
 	@Autowired
 	private UserRepository userRepo;
@@ -55,10 +64,6 @@ public class UserServiceImpl implements UserService {
 					String.format("Email [%s] is already associated with another account.", user.getEmail()));
 		} else {
 			user.setPassword(passwordEncoder.encode(user.getPassword()));
-			user.setAccountNonExpired(true);
-			user.setAccountNonLocked(true);
-			user.setCredentialsNonExpired(true);
-			user.setEnabled(true);
 			return userRepo.save(user);
 		}
 	}
@@ -95,4 +100,48 @@ public class UserServiceImpl implements UserService {
 		userRepo.delete(user);
 	}
 
+	@Override
+	public Optional findUserById(Long uid) {
+		Optional<UserModel> entity = userRepo.findById(uid);
+		return entity.isPresent() ? Optional.ofNullable(mapUser(entity.get())) : Optional.empty();
+	}
+
+	@Override
+	public Page<UserResource> findAllUsers(Predicate predicate, Pageable pageable) {
+		Page<UserModel> users = userRepo.findAll(predicate, pageable);
+		return users.map(model -> mapUser(model));
+	}
+
+	@Override
+	public UserResource saveUser(UserResource resource) throws AccountException {
+		resource.setUid(null);
+		UserModel entity = mapper.map(resource, UserModel.class);
+		return mapUser(register(entity));
+	}
+
+	@Override
+	public UserResource updateUser(Long uid, UserResource resource) {
+		Optional<UserModel> user = userRepo.findById(uid);
+		if (user.isPresent()) {
+			UserModel entity = mapper.map(resource, UserModel.class);
+			entity.setUid(user.get().getUid());
+			entity.setPassword(user.get().getPassword());
+			return mapUser(userRepo.save(entity));
+		}
+		throw new NotFoundAuthServiceException("User with uid : '" + resource.getUid() + "' not found!");
+	}
+
+	@Override
+	public void deleteUserById(Long uid) {
+		Optional<UserModel> user = userRepo.findById(uid);
+		if (user.isPresent()) {
+			userRepo.delete(user.get());
+			return;
+		}
+		throw new NotFoundAuthServiceException("User with uid : '" + uid + "' not found!");
+	}
+
+	private UserResource mapUser(UserModel userModel) {
+		return mapper.map(userModel, UserResource.class);
+	}
 }

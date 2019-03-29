@@ -16,7 +16,7 @@ import org.springframework.web.util.HtmlUtils;
  */
 @Controller
 @SessionAttributes("authorizationRequest")
-public class OAuthContoller {
+public class OAuthController {
 
 	@RequestMapping("/oauth/confirm_access")
 	public ModelAndView getAccessConfirmation(Map<String, Object> model, HttpServletRequest request) {
@@ -33,7 +33,7 @@ public class OAuthContoller {
 
 	@RequestMapping("/oauth/error")
 	public ModelAndView handleError(HttpServletRequest request) {
-		Map<String, Object> model = new HashMap<String, Object>();
+		Map<String, Object> model = new HashMap<>();
 		Object error = request.getAttribute("error");
 		// The error summary may contain malicious user input,
 		// it needs to be escaped to prevent XSS

@@ -2,13 +2,20 @@ package com.giteshdalal.authservice.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;
 import com.giteshdalal.authservice.model.ClientModel;
 import com.giteshdalal.authservice.repository.ClientRepository;
+import com.giteshdalal.authservice.resource.ClientResource;
 import com.giteshdalal.authservice.service.ClientService;
+import com.querydsl.core.types.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -23,6 +30,9 @@ import org.springframework.stereotype.Service;
 public class ClientServiceImpl implements ClientService {
 
 	@Autowired
+	protected ModelMapper mapper;
+
+	@Autowired
 	private ClientRepository clientRepo;
 
 	@Autowired
@@ -33,9 +43,8 @@ public class ClientServiceImpl implements ClientService {
 		Optional<ClientModel> client = clientRepo.findOptionalByClientId(clientId);
 		if (client.isPresent()) {
 			return client.get();
-		} else {
-			throw new ClientRegistrationException(String.format("Client with id [%s] not found", clientId));
 		}
+		throw new ClientRegistrationException(String.format("Client with id [%s] not found", clientId));
 	}
 
 	@Override
@@ -43,9 +52,8 @@ public class ClientServiceImpl implements ClientService {
 		Optional<ClientModel> client = clientRepo.findOptionalByClientId(clientId);
 		if (client.isPresent()) {
 			return client.get();
-		} else {
-			throw new NoSuchClientException(String.format("Client with id [%s] not found", clientId));
 		}
+		throw new NoSuchClientException(String.format("Client with id [%s] not found", clientId));
 	}
 
 	@Override
@@ -77,24 +85,30 @@ public class ClientServiceImpl implements ClientService {
 	public void addClientDetails(ClientDetails clientDetails) throws ClientAlreadyExistsException {
 		if (clientDetails instanceof ClientModel) {
 			this.register((ClientModel) clientDetails);
-		} else {
-			throw new IllegalArgumentException("Unexpected type of ClientDetails object received");
+			return;
 		}
+		throw new IllegalArgumentException("Unexpected type of ClientDetails object received");
 	}
 
 	@Override
 	public void updateClientDetails(ClientDetails clientDetails) throws NoSuchClientException {
 		if (clientDetails instanceof ClientModel) {
 			this.update((ClientModel) clientDetails);
-		} else {
-			throw new IllegalArgumentException("Unexpected type of ClientDetails object received");
+			return;
 		}
+		throw new IllegalArgumentException("Unexpected type of ClientDetails object received");
 	}
 
 	@Override
-	public void update(ClientModel clientDetails) throws NoSuchClientException {
-		// TODO Auto-generated method stub
+	public ClientModel update(ClientModel entity) throws NoSuchClientException {
+		Objects.requireNonNull(entity, "ClientDetails object must not be null");
 
+		Optional<ClientModel> client = clientRepo.findById(entity.getUid());
+		if (client.isPresent()) {
+			entity.setClientSecret(client.get().getClientSecret());
+			return clientRepo.save(entity);
+		}
+		throw new NotFoundAuthServiceException("Client with uid : '" + entity.getUid() + "' not found!");
 	}
 
 	@Override
@@ -104,10 +118,9 @@ public class ClientServiceImpl implements ClientService {
 			ClientModel clientModel = client.get();
 			clientModel.setClientSecret(passwordEncoder.encode(secret));
 			clientRepo.save(clientModel);
-		} else {
-			throw new NoSuchClientException(String.format("Client with id [%s] not found", clientId));
+			return;
 		}
-
+		throw new NoSuchClientException(String.format("Client with id [%s] not found", clientId));
 	}
 
 	@Override
@@ -119,6 +132,46 @@ public class ClientServiceImpl implements ClientService {
 	@Override
 	public List<ClientDetails> listClientDetails() {
 		return new ArrayList<>(clientRepo.findAll());
+	}
+
+	@Override
+	public Optional findClientById(Long uid) {
+		Optional<ClientModel> entity = clientRepo.findById(uid);
+		return entity.isPresent() ? Optional.ofNullable(mapClient(entity.get())) : Optional.empty();
+	}
+
+	@Override
+	public Page<ClientResource> findAllClients(Predicate predicate, Pageable pageable) {
+		Page<ClientModel> clients = clientRepo.findAll(predicate, pageable);
+		return clients.map(model -> mapClient(model));
+	}
+
+	@Override
+	public ClientResource saveClient(ClientResource resource) {
+		resource.setUid(null);
+		ClientModel entity = mapper.map(resource, ClientModel.class);
+		return mapClient(register(entity));
+	}
+
+	@Override
+	public ClientResource updateClient(Long uid, ClientResource resource) {
+		ClientModel entity = mapper.map(resource, ClientModel.class);
+		entity.setUid(uid);
+		return mapClient(update(entity));
+	}
+
+	@Override
+	public void deleteClientById(Long uid) {
+		Optional<ClientModel> client = clientRepo.findById(uid);
+		if (client.isPresent()) {
+			clientRepo.delete(client.get());
+			return;
+		}
+		throw new NotFoundAuthServiceException("Client with uid : '" + uid + "' not found!");
+	}
+
+	private ClientResource mapClient(ClientModel clientModel) {
+		return mapper.map(clientModel, ClientResource.class);
 	}
 
 }

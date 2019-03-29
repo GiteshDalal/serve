@@ -9,7 +9,6 @@ import javax.security.auth.login.AccountException;
 
 import com.giteshdalal.authservice.OAuth2Properties;
 import com.giteshdalal.authservice.model.ClientModel;
-import com.giteshdalal.authservice.model.PrivilegeModel;
 import com.giteshdalal.authservice.model.RoleModel;
 import com.giteshdalal.authservice.model.UserModel;
 import com.giteshdalal.authservice.service.AuthorityService;
@@ -31,7 +30,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @Slf4j
 public class AuthApplicationDataTest {
 
-	private static final String TEST_USERS = "user,admin,john,robert,ana";
+	private static final String TEST_USERS = "user,john,robert,ana";
 	private static final String DEFAULT_PASSWORD = "serve";
 	private static final String CLIENT_DEFAULT_PASSWORD = "serveclient";
 
@@ -39,7 +38,6 @@ public class AuthApplicationDataTest {
 	private static final String ROLE_USER = "ROLE_USER";
 	private static final String ROLE_TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
 	private static final List<String> CLIENT_SCOPES = Arrays.asList("publish", "read", "write");
-	private static final List<String> CLIENT_ADMIN_SCOPE =  Arrays.asList("CLIENT_ADMIN");
 	private static final List<String> CLIENT_GRANTS = Arrays.asList("authorization_code", "client_credentials", "refresh_token");
 	private static final List<String> CLIENT_REDIRECT_URIS = Collections.singletonList("http://localhost:1234/api");
 	private static final String CLIENT_EMAIL = "client.%s@giteshdalal.com";
@@ -89,12 +87,6 @@ public class AuthApplicationDataTest {
 		client.setAuthorizedGrantTypes(new HashSet<>(CLIENT_GRANTS));
 		client.setRegisteredRedirectUri(new HashSet<>(CLIENT_REDIRECT_URIS));
 
-		// For client_admin
-		if (client.getClientId().equals("client_admin")) {
-			client.getAuthorizedGrantTypes().add("password");
-			client.setScopes(new HashSet<>(CLIENT_ADMIN_SCOPE));
-		}
-
 		// For client_new
 		if (client.getClientId().equals("client_new")) {
 			client.getAuthorizedGrantTypes().add("password");
@@ -111,57 +103,24 @@ public class AuthApplicationDataTest {
 	}
 
 	private UserModel createNewUser(String username) {
-		RoleModel userRole = getNewUserRoleModel();
+		RoleModel userRole = authorityService.getRoleByName(ROLE_USER).get();
 
 		UserModel acct = new UserModel();
 		acct.setUsername(username);
-		if (username.equals("admin")) {
-			acct.grantAuthority(getNewAdminRoleModel());
-		}
 		acct.setPassword(DEFAULT_PASSWORD);
 		acct.setFirstName(username);
 		acct.setLastName("testing");
 		acct.grantAuthority(userRole);
 		acct.setEmail(String.format(USER_EMAIL, username));
+		acct.setEnabled(true);
+		acct.setCredentialsNonExpired(true);
+		acct.setAccountNonLocked(true);
+		acct.setAccountNonExpired(true);
 		try {
 			userService.register(acct);
 		} catch (AccountException e) {
 			e.printStackTrace();
 		}
 		return acct;
-	}
-
-	private RoleModel getNewAdminRoleModel() {
-		RoleModel adminRole = new RoleModel();
-		adminRole.setName(ROLE_ADMIN);
-
-		authorityService.saveRole(adminRole);
-		return adminRole;
-	}
-
-	private RoleModel getNewUserRoleModel() {
-		PrivilegeModel readPrivilege = new PrivilegeModel();
-		readPrivilege.setName("READ");
-		PrivilegeModel writePrivilege = new PrivilegeModel();
-		writePrivilege.setName("WRITE");
-		PrivilegeModel publishPrivilege = new PrivilegeModel();
-		publishPrivilege.setName("PUBLISH");
-		PrivilegeModel deletePrivilege = new PrivilegeModel();
-		deletePrivilege.setName("DELETE");
-
-		authorityService.savePrilivege(readPrivilege);
-		authorityService.savePrilivege(writePrivilege);
-		authorityService.savePrilivege(publishPrivilege);
-		authorityService.savePrilivege(deletePrivilege);
-
-		RoleModel userRole = new RoleModel();
-		userRole.setName(ROLE_USER);
-		userRole.addPrivilege(readPrivilege);
-		userRole.addPrivilege(writePrivilege);
-		userRole.addPrivilege(publishPrivilege);
-		userRole.addPrivilege(deletePrivilege);
-
-		authorityService.saveRole(userRole);
-		return userRole;
 	}
 }
