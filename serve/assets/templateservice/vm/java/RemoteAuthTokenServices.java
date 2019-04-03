@@ -1,13 +1,13 @@
 package ${service.group.toLowerCase()};
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
 import java.util.Objects;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -30,25 +30,30 @@ import org.springframework.web.client.RestTemplate;
 /**
  * @author Serve Engine
  */
+@Slf4j
 public class RemoteAuthTokenServices implements ResourceServerTokenServices {
 
-	protected final Log logger = LogFactory.getLog(getClass());
-
+	@Setter
 	private RestOperations restTemplate;
 
+	@Setter
 	private String checkTokenEndpointUrl;
 
+	@Setter
 	private String clientId;
 
+	@Setter
 	private String clientSecret;
 
+	@Setter
 	private String tokenName = "token";
 
+	@Setter
 	private AccessTokenConverter tokenConverter = new DefaultAccessTokenConverter();
 
 	public RemoteAuthTokenServices() {
-		restTemplate = new RestTemplate();
-		((RestTemplate) restTemplate).setErrorHandler(new DefaultResponseErrorHandler() {
+		RestTemplate restTemplate = new RestTemplate();
+		restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
 			@Override
 			// Ignore 400
 			public void handleError(ClientHttpResponse response) throws IOException {
@@ -57,48 +62,26 @@ public class RemoteAuthTokenServices implements ResourceServerTokenServices {
 				}
 			}
 		});
-	}
 
-	public void setRestTemplate(RestOperations restTemplate) {
-		this.restTemplate = restTemplate;
-	}
-
-	public void setCheckTokenEndpointUrl(String checkTokenEndpointUrl) {
-		this.checkTokenEndpointUrl = checkTokenEndpointUrl;
-	}
-
-	public void setClientId(String clientId) {
-		this.clientId = clientId;
-	}
-
-	public void setClientSecret(String clientSecret) {
-		this.clientSecret = clientSecret;
-	}
-
-	public void setAccessTokenConverter(AccessTokenConverter accessTokenConverter) {
-		this.tokenConverter = accessTokenConverter;
-	}
-
-	public void setTokenName(String tokenName) {
-		this.tokenName = tokenName;
+		this.setRestTemplate(restTemplate);
 	}
 
 	@Override
 	public OAuth2Authentication loadAuthentication(String accessToken) throws AuthenticationException, InvalidTokenException {
 
-		MultiValueMap<String, String> formData = new LinkedMultiValueMap<String, String>();
+		MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
 		formData.add(tokenName, accessToken);
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", getAuthorizationHeader(clientId, clientSecret));
 		Map<String, Object> map = postForMap(checkTokenEndpointUrl, formData, headers);
 
 		if (map.containsKey("error")) {
-			logger.debug("check_token returned error: " + map);
+			log.debug("check_token returned error: " + map);
 			throw new InvalidTokenException(String.valueOf(map.get("error_description")));
 		}
 
 		if (!Boolean.TRUE.toString().equalsIgnoreCase(map.get("active").toString())) {
-			logger.debug("check_token returned active attribute: " + map);
+			log.debug("check_token returned active attribute: " + map);
 			throw new InvalidTokenException("User account not enabled");
 		}
 
@@ -113,15 +96,11 @@ public class RemoteAuthTokenServices implements ResourceServerTokenServices {
 	private String getAuthorizationHeader(String clientId, String clientSecret) {
 
 		if (clientId == null || clientSecret == null) {
-			logger.warn("Null Client ID or Client Secret detected. Endpoint that requires authentication will reject request with 401 error.");
+			log.warn("Null Client ID or Client Secret detected. Endpoint that requires authentication will reject request with 401 error.");
 		}
 
-		String creds = String.format("%s:%s", clientId, clientSecret);
-		try {
-			return "Basic " + new String(Base64.getEncoder().encode(creds.getBytes("UTF-8")));
-		} catch (UnsupportedEncodingException e) {
-			throw new IllegalStateException("Could not convert String");
-		}
+		String credentials = String.format("%s:%s", clientId, clientSecret);
+		return "Basic " + new String(Base64.getEncoder().encode(credentials.getBytes(StandardCharsets.UTF_8)));
 	}
 
 	private Map<String, Object> postForMap(String path, MultiValueMap<String, String> formData, HttpHeaders headers) {

@@ -26,6 +26,16 @@ public class ${service.name.substring(0,1).toUpperCase()}${service.name.substrin
 	public ModelMapper modelMapperInstance() {
 		ModelMapper modelMapper = new ModelMapper();
 		modelMapper.getConfiguration().addValueReader(new JsonNodeValueReader());
+		configTypeMaps(modelMapper);
 		return modelMapper;
+	}
+
+	/**
+	 * This method is used to configure type maps for mapper.
+	 *
+	 * @param mapper
+	 */
+	private void configTypeMaps(ModelMapper mapper) {
+		// TODO: Configure type maps over here if needed
 	}
 }
