@@ -1,4 +1,4 @@
-package ${service.group.toLowerCase()}.${service.name.toLowerCase()}service.repository;
+package ${service.group.toLowerCase()}.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;

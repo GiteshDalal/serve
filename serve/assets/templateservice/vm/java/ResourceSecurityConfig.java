@@ -1,4 +1,4 @@
-package ${service.group.toLowerCase()}.${service.name.toLowerCase()}service;
+package ${service.group.toLowerCase()};
 
 import java.util.List;
 import java.util.Random;
@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Serve Engine
- * 
  */
 @Slf4j
 @Configuration

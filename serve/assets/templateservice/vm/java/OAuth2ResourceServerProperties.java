@@ -1,4 +1,4 @@
-package ${service.group.toLowerCase()}.${service.name.toLowerCase()}service;
+package ${service.group.toLowerCase()};
 
 import javax.validation.constraints.NotEmpty;
 
@@ -10,7 +10,6 @@ import lombok.Data;
 
 /**
  * @author Serve Engine
- * 
  */
 @Data
 @Component

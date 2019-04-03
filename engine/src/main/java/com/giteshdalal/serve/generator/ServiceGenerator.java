@@ -45,14 +45,14 @@ public class ServiceGenerator {
 			EnginePluginUtil.appendToFile(project.file("settings.gradle"), text);
 
 		} else {
-			throw new GradleException("[SERVE][ERROR] service with name '" + service.getName() + "' alreay exists");
+			throw new GradleException("[SERVE][ERROR] service with name '" + service.getName() + "' already exists");
 		}
 	}
 
 	private void copyTemplateFiles(ServiceDescriptor service, Project project) {
 		File templateDir = project.file(EnginePluginConstants.SERVICE_COPY_TEMPLATES);
 		File copyToDir = project
-				.file(service.getName().toLowerCase() + "service" + File.separator + EnginePluginConstants.RESOURCES);
+				.file(service.getName().toLowerCase() + "service" + File.separator + EnginePluginConstants.TEMPLATES);
 		try {
 			FileUtils.copyDirectory(templateDir, copyToDir);
 		} catch (IOException e) {
@@ -85,18 +85,18 @@ public class ServiceGenerator {
 		final String path = service.getName().toLowerCase() + "service" + File.separator
 				+ EnginePluginConstants.RESOURCES;
 		final File resourceLoaderDirectory = project.file(EnginePluginConstants.SERVICE_RESOURCES_VM);
-		final String teamplateParentPath = "resources" + File.separator;
+		final String templateParentPath = "resources" + File.separator;
 
-		EnginePluginUtil.writeFiles(resourceLoaderDirectory, teamplateParentPath, context, path, StringUtils.EMPTY,
+		EnginePluginUtil.writeFiles(resourceLoaderDirectory, templateParentPath, context, path, StringUtils.EMPTY,
 				EnginePluginConstants.SERVICE_REGEX, StringUtils.capitalize(service.getName()));
 	}
 
 	private void generateJavaFiles(ServiceDescriptor service, Project project, VelocityContext context) {
 		final String path = service.getName().toLowerCase() + "service" + File.separator + EnginePluginConstants.JAVA;
 		final File resourceLoaderDirectory = project.file(EnginePluginConstants.SERVICE_JAVA_VM);
-		final String teamplateParentPath = "java" + File.separator;
+		final String templateParentPath = "java" + File.separator;
 
-		EnginePluginUtil.writeFiles(resourceLoaderDirectory, teamplateParentPath, context, path,
+		EnginePluginUtil.writeFiles(resourceLoaderDirectory, templateParentPath, context, path,
 				service.getGroup().toLowerCase(), EnginePluginConstants.SERVICE_REGEX,
 				StringUtils.capitalize(service.getName()));
 	}

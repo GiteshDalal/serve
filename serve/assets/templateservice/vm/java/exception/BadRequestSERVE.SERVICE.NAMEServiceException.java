@@ -1,11 +1,10 @@
-package ${service.group.toLowerCase()}.${service.name.toLowerCase()}service.exception;
+package ${service.group.toLowerCase()}.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * @author gitesh
- *
+ * @author Serve Engine
  */
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BadRequest${service.name.substring(0,1).toUpperCase()}${service.name.substring(1)}ServiceException extends RuntimeException {

@@ -1,10 +1,10 @@
-package ${service.group.toLowerCase()}.${service.name.toLowerCase()}service.exception;
+package ${service.group.toLowerCase()};
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * @author gitesh
+ * @author Serve Engine
  *
  */
 @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
