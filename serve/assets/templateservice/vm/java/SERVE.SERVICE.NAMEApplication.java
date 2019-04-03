@@ -1,4 +1,4 @@
-package ${service.group.toLowerCase()}.${service.name.toLowerCase()}service;
+package ${service.group.toLowerCase()};
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.jackson.JsonNodeValueReader;
@@ -7,16 +7,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.util.Map;
 
 /**
  * @author Serve Engine
- * 
  */
 @SpringBootApplication
 @EnableDiscoveryClient

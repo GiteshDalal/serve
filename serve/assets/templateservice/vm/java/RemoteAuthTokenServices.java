@@ -1,4 +1,4 @@
-package ${service.group.toLowerCase()}.${service.name.toLowerCase()}service;
+package ${service.group.toLowerCase()};
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -29,7 +29,6 @@ import org.springframework.web.client.RestTemplate;
 
 /**
  * @author Serve Engine
- * 
  */
 public class RemoteAuthTokenServices implements ResourceServerTokenServices {
 

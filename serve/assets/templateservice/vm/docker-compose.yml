@@ -1,6 +1,6 @@
   ${service.name.toLowerCase()}:
     image: serve_${service.name.toLowerCase()}
-    build: 
+    build:
       context: .
       dockerfile: ./${service.name.toLowerCase()}service/Dockerfile
     container_name: serve_container_${service.name.toLowerCase()}
@@ -10,4 +10,4 @@
     depends_on:
       - auth
     ports:
-    - "${service.port}:${service.port}"
+      - "${service.port}:${service.port}"

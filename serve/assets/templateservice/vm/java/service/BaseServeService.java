@@ -1,4 +1,4 @@
-package ${service.group.toLowerCase()}.${service.name.toLowerCase()}service.service;
+package ${service.group.toLowerCase()}.service;
 
 import java.util.Optional;
 

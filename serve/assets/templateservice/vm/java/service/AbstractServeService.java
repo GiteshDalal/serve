@@ -1,11 +1,11 @@
-package ${service.group.toLowerCase()}.${service.name.toLowerCase()}service.service;
+package ${service.group.toLowerCase()}.service;
 
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import ${service.group.toLowerCase()}.${service.name.toLowerCase()}service.exception.NotFoundProductServiceException;
-import ${service.group.toLowerCase()}.${service.name.toLowerCase()}service.repository.BaseServeRepository;
+import ${service.group.toLowerCase()}.exception.NotFound${service.name.substring(0,1).toUpperCase()}${service.name.substring(1)}ServiceException;
+import ${service.group.toLowerCase()}.repository.BaseServeRepository;
 
 import com.querydsl.core.types.EntityPath;
 import com.querydsl.core.types.Predicate;
@@ -68,7 +68,7 @@ public abstract class AbstractServeService<T, QT extends EntityPath<?>, RT, ID, 
 			mapper.map(updates, entity);
 			repo.save(entity);
 		} else {
-			new NotFoundProductServiceException("Object with uid : '" + uid + "' not found!");
+			new NotFound${service.name.substring(0,1).toUpperCase()}${service.name.substring(1)}ServiceException("Object with uid : '" + uid + "' not found!");
 		}
 	}
 

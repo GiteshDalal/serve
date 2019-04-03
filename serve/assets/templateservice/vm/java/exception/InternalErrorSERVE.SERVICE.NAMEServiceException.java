@@ -1,11 +1,10 @@
-package ${service.group.toLowerCase()}.${service.name.toLowerCase()}service.exception;
+package ${service.group.toLowerCase()};
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  * @author gitesh
- *
  */
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class InternalError${service.name.substring(0,1).toUpperCase()}${service.name.substring(1)}ServiceException extends RuntimeException {

@@ -1,4 +1,4 @@
-package ${service.group.toLowerCase()}.${service.name.toLowerCase()}service.controller;
+package ${service.group.toLowerCase()}.controller;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -6,9 +6,9 @@ import java.util.Locale;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ${service.group.toLowerCase()}.${service.name.toLowerCase()}service.exception.BadRequestProductServiceException;
-import ${service.group.toLowerCase()}.${service.name.toLowerCase()}service.exception.NotFoundProductServiceException;
-import ${service.group.toLowerCase()}.${service.name.toLowerCase()}service.service.BaseServeService;
+import ${service.group.toLowerCase()}.exception.BadRequest${service.name.substring(0,1).toUpperCase()}${service.name.substring(1)}ServiceException;
+import ${service.group.toLowerCase()}.exception.NotFound${service.name.substring(0,1).toUpperCase()}${service.name.substring(1)}ServiceException;
+import ${service.group.toLowerCase()}.service.BaseServeService;
 
 import com.querydsl.core.types.Predicate;
 
@@ -47,7 +47,7 @@ public abstract class AbstractServeController<RT, ID, S extends BaseServeService
 	@GetMapping("/{uid}")
 	public HttpEntity<RT> getById(@PathVariable("uid") ID uid, Locale locale) {
 		RT resource = service.findByUid(uid)
-				.orElseThrow(() -> new NotFound${service.name.toLowerCase()}ServiceException("Object with uid : '" + uid + "' not found!"));
+				.orElseThrow(() -> new NotFound${service.name.substring(0,1).toUpperCase()}${service.name.substring(1)}ServiceException("Object with uid : '" + uid + "' not found!"));
 		return new ResponseEntity<>(resource, HttpStatus.OK);
 	}
 
@@ -95,7 +95,7 @@ public abstract class AbstractServeController<RT, ID, S extends BaseServeService
 		try {
 			jsonNode = new ObjectMapper().readTree(httpEntity.getBody());
 		} catch (IOException e) {
-			throw new BadRequest${service.name.toLowerCase()}ServiceException("Error translating request body: " + httpEntity.getBody(), e);
+			throw new BadRequest${service.name.substring(0,1).toUpperCase()}${service.name.substring(1)}ServiceException("Error translating request body: " + httpEntity.getBody(), e);
 		}
 		service.patch(uid, jsonNode);
 		return new ResponseEntity<>(HttpStatus.NO_CONTENT);

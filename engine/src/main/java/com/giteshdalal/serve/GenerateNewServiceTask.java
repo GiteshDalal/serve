@@ -18,18 +18,16 @@ public class GenerateNewServiceTask extends DefaultTask {
 		try (final Scanner scan = new Scanner(System.in)) {
 			System.err.println(EnginePluginConstants.SIGNATURE);
 			service.setName(askForName(scan));
-			service.setGroup(askForGroup(scan));
+			service.setGroup(String.format("%s.%sservice", askForGroup(scan), service.getName().toLowerCase()));
 			service.setPort(askForPort(scan));
+			final ServiceGenerator gen = new ServiceGenerator();
+			gen.generate(service, super.getProject());
 		}
-
-		final ServiceGenerator gen = new ServiceGenerator();
-		gen.generate(service, super.getProject());
-
 	}
 
 	private String askForName(Scanner scan) {
 		System.err.println("\n[SERVE]    Please enter the NAME for the new service");
-		System.err.println("[SERVE]    (witherr 'service' suffix, for example 'myNewProduct')");
+		System.err.println("[SERVE]    (without 'service' suffix, for example entering 'newProduct' will produce 'newProductService')");
 		final String name = scan.next();
 		System.err.println("\n[SERVE]    Input received: " + name);
 
