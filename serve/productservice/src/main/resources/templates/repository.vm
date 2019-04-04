@@ -10,13 +10,11 @@
 
 package $config.repositoryPackage;
 
+import ${config.group}.repository.BaseServeRepository;
 import org.springframework.stereotype.Repository;
-
-import com.giteshdalal.productservice.model.generated.*;
-import com.giteshdalal.productservice.repository.BaseServeRepository;
+import ${config.modelPackage}.*;
 
 @Repository
 @SuppressWarnings(value = { "unused" })
 public interface ${model.name}Repository extends BaseServeRepository<${model.name}Model, Q${model.name}Model, ${model.idType}> {
-	
 }

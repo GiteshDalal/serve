@@ -21,6 +21,8 @@ public interface BaseServeService<RT, ID> {
 	Optional<RT> findByUid(ID uid);
 
 	RT save(RT resource);
+
+	RT update(ID uid, RT resource);
 	
 	void patch(ID uid, JsonNode updates);
 

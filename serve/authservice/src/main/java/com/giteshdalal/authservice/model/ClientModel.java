@@ -68,9 +68,7 @@ public class ClientModel implements ClientDetails {
 	@ElementCollection(fetch = FetchType.EAGER)
 	private Set<String> resourceIds, scopes, autoApprovedScopes, authorizedGrantTypes, registeredRedirectUri;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	@MapKeyColumn(name = "name")
-	@Column(name = "value")
+	@ElementCollection(fetch = FetchType.EAGER) @MapKeyColumn(name = "name") @Column(name = "value")
 	@Setter
 	@CollectionTable(name = "additionalInformation", joinColumns = @JoinColumn(name = "additionalInformation_id"))
 	private Map<String, String> additionalInformation;

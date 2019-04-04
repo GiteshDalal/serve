@@ -28,6 +28,7 @@ public class ServiceGenerator {
 
 			final VelocityContext context = new VelocityContext();
 			context.put("service", service);
+			context.put("StringUtils", StringUtils.class);
 
 			this.generateResourceFiles(service, project, context);
 			this.generateJavaFiles(service, project, context);

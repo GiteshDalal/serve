@@ -6,10 +6,6 @@ import java.util.Map;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
-import com.giteshdalal.authservice.resource.ClientResource;
-import com.giteshdalal.authservice.resource.PrivilegeResource;
-import com.giteshdalal.authservice.resource.RoleResource;
-import com.giteshdalal.authservice.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,10 +29,6 @@ public class SchemaController {
 	@ResponseBody
 	Map<String, JsonSchema> getMetaInfo() throws JsonMappingException {
 		Map<String, JsonSchema> schemas = new HashMap<>();
-		schemas.put("/api/users", schemaGenerator.generateSchema(UserResource.class));
-		schemas.put("/api/roles", schemaGenerator.generateSchema(RoleResource.class));
-		schemas.put("/api/privileges", schemaGenerator.generateSchema(PrivilegeResource.class));
-		schemas.put("/api/clients", schemaGenerator.generateSchema(ClientResource.class));
 		return schemas;
 	}
 }

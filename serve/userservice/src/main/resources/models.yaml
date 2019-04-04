@@ -1,0 +1,182 @@
+configuration:
+  group: com.giteshdalal.userservice
+
+models:
+  #List of Models - Used to create Entity, Repository and Resource
+  #==================================
+  - name: Role
+    hasResource: true
+    hasRepo: true
+    attributes:
+      - name: uid
+        type: Long
+        annotations:
+          - Id
+          - TableGenerator(name = "roleSeqGen", table = "ID_GEN", pkColumnValue = "ROLE_ID", initialValue = 10)
+          - GeneratedValue(strategy = GenerationType.TABLE, generator = "roleSeqGen")
+
+      - name: name
+        type: String
+        annotations:
+          - Column(unique = true, nullable = false)
+
+      - name: users
+        type: List
+        related: User
+        annotations:
+          - ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+
+      - name: privileges
+        type: List
+        related: Privilege
+        annotations:
+          - ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+          - JoinTable(name = "ROLE_PRIVILEGES", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "uid"), inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "uid"))
+
+  #==================================
+  - name: Privilege
+    hasResource: true
+    hasRepo: true
+    attributes:
+      - name: uid
+        type: Long
+        annotations:
+          - Id
+          - TableGenerator(name = "privilegeSeqGen", table = "ID_GEN", pkColumnValue = "PRIVILEGE_ID")
+          - GeneratedValue(strategy = GenerationType.TABLE, generator = "privilegeSeqGen")
+
+      - name: name
+        type: String
+        annotations:
+          - Column(unique = true, nullable = false)
+
+      - name: roles
+        type: List
+        related: Role
+        annotations:
+          - ManyToMany(mappedBy = "privileges", fetch = FetchType.LAZY)
+
+  #==================================
+  - name: Client
+    hasResource: true
+    hasRepo: true
+    attributes:
+      - name: uid
+        type: Long
+        annotations:
+          - Id
+          - TableGenerator(name = "clientSeqGen", table = "ID_GEN", pkColumnValue = "CLIENT_ID", initialValue = 100)
+          - GeneratedValue(strategy = GenerationType.TABLE, generator = "clientSeqGen")
+
+      - name: clientId
+        type: String
+        annotations:
+          - Column(unique = true, nullable = false)
+
+      - name: clientSecret
+        type: String
+
+      - name: accessTokenValiditySeconds
+        type: Integer
+
+      - name: refreshTokenValiditySeconds
+        type: Integer
+
+      - name: seceretRequired
+        type: Boolean
+
+      - name: scopeRequired
+        type: Boolean
+
+      - name: email
+        type: String
+        annotations:
+          - Column(unique = true, nullable = false)
+
+      - name: clientRoles
+        type: Set<String>
+        annotations:
+          - ElementCollection(fetch = FetchType.EAGER)
+
+      - name: resourceIds
+        type: Set<String>
+        annotations:
+          - ElementCollection(fetch = FetchType.EAGER)
+
+      - name: scopes
+        type: Set<String>
+        annotations:
+          - ElementCollection(fetch = FetchType.EAGER)
+
+      - name: autoApprovedScopes
+        type: Set<String>
+        annotations:
+          - ElementCollection(fetch = FetchType.EAGER)
+
+      - name: authorizedGrantTypes
+        type: Set<String>
+        annotations:
+          - ElementCollection(fetch = FetchType.EAGER)
+
+      - name: registeredRedirectUri
+        type: Set<String>
+        annotations:
+          - ElementCollection(fetch = FetchType.EAGER)
+
+      - name: additionalInformation
+        type: Map<String, String>
+        annotations:
+          - ElementCollection(fetch = FetchType.EAGER) @MapKeyColumn(name = "name") @Column(name = "value")
+          - CollectionTable(name = "additionalInformation", joinColumns = @JoinColumn(name = "additionalInformation_id"))
+
+  #==================================
+  - name: User
+    hasResource: true
+    hasRepo: true
+    attributes:
+      - name: uid
+        type: Long
+        annotations:
+          - Id
+          - TableGenerator(name = "userSeqGen", table = "ID_GEN", pkColumnValue = "USER_ID", initialValue = 1000)
+          - GeneratedValue(strategy = GenerationType.TABLE, generator = "userSeqGen")
+
+      - name: email
+        type: String
+        annotations:
+          - Column(unique = true, nullable = false)
+
+      - name: username
+        type: String
+        annotations:
+          - Column(unique = true, nullable = false)
+
+      - name: password
+        type: String
+
+      - name: firstName
+        type: String
+
+      - name: lastName
+        type: String
+
+      - name: accountNonExpired
+        type: Boolean
+
+      - name: accountNonLocked
+        type: Boolean
+
+      - name: credentialsNonExpired
+        type: Boolean
+
+      - name: enabled
+        type: Boolean
+
+      - name: roles
+        type: Set
+        related: Role
+        annotations:
+          - ManyToMany(fetch = FetchType.EAGER)
+          - JoinTable(name = "USER_ROLES", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "uid"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "uid"))
+
+  #==================================

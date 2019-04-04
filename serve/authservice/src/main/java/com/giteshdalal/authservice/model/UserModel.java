@@ -30,11 +30,8 @@ public class UserModel implements UserDetails {
 	private static final long serialVersionUID = 101L;
 	public static final String NAME = "User";
 
-	@Id
-	@TableGenerator(name = "userSeqGen", table = "ID_GEN", pkColumnValue = "USER_ID", initialValue = 1000)
-	@GeneratedValue(strategy = GenerationType.TABLE, generator = "userSeqGen")
-	@Getter
-	@Setter
+	@Id @TableGenerator(name = "userSeqGen", table = "ID_GEN", pkColumnValue = "USER_ID", initialValue = 1000)
+	@GeneratedValue(strategy = GenerationType.TABLE, generator = "userSeqGen") @Getter @Setter
 	private Long uid;
 
 	@Getter

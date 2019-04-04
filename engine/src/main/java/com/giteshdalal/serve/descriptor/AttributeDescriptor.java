@@ -9,6 +9,7 @@ import java.util.List;
 public class AttributeDescriptor {
 	private String name;
 	private String type;
+	private String related;
 	private Boolean includeInResource = Boolean.TRUE;
 	private Boolean includeInModel = Boolean.TRUE;
 	private List<String> annotations;
@@ -53,4 +54,11 @@ public class AttributeDescriptor {
 		this.annotations = annotations;
 	}
 
+	public String getRelated() {
+		return related;
+	}
+
+	public void setRelated(String related) {
+		this.related = related;
+	}
 }

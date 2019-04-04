@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import com.giteshdalal.serve.EnginePluginConstants;
 import com.giteshdalal.serve.util.EnginePluginUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -37,6 +38,7 @@ public class RepositoryGenerator {
                 final VelocityContext context = new VelocityContext();
                 context.put("model", model);
                 context.put("config", configuration);
+                context.put("StringUtils", StringUtils.class);
 
                 final Template template = Velocity.getTemplate(EnginePluginConstants.REPOSITORY_TEMPLATE_FILE);
 

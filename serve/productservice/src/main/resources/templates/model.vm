@@ -36,7 +36,15 @@ public class ${model.name}Model #if( $model.parent )extends ${model.parent}Model
 #if($att.type == "Date")
 	@Temporal(TemporalType.TIMESTAMP)
 #end
+#if( $StringUtils.isNotBlank($att.related) )
+#if( $StringUtils.isNotBlank($att.type) )
+	private ${att.type}<${att.related}Model> $att.name;
+#else
+	private ${att.related}Model $att.name;
+#end
+#else
 	private $att.type $att.name;
+#end
 	
 #end
 #end

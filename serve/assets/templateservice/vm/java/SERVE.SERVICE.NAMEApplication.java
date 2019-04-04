@@ -1,5 +1,7 @@
 package ${service.group.toLowerCase()};
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.jackson.JsonNodeValueReader;
 import org.springframework.boot.SpringApplication;
@@ -20,6 +22,11 @@ public class ${service.name.substring(0,1).toUpperCase()}${service.name.substrin
 
 	public static void main(String[] args) {
 		SpringApplication.run(${service.name.substring(0,1).toUpperCase()}${service.name.substring(1)}Application.class, args);
+	}
+
+	@Bean
+	public JsonSchemaGenerator schemaGenerator() {
+		return new JsonSchemaGenerator(new ObjectMapper());
 	}
 
 	@Bean

@@ -90,6 +90,19 @@ services:
       - db
     ports:
       - "8090:8090"
+  user:
+    image: serve_user
+    build:
+      context: .
+      dockerfile: ./userservice/Dockerfile
+    container_name: serve_container_user
+    restart: on-failure
+    environment:
+      SPRING_PROFILES_ACTIVE: dev,docker
+    depends_on:
+      - auth
+    ports:
+      - "8091:8091"
   product:
     image: serve_product
     build:
@@ -102,4 +115,4 @@ services:
     depends_on:
       - auth
     ports:
-      - "8091:8091"
+      - "8092:8092"

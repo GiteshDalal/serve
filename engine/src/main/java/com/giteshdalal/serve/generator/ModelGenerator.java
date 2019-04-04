@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -36,6 +37,7 @@ public class ModelGenerator {
             final VelocityContext context = new VelocityContext();
             context.put("model", model);
             context.put("config", configuration);
+            context.put("StringUtils", StringUtils.class);
 
             final Template template = Velocity.getTemplate(EnginePluginConstants.MODEL_TEMPLATE_FILE);
 

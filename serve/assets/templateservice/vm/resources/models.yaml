@@ -1,5 +1,5 @@
 configuration:
-  group: ${service.group.toLowerCase()}.${service.name.toLowerCase()}service
+  group: ${service.group.toLowerCase()}
   
 models: 
 #List of Models - Used to create Entity, Repository and Resource

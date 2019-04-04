@@ -24,7 +24,15 @@ public class ${model.name}Resource extends#if( $model.parent ) ${model.parent}Re
 #if(!$att.includeInResource)
 	@JsonIgnore
 #end
-	private ${att.type} $att.name;
+#if( $StringUtils.isNotBlank($att.related) )
+#if( $StringUtils.isNotBlank($att.type) )
+	private ${att.type}<${att.related}Resource> $att.name;
+#else
+	private ${att.related}Resource $att.name;
+#end
+#else
+	private $att.type $att.name;
+#end
 #end
 
 }
