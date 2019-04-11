@@ -11,6 +11,7 @@ import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedResources;
 import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -73,6 +74,11 @@ public class PrivilegeController extends AbstractServeController<PrivilegeResour
 	@PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE:DELETE')")
 	public HttpEntity<?> delete(@PathVariable("uid") Long uid, Locale locale) {
 		return super.delete(uid, locale);
+	}
+
+	@Override
+	protected void supportHateoas(PrivilegeResource resource) {
+		resource.add(ControllerLinkBuilder.linkTo(getClass()).slash(resource.getUid()).withSelfRel());
 	}
 
 }
