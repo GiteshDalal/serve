@@ -1,12 +1,14 @@
 package com.giteshdalal.authservice.service.impl;
 
 import java.util.Optional;
+import java.util.UUID;
 import javax.security.auth.login.AccountException;
 
 import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;
 import com.giteshdalal.authservice.model.UserModel;
 import com.giteshdalal.authservice.repository.UserRepository;
 import com.giteshdalal.authservice.resource.UserResource;
+import com.giteshdalal.authservice.service.AuthorityService;
 import com.giteshdalal.authservice.service.UserService;
 import com.querydsl.core.types.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +33,9 @@ public class UserServiceImpl implements UserService {
 	protected ModelMapper mapper;
 
 	@Autowired
+	private AuthorityService authorityService;
+
+	@Autowired
 	private UserRepository userRepo;
 
 	@Autowired
@@ -51,6 +56,16 @@ public class UserServiceImpl implements UserService {
 		} else {
 			throw new UsernameNotFoundException(String.format("Username [%s] not found", username));
 		}
+	}
+
+	@Override
+	public UserModel register(String username, String email, String password) throws AccountException {
+		UserModel user = new UserModel();
+		user.setEmail(email);
+		user.setUsername(username);
+		user.setPassword(password);
+		user.grantAuthority(authorityService.getRoleByName("ROLE_USER").get());
+		return this.register(user);
 	}
 
 	@Override

@@ -22,6 +22,8 @@ public interface UserService extends UserDetailsService {
 
 	UserModel findUserByUsername(String username) throws UsernameNotFoundException;
 
+	UserModel register(String username, String email, String password) throws AccountException;
+
 	UserModel register(UserModel user) throws AccountException;
 
 	void changePassword(String oldPassword, String newPassword) throws AccountException;
