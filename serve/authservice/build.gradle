@@ -13,7 +13,6 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-hateoas')
     compile('org.springframework.boot:spring-boot-starter-thymeleaf')
     compile('org.springframework.boot:spring-boot-starter-web')
-    compile('org.springframework.boot:spring-boot-starter-mail')
     compile('org.apache.commons:commons-lang3')
     compile('org.apache.commons:commons-collections4:4.1')
     runtime('org.springframework.boot:spring-boot-devtools')

@@ -1,0 +1,6 @@
+[( ${title} )]
+
+[( ${message} )]
+
+Regards,
+    [( #{email.author} )]

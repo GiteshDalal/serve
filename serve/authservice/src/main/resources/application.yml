@@ -1,15 +1,8 @@
 ---
 spring:
   profiles: dev
-  jpa:
-    show-sql: true
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
   mail:
     properties:
       mail.smtp.auth: true
-      mail.smtp.socketFactory.port: 465
-      mail.smtp.socketFactory.class: javax.net.ssl.SSLSocketFactory
-      mail.smtp.socketFactory.fallback: false
+      mail.smtp.starttls.enable: true
+      mail.transport.protocol: smtp

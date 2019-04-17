@@ -42,7 +42,7 @@ subprojects {
             }
         }
     }
-    
+
     querydsl {
         jpa = true
         querydslSourcesDir = "$buildDir/generated-sources/apt"
@@ -72,7 +72,9 @@ subprojects {
         compile("com.querydsl:querydsl-jpa:$querydslVersion")
         compile("com.querydsl:querydsl-apt:$querydslVersion:jpa")
         compile("com.fasterxml.jackson.module:jackson-module-jsonSchema")
-        testCompile('org.springframework.boot:spring-boot-starter-test')
+        compile("org.springframework.boot:spring-boot-starter-mail")
+        compile("commons-io:commons-io:2.6")
+        testCompile("org.springframework.boot:spring-boot-starter-test")
     }
 
     dependencyManagement {

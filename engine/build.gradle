@@ -18,7 +18,7 @@ dependencies {
     includeJar('com.fasterxml.jackson.core:jackson-databind:2.9.5')
     includeJar('com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.9.5')
     includeJar('commons-io:commons-io:2.6')
-    includeJar('org.apache.velocity:velocity-engine-core:2.0')
+    includeJar('org.apache.velocity:velocity-engine-core:2.1')
     configurations.compile.extendsFrom(configurations.includeJar)
 }
 
