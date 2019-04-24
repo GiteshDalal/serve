@@ -20,6 +20,8 @@
                 <img class="logo-small" th:src="@{/assets/img/icon.png}" alt="Serve Logo"/>
             </div>
             <p th:text="${msg}"></p>
+            <a th:href="@{/dashboard}" href="dashboard.html" class="btn">Dashboard</a>
+            <a th:onclick="|window.history.back()|" onclick="window.history.back()" href="#" class="btn">Back</a>
         </section>
     </div>
 </div>

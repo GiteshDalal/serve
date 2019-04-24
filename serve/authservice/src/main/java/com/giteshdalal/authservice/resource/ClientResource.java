@@ -15,7 +15,6 @@ public class ClientResource {
 	private String clientId, clientSecret, email;
 	private Integer accessTokenValiditySeconds, refreshTokenValiditySeconds;
 	private boolean seceretRequired, scopeRequired;
-	private List<String> clientRoles;
-	private Set<String> resourceIds, scopes, autoApprovedScopes, authorizedGrantTypes, registeredRedirectUri;
+	private List<String> clientRoles, resourceIds, scopes, autoApprovedScopes, authorizedGrantTypes, registeredRedirectUri;
 	private Map<String, String> additionalInformation;
 }

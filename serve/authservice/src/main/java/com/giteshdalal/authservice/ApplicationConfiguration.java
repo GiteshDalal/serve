@@ -105,6 +105,9 @@ public class ApplicationConfiguration {
 	private void configTypeMaps(ModelMapper mapper) {
 		TypeMap<ClientModel, ClientResource> clientTypeMap = mapper.createTypeMap(ClientModel.class, ClientResource.class);
 		clientTypeMap.addMappings(m -> m.skip(ClientResource::setClientSecret));
+		clientTypeMap.addMapping(ClientModel::getScope, ClientResource::setScopes);
+		clientTypeMap.addMapping(ClientModel::isSecretRequired, ClientResource::setSeceretRequired);
+		clientTypeMap.addMapping(ClientModel::isScoped, ClientResource::setScopeRequired);
 
 		TypeMap<UserModel, UserResource> userTypeMap = mapper.createTypeMap(UserModel.class, UserResource.class);
 		userTypeMap.addMappings(m -> m.skip(UserResource::setPassword));

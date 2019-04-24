@@ -3,8 +3,10 @@ package com.giteshdalal.authservice;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import javax.security.auth.login.AccountException;
 
 import com.giteshdalal.authservice.model.ClientModel;
@@ -80,6 +82,10 @@ public class AuthApplication {
 		client.setScopes(new HashSet<>(CLIENT_ADMIN_SCOPE));
 		client.setSeceretRequired(true);
 		client.setEmail(ADMIN_EMAIL);
+		Map<String, String> info = new HashMap<>();
+		info.put("ROLE_TRUSTED_CLIENT","This is an important role for client");
+		info.put("client_admin","This client is always created on server startup");
+		client.setAdditionalInformation(info);
 		try {
 			clientService.register(client);
 		} catch (ClientRegistrationException e) {

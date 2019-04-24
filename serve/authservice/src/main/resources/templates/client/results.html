@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Gitesh Dalal">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serve - Client Management</title>
+    <link th:href="@{/assets/img/faviconv1.ico}" href="../../static/assets/img/faviconv1.ico" rel="icon" type="image/x-icon">
+    <link href="https://fonts.googleapis.com/css?family=Arvo:400,700" rel="stylesheet">
+    <link th:href="@{/assets/css/serve.css}" href="../../static/assets/css/serve.css" rel="stylesheet">
+</head>
+<body class="backdrop">
+<div class="serve dashboard">
+    <div class="content">
+        <section class="panel">
+            <div class="rel">
+                <h2>Search &#9819;</h2>
+                <img class="logo-small" th:src="@{/assets/img/icon.png}" src="../../static/assets/img/icon.png" alt="Serve Logo"/>
+            </div>
+            <table>
+                <tr>
+                    <th>Client Id</th>
+                    <th>Email</th>
+                    <th></th>
+                </tr>
+                <tr th:each="resource: ${results.content}" onclick="window.location.href='edit.html'"
+                    th:onclick="|window.location.href='/client/${resource.uid}/edit'|">
+                    <td th:text="${resource.clientId}">serve_client</td>
+                    <td th:text="${resource.email}">serve@giteshdalal.com</td>
+                    <td>&#x270E;</td>
+                </tr>
+            </table>
+            <p class="legend">
+                Showing <span th:text="${results.numberOfElements}"></span> of <span th:text="${results.totalElements}"></span>
+                <span class="pull-right">
+                    <a th:if="${results.number -1 > 0}"
+                       th:href="@{?clientId=__${clientId != null ? clientId : ''}__&email=__${email != null ? email : ''}__&page=0&size=__${results.size}__}"
+                       href="#">&lt;&lt;&lt;First</a>
+                    <a th:if="${results.number -1 >= 0}"
+                       th:href="@{?clientId=__${clientId != null ? clientId : ''}__&email=__${email != null ? email : ''}__&page=__${results.number -1}__&size=__${results.size}__}"
+                       href="#">&lt;Previous</a>
+
+                    <span>Page <span th:text="${results.number + 1}">1</span> of <span th:text="${results.totalPages}">1</span></span>
+
+                    <a th:if="${results.number +1 < results.totalPages}"
+                       th:href="@{?clientId=__${clientId != null ? clientId : ''}__&email=__${email != null ? email : ''}__&page=__${results.number +1}__&size=__${results.size}__}"
+                       href="#">Next&gt;</a>
+                    <a th:if="${results.number +2 < results.totalPages}"
+                       th:href="@{?clientId=__${clientId != null ? clientId : ''}__&email=__${email != null ? email : ''}__&page=__${results.totalPages -1}__&size=__${results.size}__}"
+                       href="#">Last&gt;&gt;&gt;</a>
+                </span>
+            </p>
+            <a th:href="@{/client/search}" href="search.html" class="btn left">Back</a>
+            <a th:href="@{/dashboard}" href="../dashboard.html" class="btn danger">Cancel</a>
+        </section>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Gitesh Dalal">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serve - Client Management</title>
+    <link th:href="@{/assets/img/faviconv1.ico}" href="../../static/assets/img/faviconv1.ico" rel="icon" type="image/x-icon"/>
+    <link href="https://fonts.googleapis.com/css?family=Arvo:400,700" rel="stylesheet"/>
+    <link th:href="@{/assets/css/serve.css}" href="../../static/assets/css/serve.css" rel="stylesheet"/>
+</head>
+<body class="backdrop">
+<div class="serve dashboard">
+    <div class="content">
+        <section class="panel">
+            <div class="rel">
+                <h2>Edit &#9819;</h2>
+                <img class="logo-small" th:src="@{/assets/img/icon.png}" src="../../static/assets/img/icon.png" alt="Serve Logo"/>
+            </div>
+            <p>Uid : <span th:text="${resource.uid}">101</span></p>
+            <form id="edit-form" name="edit-form" class="clear" th:object="${resource}" th:action="|/client/${resource.uid}/edit|"
+                  action="#"
+                  method="post">
+                <div class="msg" th:text="${error}"></div>
+
+                <div class="form-field">
+                    <label for="clientId">Client Id *</label>
+                    <input type="text" id="clientId" placeholder="_" th:field="*{clientId}" required minlength="6" autofocus/>
+                </div>
+
+                <div class="form-field">
+                    <label for="email">Email *</label>
+                    <input type="email" id="email" placeholder="_" th:field="*{email}" required/>
+                </div>
+
+                <div class="form-field">
+                    <label for="accessTokenValiditySeconds">Access Token Validity (Seconds) *</label>
+                    <input type="number" id="accessTokenValiditySeconds" placeholder="_" th:field="*{accessTokenValiditySeconds}"
+                           required
+                           min="60" onchange="form.refreshTokenValiditySeconds.min = (Number.parseInt(this.value) + 60)"/>
+                </div>
+
+                <div class="form-field">
+                    <label for="refreshTokenValiditySeconds">Refresh Token Validity (Seconds) *</label>
+                    <input type="number" id="refreshTokenValiditySeconds" placeholder="_" th:field="*{refreshTokenValiditySeconds}"
+                           required
+                           min="180"/>
+                </div>
+
+                <div class="form-field">
+                    <label for="clientSecret">Secret</label>
+                    <input type="password" id="clientSecret" placeholder="_" th:field="*{clientSecret}"
+                           onchange="form.confirmSecret.pattern = this.value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); form.confirmSecret.required = true"/>
+                </div>
+
+                <div class="form-field">
+                    <label for="confirmSecret">Confirm Secret</label>
+                    <input type="password" id="confirmSecret" placeholder="_" name="confirmSecret"
+                           oninvalid="this.setCustomValidity('Secrets do not match')"/>
+                </div>
+
+                <div class="form-field checkbox">
+                    <input type="checkbox" id="seceretRequired" placeholder="_" th:field="*{seceretRequired}"/>
+                    <label for="seceretRequired">Is Secret Required?</label>
+                </div>
+
+                <div class="form-field checkbox">
+                    <input type="checkbox" id="scopeRequired" placeholder="_" th:field="*{scopeRequired}"/>
+                    <label for="scopeRequired">Is Scope Required?</label>
+                </div>
+
+                <div class="form-field wide">
+                    <div class="rel">
+                        <a href="#" class="icon" data-field="resourceIds">&#8853;</a>
+                        <label>Authorized Resources (list)</label>
+                    </div>
+                    <div class="rel" th:each="resource, stat : *{resourceIds}">
+                        <input type="text" placeholder="_" th:field="*{resourceIds[__${stat.index}__]}">
+                        <a href="#" class="icon danger remove">&#8854;</a>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <div class="rel">
+                        <a href="#" class="icon" data-field="clientRoles">&#8853;</a>
+                        <label>Roles (list)</label>
+                    </div>
+                    <div class="rel" th:each="role, stat : *{clientRoles}">
+                        <input type="text" placeholder="_" th:field="*{clientRoles[__${stat.index}__]}">
+                        <a href="#" class="icon danger remove">&#8854;</a>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <div class="rel">
+                        <a href="#" class="icon" data-field="scopes">&#8853;</a>
+                        <label>Privileges/Scopes (list)</label>
+                    </div>
+                    <div class="rel" th:each="scope, stat : *{scopes}">
+                        <input type="text" placeholder="_" th:field="*{scopes[__${stat.index}__]}">
+                        <a href="#" class="icon danger remove">&#8854;</a>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <div class="rel">
+                        <a href="#" class="icon" data-field="autoApprovedScopes">&#8853;</a>
+                        <label>Authorized Privileges/Scopes (list)</label>
+                    </div>
+                    <div class="rel" th:each="scope, stat : *{autoApprovedScopes}">
+                        <input type="text" placeholder="_" th:field="*{autoApprovedScopes[__${stat.index}__]}">
+                        <a href="#" class="icon danger remove">&#8854;</a>
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <div class="rel">
+                        <a href="#" class="icon" data-field="authorizedGrantTypes">&#8853;</a>
+                        <label>Authorized Grant Types (list)</label>
+                    </div>
+                    <div class="rel" th:each="grant, stat : *{authorizedGrantTypes}">
+                        <input type="text" placeholder="_" th:field="*{authorizedGrantTypes[__${stat.index}__]}">
+                        <a href="#" class="icon danger remove">&#8854;</a>
+                    </div>
+                </div>
+
+                <div class="form-field wide">
+                    <div class="rel">
+                        <a href="#" class="icon" data-field="registeredRedirectUri">&#8853;</a>
+                        <label>Supported Redirect URI's (list)</label>
+                    </div>
+                    <div class="rel" th:each="uri, stat : *{registeredRedirectUri}">
+                        <input type="text" placeholder="_" th:field="*{registeredRedirectUri[__${stat.index}__]}">
+                        <a href="#" class="icon danger remove">&#8854;</a>
+                    </div>
+                </div>
+
+                <div class="form-field wide">
+                    <div class="rel">
+                        <a href="#" class="icon" data-field="additionalInformation">&#8853;</a>
+                        <label>Additional Information (map)</label>
+                    </div>
+                    <table>
+                        <tbody>
+                        <tr th:each="pr, stat : *{additionalInformation}">
+                            <td><input class="key" type="text" placeholder="_" th:value="${pr.key}" required></td>
+                            <td class="rel">
+                                <input class="value" type="text" placeholder="_" th:field="*{additionalInformation[__${pr.key}__]}">
+                                <a href="#" class="icon danger remove">&#8854;</a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+                <div class="form-field wide">
+                    <p class="legend">
+                        <em>*&nbsp;&nbsp;&nbsp;&nbsp;: Mandatory field</em> <br/>
+                        <em>list : Field can have multiple values</em><br/>
+                        <em>map&nbsp;&nbsp;: Field can have multiple key value pairs</em><br/>
+                    </p>
+                </div>
+
+                <input value="Save &#9819;" type="submit"/>
+            </form>
+            <a th:href="@{/dashboard}" href="../dashboard.html" class="btn danger">Cancel</a>
+            <a th:onclick="|window.history.back()|" th:href="|#|" href="results.html" class="btn left">Back</a>
+        </section>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/assets/js/forms.js}" src="../../static/assets/js/forms.js"></script>
+</body>
+</html>

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -62,11 +63,11 @@ public class ClientModel implements ClientDetails {
 	@Getter
 	@Setter
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> clientRoles;
+	private Set<String> clientRoles, autoApprovedScopes;
 
 	@Setter
 	@ElementCollection(fetch = FetchType.EAGER)
-	private Set<String> resourceIds, scopes, autoApprovedScopes, authorizedGrantTypes, registeredRedirectUri;
+	private Set<String> resourceIds, scopes, authorizedGrantTypes, registeredRedirectUri;
 
 	@ElementCollection(fetch = FetchType.EAGER) @MapKeyColumn(name = "name") @Column(name = "value")
 	@Setter
@@ -144,6 +145,9 @@ public class ClientModel implements ClientDetails {
 
 	@Override
 	public Map<String, Object> getAdditionalInformation() {
+		if(Objects.isNull(this.additionalInformation)) {
+			return new HashMap<>();
+		}
 		return new HashMap<>(this.additionalInformation);
 	}
 
