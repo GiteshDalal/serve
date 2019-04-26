@@ -3,6 +3,7 @@ package com.giteshdalal.authservice.service;
 import java.util.Optional;
 import javax.security.auth.login.AccountException;
 
+import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;
 import com.giteshdalal.authservice.model.UserModel;
 import com.giteshdalal.authservice.resource.UserResource;
 import com.querydsl.core.types.Predicate;
@@ -43,4 +44,8 @@ public interface UserService extends UserDetailsService {
 	UserResource updateUser(Long uid, UserResource resource);
 
 	void deleteUserById(Long uid);
+
+	void resetPassword(String token, String password) throws NotFoundAuthServiceException;
+
+	String generateResetToken(UserModel user);
 }

@@ -37,7 +37,7 @@ public class RoleModel {
 	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
 	private List<UserModel> users;
 
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "ROLE_PRIVILEGES", joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "uid"),
 			inverseJoinColumns = @JoinColumn(name = "privilege_id", referencedColumnName = "uid"))
 	private List<PrivilegeModel> privileges;

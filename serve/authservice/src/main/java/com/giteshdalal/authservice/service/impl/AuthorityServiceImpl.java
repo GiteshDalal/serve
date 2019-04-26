@@ -2,7 +2,9 @@ package com.giteshdalal.authservice.service.impl;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;
 import com.giteshdalal.authservice.model.PrivilegeModel;
@@ -13,6 +15,8 @@ import com.giteshdalal.authservice.resource.PrivilegeResource;
 import com.giteshdalal.authservice.resource.RoleResource;
 import com.giteshdalal.authservice.service.AuthorityService;
 import com.querydsl.core.types.Predicate;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -52,7 +56,17 @@ public class AuthorityServiceImpl implements AuthorityService {
 
 	@Override
 	public List<PrivilegeModel> saveAllPrivileges(Collection<PrivilegeModel> privileges) {
-		return privilegeRepo.saveAll(privileges);
+		List<PrivilegeModel> validPrivileges = privileges.stream().filter(p -> StringUtils.isNotBlank(p.getName()))
+				.collect(Collectors.toList());
+		for (PrivilegeModel p : validPrivileges) {
+			if (Objects.isNull(p.getUid())) {
+				Optional<PrivilegeModel> optionalByName = getPrivilegeByName(p.getName());
+				if (optionalByName.isPresent()) {
+					p.setUid(optionalByName.get().getUid());
+				}
+			}
+		}
+		return privilegeRepo.saveAll(validPrivileges);
 	}
 
 	@Override
@@ -122,6 +136,9 @@ public class AuthorityServiceImpl implements AuthorityService {
 		if (role.isPresent()) {
 			RoleModel entity = mapper.map(resource, RoleModel.class);
 			entity.setUid(role.get().getUid());
+			if (CollectionUtils.isNotEmpty(entity.getPrivileges())) {
+				entity.setPrivileges(saveAllPrivileges(entity.getPrivileges()));
+			}
 			return mapRole(roleRepo.save(entity));
 		}
 		throw new NotFoundAuthServiceException("Role with id : '" + uid + "' not found!");

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+>
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Gitesh Dalal">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serve - Client Management</title>
+    <link th:href="@{/assets/img/faviconv1.ico}" href="../../static/assets/img/faviconv1.ico" rel="icon" type="image/x-icon"/>
+    <link href="https://fonts.googleapis.com/css?family=Arvo:400,700" rel="stylesheet"/>
+    <link th:href="@{/assets/css/serve.css}" href="../../static/assets/css/serve.css" rel="stylesheet"/>
+</head>
+<body class="backdrop">
+<div class="serve dashboard">
+    <div class="content">
+        <section class="panel">
+            <div class="rel">
+                <h2>Edit Role &#9819;</h2>
+                <img class="logo-small" th:src="@{/assets/img/icon.png}" src="../../static/assets/img/icon.png" alt="Serve Logo"/>
+            </div>
+            <p>Uid : <span th:text="${resource.uid}">101</span></p>
+            <form id="edit-form" name="edit-form" class="clear" th:object="${resource}" th:action="|/role/${resource.uid}/edit|"
+                  action="#"
+                  method="post">
+                <div class="msg" th:text="${error}"></div>
+
+                <div class="form-field">
+                    <label for="name">Name *</label>
+                    <input type="text" id="name" placeholder="_" th:field="*{name}" required autofocus/>
+                </div>
+
+                <div class="form-field">
+                    <div class="rel">
+                        <a href="#" class="icon" data-field="privileges#.name">&#8853;</a>
+                        <label>Privileges (Name)</label>
+                    </div>
+                    <div class="rel" th:each="resource, stat : *{privileges}">
+                        <input type="hidden" placeholder="_" th:field="*{privileges[__${stat.index}__].uid}">
+                        <input type="text" placeholder="_" th:field="*{privileges[__${stat.index}__].name}">
+                        <a href="#" class="icon danger remove">&#8854;</a>
+                    </div>
+                </div>
+
+                <div class="form-field wide">
+                    <p class="legend">
+                        <em>*&nbsp;&nbsp;&nbsp;&nbsp;: Mandatory field</em> <br/>
+                        <em>list : Field can have multiple values</em><br/>
+                        <em>map&nbsp;&nbsp;: Field can have multiple key value pairs</em><br/>
+                    </p>
+                </div>
+
+                <input value="Save &#9819;" type="submit"/>
+            </form>
+            <a th:href="@{/dashboard}" href="../dashboard.html" class="btn danger">Cancel</a>
+            <a th:onclick="|window.history.back()|" th:href="|#|" href="results.html" class="btn left">Back</a>
+        </section>
+    </div>
+</div>
+<script type="text/javascript" th:src="@{/assets/js/forms.js}" src="../../static/assets/js/forms.js"></script>
+</body>
+</html>

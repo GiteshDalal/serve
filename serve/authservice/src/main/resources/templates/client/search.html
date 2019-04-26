@@ -16,24 +16,37 @@
     <div class="content">
         <section class="panel">
             <div class="rel">
-                <h2>Search &#x265B;</h2>
+                <h2>Search Client&#x265B;</h2>
                 <img class="logo-small" th:src="@{/assets/img/icon.png}" src="../../static/assets/img/icon.png" alt="Serve Logo"/>
             </div>
-            <form id="registerForm" name="registerForm" th:action="@{/client/query}" action="results.html" method="get">
+            <form th:action="@{/client/query}" action="results.html" method="get">
                 <div class="msg" th:text="${error}"></div>
-                <div class="form-field">
-                    <label for="clientId">Client Id</label>
-                    <input type="text" name="clientId" id="clientId" placeholder="_" th:value="${clientId}" autofocus/>
-                </div>
 
-                <div class="form-field">
-                    <label for="email">Email</label>
-                    <input type="text" name="email" id="email" placeholder="_" th:value="${email}"/>
+                <div class="form-field wide">
+                    <div class="rel">
+                        <a href="#" class="icon" data-field="">&#8853;</a>
+                        <label>Query Builder (Map)</label>
+                    </div>
+                    <table>
+                        <tbody>
+                        <th:block th:each="p : ${param}">
+                            <tr th:each="v : ${p.value}">
+                                <td><input class="key" type="text" placeholder="_" th:value="${p.key}" required></td>
+                                <td class="rel">
+                                    <input class="value" type="text" placeholder="_" th:name="${p.key}" th:value="${v}">
+                                    <a href="#" class="icon danger remove">&#8854;</a>
+                                </td>
+                            </tr>
+                        </th:block>
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="form-field wide">
                     <p class="legend">
-                        <em>Search fields are optional. Press enter to view all clients.</em>
+                        Map : <em>Multi key value pairs. Key represent object field/property.</em><br/>
+                        Fields : <em>uid, clientId, email, accessTokenValiditySeconds, refreshTokenValiditySeconds, clientRoles, scopes
+                        autoApprovedScopes, resourceIds, authorizedGrantTypes, registeredRedirectUri, seceretRequired, scopeRequired</em>
                     </p>
                 </div>
                 <input value="Search &#9819;" type="submit"/>
@@ -42,5 +55,6 @@
         </section>
     </div>
 </div>
+<script type="text/javascript" th:src="@{/assets/js/forms.js}" src="../../static/assets/js/forms.js"></script>
 </body>
 </html>

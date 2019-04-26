@@ -16,21 +16,27 @@
     <div class="content">
         <section class="panel">
             <div class="rel">
-                <h2>Search Client &#9819;</h2>
+                <h2>Search Role &#9819;</h2>
                 <img class="logo-small" th:src="@{/assets/img/icon.png}" src="../../static/assets/img/icon.png" alt="Serve Logo"/>
             </div>
             <table>
                 <tr>
                     <th>Uid</th>
-                    <th>Client Id</th>
-                    <th>Email</th>
+                    <th>Name</th>
+                    <th>Privileges</th>
                     <th></th>
                 </tr>
                 <tr th:each="resource: ${results.content}" onclick="window.location.href='edit.html'"
-                    th:onclick="|window.location.href='/client/${resource.uid}/edit'|">
-                    <td th:text="${resource.uid}">uid</td>
-                    <td th:text="${resource.clientId}">serve_client</td>
-                    <td th:text="${resource.email}">serve@giteshdalal.com</td>
+                    th:onclick="|window.location.href='/role/${resource.uid}/edit'|">
+                    <td th:text="${resource.uid}">101</td>
+                    <td th:text="${resource.name}">ROLE_USER</td>
+                    <td>
+                        [
+                        <th:block th:each="p, stat : ${resource.privileges}">
+                            (<span th:text="${p.uid}">id</span>) <span th:text="!${stat.last} ? ${p.name} + ', ': ${p.name}">name</span>
+                        </th:block>
+                        ]
+                    </td>
                     <td>&#x270E;</td>
                 </tr>
             </table>
@@ -54,7 +60,7 @@
                        href="#">Last&gt;&gt;&gt;</a>
                 </span>
             </p>
-            <a th:href="@{/client/search__${query}__}" href="search.html" class="btn left">Back</a>
+            <a th:href="@{/role/search__${query}__}" href="search.html" class="btn left">Back</a>
             <a th:href="@{/dashboard}" href="../dashboard.html" class="btn danger">Cancel</a>
         </section>
     </div>

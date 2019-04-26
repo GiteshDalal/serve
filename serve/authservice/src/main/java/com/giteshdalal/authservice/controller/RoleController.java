@@ -5,11 +5,10 @@ import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
-import com.giteshdalal.authservice.model.ClientModel;
-import com.giteshdalal.authservice.resource.ClientResource;
-import com.giteshdalal.authservice.service.ClientService;
+import com.giteshdalal.authservice.model.RoleModel;
+import com.giteshdalal.authservice.resource.RoleResource;
+import com.giteshdalal.authservice.service.AuthorityService;
 import com.querydsl.core.types.Predicate;
-import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,11 +28,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @SessionAttributes("authorizationRequest")
-@RequestMapping("/client")
-public class ClientController {
+@RequestMapping("/role")
+public class RoleController {
 
 	@Autowired
-	private ClientService clientService;
+	private AuthorityService authorityService;
 
 	@Autowired
 	private ModelMapper modelMapper;
@@ -41,52 +40,47 @@ public class ClientController {
 	@RequestMapping("/search")
 	public ModelAndView searchPage(Map<String, Object> model, HttpServletRequest request) {
 
-		return new ModelAndView("client/search", model);
+		return new ModelAndView("role/search", model);
 	}
 
 	@RequestMapping(value = "/query")
-	public ModelAndView search(Pageable pageable, @QuerydslPredicate(root = ClientModel.class) Predicate predicate,
-			@RequestParam MultiValueMap<String, String> parameters, PagedResourcesAssembler<ClientResource> assembler,
+	public ModelAndView search(Pageable pageable, @QuerydslPredicate(root = RoleModel.class) Predicate predicate,
+			@RequestParam MultiValueMap<String, String> parameters, PagedResourcesAssembler<RoleResource> assembler,
 			Map<String, Object> model, HttpServletRequest request, Locale locale) {
-		Page<ClientResource> results = clientService.findAllClients(predicate, pageable);
+		Page<RoleResource> results = authorityService.findAllRoles(predicate, pageable);
 
 		if (results.hasContent()) {
 			model.put("results", results);
 			model.put("query", ControllerUtil.buildQuery(parameters));
-			return new ModelAndView("client/results", model);
+			return new ModelAndView("role/results", model);
 		}
 		model.put("error", "No results found.");
-		return new ModelAndView("client/search", model);
+		return new ModelAndView("role/search", model);
 	}
 
 	@RequestMapping("/new")
 	public ModelAndView add(Map<String, Object> model, HttpServletRequest request) {
 
-		return new ModelAndView("client/register", model);
+		return new ModelAndView("role/register", model);
 	}
 
 	@RequestMapping(value = "/{uid}/edit", method = RequestMethod.GET)
 	public ModelAndView edit(@PathVariable("uid") Long uid, Map<String, Object> model, HttpServletRequest request) {
-		Optional<ClientResource> clientById = clientService.findClientById(uid);
-		if (clientById.isPresent()) {
-			model.put("resource", clientById.get());
-			return new ModelAndView("client/edit", model);
+		Optional<RoleResource> roleById = authorityService.findRoleById(uid);
+		if (roleById.isPresent()) {
+			model.put("resource", roleById.get());
+			return new ModelAndView("role/edit", model);
 		}
 
 		model.put("error", "No results found.");
-		return new ModelAndView("client/search", model);
+		return new ModelAndView("role/search", model);
 	}
 
 	@RequestMapping(value = "/{uid}/edit", method = RequestMethod.POST)
-	public ModelAndView save(@PathVariable("uid") Long uid, @ModelAttribute("resource") ClientResource resource, BindingResult result,
+	public ModelAndView save(@PathVariable("uid") Long uid, @ModelAttribute("resource") RoleResource resource, BindingResult result,
 			Map<String, Object> model, HttpServletRequest request) {
-		ClientResource saved = clientService.updateClient(uid, resource);
-		if (StringUtils.isNotBlank(resource.getClientSecret())) {
-			clientService.updateClientSecret(saved.getClientId(), resource.getClientSecret());
-			model.put("msg", String.format("Client [%s] saved successfully with new secret.", saved.getUid()));
-		} else {
-			model.put("msg", String.format("Client [%s] saved successfully.", saved.getUid()));
-		}
+		RoleResource saved = authorityService.updateRole(uid, resource);
+		model.put("msg", String.format("Role [%s] saved successfully.", saved.getUid()));
 		return new ModelAndView("success", model);
 	}
 }

@@ -1,10 +1,15 @@
 function keyChange(e) {
     var key = this.value;
     var input = this.parentElement.nextElementSibling.querySelector("input");
-    var field = input.getAttribute("name").split("[")[0];
+    var name = input.getAttribute("name");
 
-    input.setAttribute("id", field + key);
-    input.setAttribute("name", field + "[" + key + "]");
+    if(name.includes("[")) {
+        var field = name.split("[")[0];
+        input.setAttribute("id", field + key);
+        input.setAttribute("name", field + "[" + key + "]");
+    } else {
+        input.setAttribute("name", key);
+    }
 }
 
 function removeInput(e) {
@@ -32,7 +37,6 @@ function addInput(e) {
         var value = document.createElement("input");
         value.setAttribute("class", "value");
         value.setAttribute("type", "text");
-        value.setAttribute("id", field);
         value.setAttribute("name", field);
         value.setAttribute("placeholder", "_");
 
@@ -57,7 +61,13 @@ function addInput(e) {
 
         table.appendChild(tr);
     } else {
-        var index = container.querySelectorAll("input").length;
+        var index = container.querySelectorAll("input:not([type='hidden'])").length;
+        var id = field + index;
+        var name = field + "[" + index + "]";
+        if(field.includes("#")){
+            id = field.replace("#", index);
+            name = field.replace("#", "[" + index + "]");
+        }
 
         var icon = document.createElement("a");
         icon.setAttribute("href", "#");
@@ -68,8 +78,8 @@ function addInput(e) {
 
         var input = document.createElement("input");
         input.setAttribute("type", "text");
-        input.setAttribute("id", field + index);
-        input.setAttribute("name", field + "[" + index + "]");
+        input.setAttribute("id", id);
+        input.setAttribute("name", name);
         input.setAttribute("placeholder", "_");
 
         var div = document.createElement("div");
@@ -83,6 +93,10 @@ function addInput(e) {
 
 for(var node of document.querySelectorAll("a.icon[data-field]")) {
     node.addEventListener("click", addInput, true);
+}
+
+for(var node of document.querySelectorAll("input.key")) {
+    node.addEventListener("change", keyChange, true);
 }
 
 for(var node of document.querySelectorAll("a.icon.remove")) {

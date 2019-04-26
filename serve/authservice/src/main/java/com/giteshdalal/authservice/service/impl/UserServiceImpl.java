@@ -1,7 +1,6 @@
 package com.giteshdalal.authservice.service.impl;
 
 import java.util.Optional;
-import java.util.UUID;
 import javax.security.auth.login.AccountException;
 
 import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;
@@ -11,6 +10,7 @@ import com.giteshdalal.authservice.resource.UserResource;
 import com.giteshdalal.authservice.service.AuthorityService;
 import com.giteshdalal.authservice.service.UserService;
 import com.querydsl.core.types.Predicate;
+import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,6 +147,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public String generateResetToken(UserModel user) {
+		String token = RandomStringUtils.randomAlphanumeric(16).toUpperCase();
+		user.setResetToken(token);
+		userRepo.save(user);
+		return token;
+	}
+
+	@Override
 	public void deleteUserById(Long uid) {
 		Optional<UserModel> user = userRepo.findById(uid);
 		if (user.isPresent()) {
@@ -154,6 +162,20 @@ public class UserServiceImpl implements UserService {
 			return;
 		}
 		throw new NotFoundAuthServiceException("User with uid : '" + uid + "' not found!");
+	}
+
+	@Override
+	public void resetPassword(String token, String password) throws NotFoundAuthServiceException {
+		Optional<UserModel> user = userRepo.findOptionalByResetToken(token);
+		if (user.isPresent()) {
+			UserModel userModel = user.get();
+			userModel.setPassword(passwordEncoder.encode(password));
+			userModel.setCredentialsNonExpired(true);
+			userModel.setResetToken(null);
+			userRepo.save(userModel);
+		} else {
+			throw new NotFoundAuthServiceException("Invalid Token.");
+		}
 	}
 
 	private UserResource mapUser(UserModel userModel) {
