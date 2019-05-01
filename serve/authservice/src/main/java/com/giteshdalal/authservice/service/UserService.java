@@ -1,12 +1,13 @@
 package com.giteshdalal.authservice.service;
 
+import java.util.List;
 import java.util.Optional;
 import javax.security.auth.login.AccountException;
 
 import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;
 import com.giteshdalal.authservice.model.UserModel;
+import com.giteshdalal.authservice.query.SearchCriteria;
 import com.giteshdalal.authservice.resource.UserResource;
-import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,7 +38,7 @@ public interface UserService extends UserDetailsService {
 
 	Optional<UserResource> findUserById(Long uid);
 
-	Page<UserResource> findAllUsers(Predicate predicate, Pageable pageable);
+	Page<UserResource> findAll(List<SearchCriteria> params, Pageable pageable);
 
 	UserResource saveUser(UserResource resource) throws AccountException;
 

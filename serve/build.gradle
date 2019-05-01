@@ -1,13 +1,14 @@
 buildscript {
     ext {
-        lombockGradleVersion = '1.12'
-        lombockVersion = '1.16.20'
-        modelMapperVersion = '2.3.0'
-        springBootVersion = '2.0.1.RELEASE'
-        cloudVersion = 'Finchley.M9'
-        queryPluginVersion = '1.0.10'
-        querydslVersion = '4.1.4'
+        lombockGradleVersion = '3.0.0'
+        lombockVersion = '1.18.6'
+        modelMapperVersion = '2.3.3'
+        springBootVersion = '2.1.4.RELEASE'
+        cloudVersion = 'Greenwich.RELEASE'
         serveVersion = '1.0.0'
+        feignVersion = '1.4.6.RELEASE'
+        lang3Version = '3.9'
+        collections4Version = '4.3'
     }
     repositories {
         mavenCentral()
@@ -16,7 +17,6 @@ buildscript {
     dependencies {
         classpath("io.franzbecker:gradle-lombok:${lombockGradleVersion}")
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-        classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:${queryPluginVersion}")
         classpath files("../engine/build/libs/engine-${serveVersion}.jar")
     }
 }
@@ -25,7 +25,6 @@ apply plugin: com.giteshdalal.serve.ServiceGeneratorPlugin
 
 subprojects {
     apply plugin: 'io.franzbecker.gradle-lombok'
-    apply plugin: 'com.ewerk.gradle.plugins.querydsl'
     apply plugin: 'java'
     apply plugin: 'eclipse'
     apply plugin: 'idea'
@@ -35,29 +34,7 @@ subprojects {
 
     sourceCompatibility = 1.8
 
-    sourceSets {
-        main {
-            java {
-                srcDir "$buildDir/generated-sources/apt"
-            }
-        }
-    }
-
-    querydsl {
-        jpa = true
-        querydslSourcesDir = "$buildDir/generated-sources/apt"
-    }
-
-    afterEvaluate {
-        println "Evaluated $project"
-        project.tasks.compileQuerydsl.options.compilerArgs = [
-                "-proc:only",
-                "-processor",
-                project.querydsl.processors() + ',lombok.launch.AnnotationProcessorHider$AnnotationProcessor'
-        ]
-    }
-
-    project.tasks.compileQuerydsl.dependsOn(project.tasks.serve)
+    project.tasks.build.dependsOn(project.tasks.serve)
 
     repositories {
         mavenCentral()
@@ -68,9 +45,6 @@ subprojects {
         compile("org.modelmapper:modelmapper:$modelMapperVersion")
         compile("org.modelmapper.extensions:modelmapper-jackson:$modelMapperVersion")
         compile('org.springframework.boot:spring-boot-starter')
-        compile("com.querydsl:querydsl-root:$querydslVersion")
-        compile("com.querydsl:querydsl-jpa:$querydslVersion")
-        compile("com.querydsl:querydsl-apt:$querydslVersion:jpa")
         compile("com.fasterxml.jackson.module:jackson-module-jsonSchema")
         compile("org.springframework.boot:spring-boot-starter-mail")
         compile("commons-io:commons-io:2.6")

@@ -6,6 +6,7 @@ import java.util.Map;
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 
+import com.giteshdalal.authservice.ApplicationConfiguration;
 import com.giteshdalal.authservice.email.template.EmailTemplate;
 import com.giteshdalal.authservice.email.template.impl.ResetTokenEmailTemplate;
 import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;
@@ -66,6 +67,7 @@ public class ResetPasswordController {
 
 	@RequestMapping(value = "/reset-password", method = RequestMethod.GET)
 	public ModelAndView resetPasswordPage(Map<String, Object> model, HttpServletRequest request) {
+		model.put("tokenLength", ApplicationConfiguration.RESET_TOKEN_LENGTH);
 		return new ModelAndView("reset-password", model);
 	}
 
@@ -81,6 +83,7 @@ public class ResetPasswordController {
 			return new ModelAndView("success", model);
 		} catch (NotFoundAuthServiceException e) {
 			model.put("msg", e.getMessage());
+			model.put("tokenLength", ApplicationConfiguration.RESET_TOKEN_LENGTH);
 		}
 		return new ModelAndView("reset-password", model);
 	}

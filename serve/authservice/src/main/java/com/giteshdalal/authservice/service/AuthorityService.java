@@ -6,9 +6,9 @@ import java.util.Optional;
 
 import com.giteshdalal.authservice.model.PrivilegeModel;
 import com.giteshdalal.authservice.model.RoleModel;
+import com.giteshdalal.authservice.query.SearchCriteria;
 import com.giteshdalal.authservice.resource.PrivilegeResource;
 import com.giteshdalal.authservice.resource.RoleResource;
-import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -33,13 +33,13 @@ public interface AuthorityService {
 
 	Optional<RoleModel> getRoleByName(String name);
 
-	Page<RoleResource> findAllRoles(Predicate predicate, Pageable pageable);
-
-	Page<PrivilegeResource> findAllPrivileges(Predicate predicate, Pageable pageable);
-
 	Optional<RoleResource> findRoleById(Long uid);
 
 	Optional<PrivilegeResource> findPrivilegeById(Long uid);
+
+	Page<RoleResource> findAllRoles(List<SearchCriteria> params, Pageable pageable);
+
+	Page<PrivilegeResource> findAllPrivileges(List<SearchCriteria> params, Pageable pageable);
 
 	RoleResource saveRole(RoleResource resource);
 

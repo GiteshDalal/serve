@@ -1,4 +1,4 @@
-group 'com.giteshdalal' 
+group 'com.giteshdalal.configservice'
 version '1.0'
 
 dependencies {

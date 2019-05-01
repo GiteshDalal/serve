@@ -16,5 +16,5 @@ import ${config.modelPackage}.*;
 
 @Repository
 @SuppressWarnings(value = { "unused" })
-public interface ${model.name}Repository extends BaseServeRepository<${model.name}Model, Q${model.name}Model, ${model.idType}> {
+public interface ${model.name}Repository extends BaseServeRepository<${model.name}Model, ${model.idType}> {
 }

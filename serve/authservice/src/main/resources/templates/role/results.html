@@ -44,23 +44,24 @@
                 Showing <span th:text="${results.numberOfElements}"></span> of <span th:text="${results.totalElements}"></span>
                 <span class="pull-right">
                     <a th:if="${results.number -1 > 0}"
-                       th:href="@{__${query}__&page=0&size=__${results.size}__}"
+                       th:href="@{?page=0&size=}+ ${param.size} + '&sort=' + ${param.sort}+ '&q=' + ${param.q}"
                        href="#">&lt;&lt;&lt;First</a>
                     <a th:if="${results.number -1 >= 0}"
-                       th:href="@{__${query}__&page=__${results.number -1}__&size=__${results.size}__}"
+                       th:href="@{?page=__${results.number -1}__&size=} + ${param.size} + '&sort=' + ${param.sort}+ '&q=' + ${param.q}"
                        href="#">&lt;Previous</a>
 
                     <span>Page <span th:text="${results.number + 1}">1</span> of <span th:text="${results.totalPages}">1</span></span>
 
                     <a th:if="${results.number +1 < results.totalPages}"
-                       th:href="@{__${query}__&page=__${results.number +1}__&size=__${results.size}__}"
+                       th:href="@{?page=__${results.number +1}__&size=} + ${param.size} + '&sort=' + ${param.sort}+ '&q=' + ${param.q}"
                        href="#">Next&gt;</a>
                     <a th:if="${results.number +2 < results.totalPages}"
-                       th:href="@{__${query}__&page=__${results.totalPages -1}__&size=__${results.size}__}"
+                       th:href="@{?page=__${results.totalPages -1}__&size=} + ${param.size} + '&sort=' + ${param.sort}+ '&q=' + ${param.q}"
                        href="#">Last&gt;&gt;&gt;</a>
                 </span>
             </p>
-            <a th:href="@{/role/search__${query}__}" href="search.html" class="btn left">Back</a>
+            <a th:href="@{/role/search?size=} + ${param.size} + '&sort=' + ${param.sort}+ '&q=' + ${param.q}" href="search.html"
+               class="btn left">Back</a>
             <a th:href="@{/dashboard}" href="../dashboard.html" class="btn danger">Cancel</a>
         </section>
     </div>

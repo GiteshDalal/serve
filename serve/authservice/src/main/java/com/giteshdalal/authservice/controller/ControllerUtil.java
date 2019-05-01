@@ -1,9 +1,15 @@
 package com.giteshdalal.authservice.controller;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import com.giteshdalal.authservice.query.SearchCriteria;
+import com.giteshdalal.authservice.query.SearchOperation;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -12,25 +18,29 @@ import org.springframework.web.bind.annotation.RequestParam;
  */
 class ControllerUtil {
 
-	private final static String[] SKIP_PARAMS = { "page", "size" };
+	private static final String QUERY_PARAMS_REGEX = "([\\w][\\w\\d_.]*?)[(]([.:!<>~$^*?`]{1,2}|[!]?[\\w]{2,10})[)]([\\s\\d\\w,$@_.-]*)?,";
 
 	/**
-	 * Generates a search query using parameters. Skips params from SKIP_PARAMS.
+	 * Generate JPA query params using query string
 	 *
-	 * @param parameters
-	 * 		- MultiValueMap
-	 * @return search query (?&param=value&param=value2)
+	 * @param query
+	 * 		- search query string
+	 * @return JPA query params
 	 */
-	static String buildQuery(@RequestParam MultiValueMap<String, String> parameters) {
-		StringBuffer query = new StringBuffer("?");
-		for (Map.Entry<String, List<String>> e : parameters.entrySet()) {
-			if (Arrays.stream(SKIP_PARAMS).anyMatch(s -> s.equalsIgnoreCase(e.getKey()))) {
-				continue;
-			}
-			for (String v : e.getValue()) {
-				query.append("&").append(e.getKey()).append("=").append(v);
+	static List<SearchCriteria> generateSearchCriteria(String query) {
+		List<SearchCriteria> queryParams = new ArrayList<>();
+		if (StringUtils.isNotBlank(query)) {
+			Pattern pattern = Pattern.compile(QUERY_PARAMS_REGEX);
+			Matcher matcher = pattern.matcher(query.trim() + ",");
+			while (matcher.find()) {
+				SearchCriteria criteria = new SearchCriteria();
+				criteria.setKey(matcher.group(1));
+				criteria.setOperation(SearchOperation.getOperation(matcher.group(2).toLowerCase()));
+				criteria.setValue(matcher.group(3));
+				queryParams.add(criteria);
 			}
 		}
-		return query.toString();
+
+		return queryParams;
 	}
 }

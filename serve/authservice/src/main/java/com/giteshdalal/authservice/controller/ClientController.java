@@ -1,23 +1,17 @@
 package com.giteshdalal.authservice.controller;
 
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 
-import com.giteshdalal.authservice.model.ClientModel;
 import com.giteshdalal.authservice.resource.ClientResource;
 import com.giteshdalal.authservice.service.ClientService;
-import com.querydsl.core.types.Predicate;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,17 +39,18 @@ public class ClientController {
 	}
 
 	@RequestMapping(value = "/query")
-	public ModelAndView search(Pageable pageable, @QuerydslPredicate(root = ClientModel.class) Predicate predicate,
-			@RequestParam MultiValueMap<String, String> parameters, PagedResourcesAssembler<ClientResource> assembler,
-			Map<String, Object> model, HttpServletRequest request, Locale locale) {
-		Page<ClientResource> results = clientService.findAllClients(predicate, pageable);
-
-		if (results.hasContent()) {
-			model.put("results", results);
-			model.put("query", ControllerUtil.buildQuery(parameters));
-			return new ModelAndView("client/results", model);
+	public ModelAndView search(Pageable pageable, @RequestParam(value = "q", required = false) String query, Map<String, Object> model,
+			HttpServletRequest request) {
+		try {
+			Page<ClientResource> results = clientService.findAll(ControllerUtil.generateSearchCriteria(query), pageable);
+			if (results.hasContent()) {
+				model.put("results", results);
+				return new ModelAndView("client/results", model);
+			}
+			model.put("error", "No results found.");
+		} catch (Exception e) {
+			model.put("error", e.getMessage());
 		}
-		model.put("error", "No results found.");
 		return new ModelAndView("client/search", model);
 	}
 

@@ -2,20 +2,14 @@ package com.giteshdalal.userservice.controller;
 
 import java.util.Locale;
 
-import com.giteshdalal.userservice.model.generated.RoleModel;
 import com.giteshdalal.userservice.resource.generated.RoleResource;
 import com.giteshdalal.userservice.service.RoleService;
-import com.querydsl.core.types.Predicate;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.querydsl.binding.QuerydslPredicate;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.PagedResources;
-import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -40,14 +34,11 @@ public class RoleController extends AbstractServeController<RoleResource, Long, 
 		return super.getById(uid, locale);
 	}
 
-	@Override
 	@GetMapping
 	@PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE:READ')")
-	public HttpEntity<PagedResources<Resource<RoleResource>>> getAllResources(Pageable pageable,
-			@QuerydslPredicate(root = RoleModel.class) Predicate predicate,
-			@RequestParam MultiValueMap<String, String> parameters, PagedResourcesAssembler<RoleResource> assembler,
+	public HttpEntity<Page<RoleResource>> getAll(Pageable pageable, @RequestParam(value = "q", required = false) String query,
 			Locale locale) {
-		return super.getAll(pageable, predicate, parameters, assembler, locale);
+		return super.getAll(pageable, query, locale);
 	}
 
 	@PostMapping(consumes = { MediaType.APPLICATION_JSON_VALUE })

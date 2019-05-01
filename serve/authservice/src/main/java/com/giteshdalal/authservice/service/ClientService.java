@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.giteshdalal.authservice.model.ClientModel;
+import com.giteshdalal.authservice.query.SearchCriteria;
 import com.giteshdalal.authservice.resource.ClientResource;
-import com.querydsl.core.types.Predicate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
@@ -47,7 +47,7 @@ public interface ClientService extends ClientDetailsService, ClientRegistrationS
 
 	Optional<ClientResource> findClientById(Long uid);
 
-	Page<ClientResource> findAllClients(Predicate predicate, Pageable pageable);
+	Page<ClientResource> findAll(List<SearchCriteria> params, Pageable pageable);
 
 	ClientResource saveClient(ClientResource resource);
 

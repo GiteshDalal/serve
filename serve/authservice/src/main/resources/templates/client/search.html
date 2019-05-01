@@ -23,23 +23,18 @@
                 <div class="msg" th:text="${error}"></div>
 
                 <div class="form-field wide">
-                    <div class="rel">
-                        <a href="#" class="icon" data-field="">&#8853;</a>
-                        <label>Query Builder (Map)</label>
-                    </div>
-                    <table>
-                        <tbody>
-                        <th:block th:each="p : ${param}">
-                            <tr th:each="v : ${p.value}">
-                                <td><input class="key" type="text" placeholder="_" th:value="${p.key}" required></td>
-                                <td class="rel">
-                                    <input class="value" type="text" placeholder="_" th:name="${p.key}" th:value="${v}">
-                                    <a href="#" class="icon danger remove">&#8854;</a>
-                                </td>
-                            </tr>
-                        </th:block>
-                        </tbody>
-                    </table>
+                    <label for="q">Query</label>
+                    <textarea id="q" name="q" placeholder="_" th:text="${param.q}" rows="5" ></textarea>
+                </div>
+
+                <div class="form-field">
+                    <label for="sort">Sort</label>
+                    <input type="text" id="sort" name="sort" placeholder="_" th:value="${param.sort}"/>
+                </div>
+
+                <div class="form-field">
+                    <label for="size">Page size</label>
+                    <input type="text" id="size" name="size" placeholder="_" th:value="${param.size}"/>
                 </div>
 
                 <div class="form-field wide">

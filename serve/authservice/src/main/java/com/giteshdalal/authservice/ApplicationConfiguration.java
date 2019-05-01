@@ -29,6 +29,7 @@ import org.thymeleaf.templateresolver.StringTemplateResolver;
 @Configuration
 public class ApplicationConfiguration {
 	public static final String EMAIL_TEMPLATE_ENCODING = "UTF-8";
+	public static final int RESET_TOKEN_LENGTH = 8;
 
 	@Bean
 	public JsonSchemaGenerator schemaGenerator() {

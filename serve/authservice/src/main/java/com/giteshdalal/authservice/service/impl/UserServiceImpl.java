@@ -1,21 +1,28 @@
 package com.giteshdalal.authservice.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 import javax.security.auth.login.AccountException;
 
+import com.giteshdalal.authservice.ApplicationConfiguration;
+import com.giteshdalal.authservice.exceptions.BadRequestAuthServiceException;
 import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;
 import com.giteshdalal.authservice.model.UserModel;
+import com.giteshdalal.authservice.query.ModelSpecification;
+import com.giteshdalal.authservice.query.SearchCriteria;
 import com.giteshdalal.authservice.repository.UserRepository;
 import com.giteshdalal.authservice.resource.UserResource;
 import com.giteshdalal.authservice.service.AuthorityService;
 import com.giteshdalal.authservice.service.UserService;
-import com.querydsl.core.types.Predicate;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.hql.internal.ast.QuerySyntaxException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -122,9 +129,23 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public Page<UserResource> findAllUsers(Predicate predicate, Pageable pageable) {
-		Page<UserModel> users = userRepo.findAll(predicate, pageable);
-		return users.map(model -> mapUser(model));
+	public Page<UserResource> findAll(List<SearchCriteria> params, Pageable pageable) {
+		Page<UserModel> page;
+		if (CollectionUtils.isNotEmpty(params)) {
+			Specification<UserModel> spec = Specification.where(new ModelSpecification<>(params.get(0)));
+			for (int i = 1; i < params.size(); i++) {
+				spec = spec.and(new ModelSpecification<>(params.get(i)));
+			}
+			try {
+				page = userRepo.findAll(spec, pageable);
+			} catch (QuerySyntaxException e) {
+				throw new BadRequestAuthServiceException(
+						"Invalid operation. Query operation not supported for this field type.", e);
+			}
+		} else {
+			page = userRepo.findAll(pageable);
+		}
+		return page.map(this::mapUser);
 	}
 
 	@Override
@@ -148,7 +169,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String generateResetToken(UserModel user) {
-		String token = RandomStringUtils.randomAlphanumeric(16).toUpperCase();
+		String token = RandomStringUtils.randomAlphanumeric(ApplicationConfiguration.RESET_TOKEN_LENGTH).toUpperCase();
+		while (userRepo.existsByResetToken(token)) {
+			token = RandomStringUtils.randomAlphanumeric(ApplicationConfiguration.RESET_TOKEN_LENGTH).toUpperCase();
+		}
 		user.setResetToken(token);
 		userRepo.save(user);
 		return token;

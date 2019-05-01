@@ -6,21 +6,25 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.giteshdalal.authservice.exceptions.BadRequestAuthServiceException;
 import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;
 import com.giteshdalal.authservice.model.PrivilegeModel;
 import com.giteshdalal.authservice.model.RoleModel;
+import com.giteshdalal.authservice.query.ModelSpecification;
+import com.giteshdalal.authservice.query.SearchCriteria;
 import com.giteshdalal.authservice.repository.PrivilegeRepository;
 import com.giteshdalal.authservice.repository.RoleRepository;
 import com.giteshdalal.authservice.resource.PrivilegeResource;
 import com.giteshdalal.authservice.resource.RoleResource;
 import com.giteshdalal.authservice.service.AuthorityService;
-import com.querydsl.core.types.Predicate;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.hql.internal.ast.QuerySyntaxException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -90,18 +94,6 @@ public class AuthorityServiceImpl implements AuthorityService {
 	}
 
 	@Override
-	public Page<RoleResource> findAllRoles(Predicate predicate, Pageable pageable) {
-		Page<RoleModel> roles = roleRepo.findAll(predicate, pageable);
-		return roles.map(model -> mapRole(model));
-	}
-
-	@Override
-	public Page<PrivilegeResource> findAllPrivileges(Predicate predicate, Pageable pageable) {
-		Page<PrivilegeModel> roles = privilegeRepo.findAll(predicate, pageable);
-		return roles.map(model -> mapPrivilege(model));
-	}
-
-	@Override
 	public Optional<RoleResource> findRoleById(Long uid) {
 		Optional<RoleModel> entity = roleRepo.findById(uid);
 		return entity.isPresent() ? Optional.ofNullable(mapRole(entity.get())) : Optional.empty();
@@ -111,6 +103,46 @@ public class AuthorityServiceImpl implements AuthorityService {
 	public Optional<PrivilegeResource> findPrivilegeById(Long uid) {
 		Optional<PrivilegeModel> entity = privilegeRepo.findById(uid);
 		return entity.isPresent() ? Optional.ofNullable(mapPrivilege(entity.get())) : Optional.empty();
+	}
+
+	@Override
+	public Page<RoleResource> findAllRoles(List<SearchCriteria> params, Pageable pageable) {
+		Page<RoleModel> page;
+		if (CollectionUtils.isNotEmpty(params)) {
+			Specification<RoleModel> spec = Specification.where(new ModelSpecification<>(params.get(0)));
+			for (int i = 1; i < params.size(); i++) {
+				spec = spec.and(new ModelSpecification<>(params.get(i)));
+			}
+			try {
+				page = roleRepo.findAll(spec, pageable);
+			} catch (QuerySyntaxException e) {
+				throw new BadRequestAuthServiceException(
+						"Invalid operation. Query operation not supported for this field type.", e);
+			}
+		} else {
+			page = roleRepo.findAll(pageable);
+		}
+		return page.map(this::mapRole);
+	}
+
+	@Override
+	public Page<PrivilegeResource> findAllPrivileges(List<SearchCriteria> params, Pageable pageable) {
+		Page<PrivilegeModel> page;
+		if (CollectionUtils.isNotEmpty(params)) {
+			Specification<PrivilegeModel> spec = Specification.where(new ModelSpecification<>(params.get(0)));
+			for (int i = 1; i < params.size(); i++) {
+				spec = spec.and(new ModelSpecification<>(params.get(i)));
+			}
+			try {
+				page = privilegeRepo.findAll(spec, pageable);
+			} catch (QuerySyntaxException e) {
+				throw new BadRequestAuthServiceException(
+						"Invalid operation. Query operation not supported for this field type.", e);
+			}
+		} else {
+			page = privilegeRepo.findAll(pageable);
+		}
+		return page.map(this::mapPrivilege);
 	}
 
 	@Override

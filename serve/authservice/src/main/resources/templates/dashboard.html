@@ -21,8 +21,8 @@
             </div>
             <p>Admin management dashboard.</p>
             <ul>
-                <li><a th:href="@{/client/search?uid&clientId&email}" href="client/search.html">&#9819; Client</a></li>
-                <li><a th:href="@{/role/search?uid&name&users&privileges}" href="role/search.html">&#9820; Role</a></li>
+                <li><a th:href="@{/client/search?size=20&sort=uid,DESC&q=uid%28eq%29}" href="client/search.html">&#9819; Client</a></li>
+                <li><a th:href="@{/role/search?size=20&sort=uid,DESC&q=uid%28eq%29}" href="role/search.html">&#9820; Role</a></li>
             </ul>
             <form id="logout-form" name="logout-form" th:action="@{/logout}" method="post">
                 <input value="Logout" type="submit"/>

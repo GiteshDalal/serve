@@ -5,17 +5,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import com.giteshdalal.authservice.exceptions.BadRequestAuthServiceException;
 import com.giteshdalal.authservice.exceptions.NotFoundAuthServiceException;
 import com.giteshdalal.authservice.model.ClientModel;
+import com.giteshdalal.authservice.query.ModelSpecification;
+import com.giteshdalal.authservice.query.SearchCriteria;
 import com.giteshdalal.authservice.repository.ClientRepository;
 import com.giteshdalal.authservice.resource.ClientResource;
 import com.giteshdalal.authservice.service.ClientService;
-import com.querydsl.core.types.Predicate;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.hql.internal.ast.QuerySyntaxException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientAlreadyExistsException;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -141,9 +146,23 @@ public class ClientServiceImpl implements ClientService {
 	}
 
 	@Override
-	public Page<ClientResource> findAllClients(Predicate predicate, Pageable pageable) {
-		Page<ClientModel> clients = clientRepo.findAll(predicate, pageable);
-		return clients.map(model -> mapClient(model));
+	public Page<ClientResource> findAll(List<SearchCriteria> params, Pageable pageable) {
+		Page<ClientModel> page;
+		if (CollectionUtils.isNotEmpty(params)) {
+			Specification<ClientModel> spec = Specification.where(new ModelSpecification<>(params.get(0)));
+			for (int i = 1; i < params.size(); i++) {
+				spec = spec.and(new ModelSpecification<>(params.get(i)));
+			}
+			try {
+				page = clientRepo.findAll(spec, pageable);
+			} catch (QuerySyntaxException e) {
+				throw new BadRequestAuthServiceException(
+						"Invalid operation. Query operation not supported for this field type.", e);
+			}
+		} else {
+			page = clientRepo.findAll(pageable);
+		}
+		return page.map(this::mapClient);
 	}
 
 	@Override

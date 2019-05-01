@@ -40,7 +40,7 @@ public class SecurityConfigAdapter extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		String[] permitAll = { "/", "/index", "/assets/**", "/oauth/token_key", "/oauth/check_token", "/api/**", "/register",
-				"/forgot-password", "/reset-password" };
+				"/forgot-password", "/reset-password", "/login" };
 		String[] adminOnly = { "/dashboard", "client/**", "/role/**", "/privilege/**" };
 		http.authorizeRequests().antMatchers(permitAll).permitAll() // permit all these urls
 				.and().authorizeRequests().antMatchers("/oauth/authorize").hasRole("USER") // allow user
