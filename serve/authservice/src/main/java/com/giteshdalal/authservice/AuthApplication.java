@@ -40,6 +40,7 @@ public class AuthApplication {
 			.asList("authorization_code", "client_credentials", "refresh_token", "password");
 	private static final List<String> CLIENT_ADMIN_SCOPE = Arrays.asList("CLIENT_ADMIN");
 	private static final List<String> CLIENT_REDIRECT_URIS = Collections.singletonList("http://localhost:1234/api");
+	public static final String CLIENT_ADMIN = "client_admin";
 
 	private final OAuth2Properties properties;
 
@@ -62,16 +63,20 @@ public class AuthApplication {
 	public CommandLineRunner init(UserService userService, ClientService clientService, AuthorityService authorityService) {
 		return (evt) -> {
 			// admin user
-			createAdminUser(userService, authorityService);
+			if (!userService.userExistsWithUsername(ADMIN)) {
+				createAdminUser(userService, authorityService);
+			}
 
 			// admin client
-			createAdminClient(clientService);
+			if (!clientService.clientExistsWithClientId(CLIENT_ADMIN)) {
+				createAdminClient(clientService);
+			}
 		};
 	}
 
 	private void createAdminClient(ClientService clientService) {
 		ClientModel client = new ClientModel();
-		client.setClientId("client_admin");
+		client.setClientId(CLIENT_ADMIN);
 		client.setResourceIds(this.properties.getResourceIds());
 		client.setAccessTokenValiditySeconds(this.properties.getValidity().getAccessToken());
 		client.setRefreshTokenValiditySeconds(this.properties.getValidity().getRefreshToken());
@@ -83,8 +88,8 @@ public class AuthApplication {
 		client.setSeceretRequired(true);
 		client.setEmail(ADMIN_EMAIL);
 		Map<String, String> info = new HashMap<>();
-		info.put("ROLE_TRUSTED_CLIENT","This is an important role for client");
-		info.put("client_admin","This client is always created on server startup");
+		info.put("ROLE_TRUSTED_CLIENT", "This is an important role for client");
+		info.put("client_admin", "This client is always created on server startup");
 		client.setAdditionalInformation(info);
 		try {
 			clientService.register(client);
@@ -100,14 +105,14 @@ public class AuthApplication {
 		readPrivilege.setName("READ");
 		PrivilegeResource writePrivilege = new PrivilegeResource();
 		writePrivilege.setName("WRITE");
-		PrivilegeResource publishPrivilege = new PrivilegeResource();
-		publishPrivilege.setName("PUBLISH");
+		PrivilegeResource editPrivilege = new PrivilegeResource();
+		editPrivilege.setName("EDIT");
 		PrivilegeResource deletePrivilege = new PrivilegeResource();
 		deletePrivilege.setName("DELETE");
 
 		privileges.add(authorityService.savePrivilege(readPrivilege));
 		privileges.add(authorityService.savePrivilege(writePrivilege));
-		privileges.add(authorityService.savePrivilege(publishPrivilege));
+		privileges.add(authorityService.savePrivilege(editPrivilege));
 		privileges.add(authorityService.savePrivilege(deletePrivilege));
 
 		RoleResource adminRole = new RoleResource();

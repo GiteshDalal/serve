@@ -6,3 +6,9 @@ spring:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
       mail.transport.protocol: smtp
+---
+email:
+  from: admin@giteshdalal.com
+  subject:
+    user-registered: Registered Successfully
+    forgot-password: Reset Password Token

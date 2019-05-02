@@ -34,10 +34,9 @@ public class AuthApplicationDataTest {
 	private static final String DEFAULT_PASSWORD = "serve";
 	private static final String CLIENT_DEFAULT_PASSWORD = "serveclient";
 
-	private static final String ROLE_ADMIN = "ROLE_ADMIN";
 	private static final String ROLE_USER = "ROLE_USER";
 	private static final String ROLE_TRUSTED_CLIENT = "ROLE_TRUSTED_CLIENT";
-	private static final List<String> CLIENT_SCOPES = Arrays.asList("publish", "read", "write");
+	private static final List<String> CLIENT_SCOPES = Arrays.asList("edit", "read", "write");
 	private static final List<String> CLIENT_GRANTS = Arrays.asList("authorization_code", "client_credentials", "refresh_token");
 	private static final List<String> CLIENT_REDIRECT_URIS = Collections.singletonList("http://localhost:1234/api");
 	private static final String CLIENT_EMAIL = "client.%s@giteshdalal.com";

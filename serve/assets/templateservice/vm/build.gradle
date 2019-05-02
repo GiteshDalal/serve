@@ -21,7 +21,7 @@ dependencies {
 	compile("org.springframework.boot:spring-boot-starter-data-jpa")
 	compile("org.springframework.boot:spring-boot-starter-hateoas")
 	compile("org.springframework.boot:spring-boot-starter-web")
-	compile("org.apache.commons:commons-lang3$lang3Version")
+	compile("org.apache.commons:commons-lang3:$lang3Version")
 	compile("org.apache.commons:commons-collections4:$collections4Version")
 	runtime("org.springframework.boot:spring-boot-devtools")
 	runtime("mysql:mysql-connector-java")
