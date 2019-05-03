@@ -103,3 +103,16 @@ services:
       - auth
     ports:
       - "8091:8091"
+  email:
+    image: serve_email
+    build:
+      context: .
+      dockerfile: ./emailservice/Dockerfile
+    container_name: serve_container_email
+    restart: on-failure
+    environment:
+      SPRING_PROFILES_ACTIVE: dev,docker
+    depends_on:
+      - auth
+    ports:
+      - "8084:8084"

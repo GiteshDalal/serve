@@ -1,0 +1,15 @@
+# email-service configuration file
+# You should use config-service instead for centralized configuration
+---
+spring:
+  profiles: dev
+  mail:
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
+      mail.transport.protocol: smtp
+---
+email:
+  from: admin@giteshdalal.com
+  subject:
+    activated-account: Account verified successfully
