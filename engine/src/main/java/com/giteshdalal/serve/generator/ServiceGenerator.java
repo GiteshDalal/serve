@@ -10,7 +10,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.apache.velocity.runtime.RuntimeConstants;
 import org.gradle.api.GradleException;
 import org.gradle.api.Project;
 
@@ -23,7 +22,7 @@ public class ServiceGenerator {
 		final File serviceDirectory = new File(service.getName().toLowerCase() + "service");
 		if (!serviceDirectory.exists()) {
 			final File resourceLoaderDirectory = project.file(EnginePluginConstants.SERVICE_GRADLE_VM);
-			Velocity.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, resourceLoaderDirectory.getAbsolutePath());
+			Velocity.setProperty(Velocity.FILE_RESOURCE_LOADER_PATH, resourceLoaderDirectory.getAbsolutePath());
 			Velocity.init();
 
 			final VelocityContext context = new VelocityContext();

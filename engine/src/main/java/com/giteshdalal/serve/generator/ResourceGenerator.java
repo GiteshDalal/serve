@@ -6,30 +6,28 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import com.giteshdalal.serve.EnginePluginConstants;
+import com.giteshdalal.serve.descriptor.ConfigurationDescriptor;
+import com.giteshdalal.serve.descriptor.ModelDescriptor;
+import com.giteshdalal.serve.descriptor.ModelFileDescriptor;
 import com.giteshdalal.serve.util.EnginePluginUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
-import org.apache.velocity.runtime.RuntimeConstants;
-
-import com.giteshdalal.serve.descriptor.ConfigurationDescriptor;
-import com.giteshdalal.serve.descriptor.ModelDescriptor;
-import com.giteshdalal.serve.descriptor.ModelFileDescriptor;
+import org.apache.velocity.app.VelocityEngine;
 
 /**
  * @author gitesh
- *
  */
 public class ResourceGenerator {
 
-	public int generateFiles(final ModelFileDescriptor fileDescriptor, final String srcPath,
-			final String templatePath) {
+	public int generateFiles(final ModelFileDescriptor fileDescriptor, final String srcPath, final String templatePath) {
 		int counter = 0;
 		final ConfigurationDescriptor configuration = fileDescriptor.getConfiguration();
 
-		Velocity.setProperty(RuntimeConstants.FILE_RESOURCE_LOADER_PATH, templatePath);
-		Velocity.init();
+		VelocityEngine resourceEngine = new VelocityEngine();
+		resourceEngine.setProperty(Velocity.FILE_RESOURCE_LOADER_PATH, templatePath);
+		resourceEngine.init();
 
 		for (int index = 0; index < fileDescriptor.getModels().size(); index++) {
 			final ModelDescriptor model = fileDescriptor.getModels().get(index);
@@ -40,7 +38,7 @@ public class ResourceGenerator {
 				context.put("config", configuration);
 				context.put("StringUtils", StringUtils.class);
 
-				final Template template = Velocity.getTemplate(EnginePluginConstants.RESOURCE_TEMPLATE_FILE);
+				final Template template = resourceEngine.getTemplate(EnginePluginConstants.RESOURCE_TEMPLATE_FILE);
 
 				final File file = EnginePluginUtil.createNewFile(model.getName(), EnginePluginConstants.RESOURCE_JAVA,
 						configuration.getResourcePackage(), srcPath);
