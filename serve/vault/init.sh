@@ -19,6 +19,8 @@ vault kv put secret/user-service/dev @${CONFIG_DIR}/user-service-credentials-dev
 vault kv put secret/user-service/local @${CONFIG_DIR}/user-service-credentials-local.json
 vault kv put secret/user-service/docker @${CONFIG_DIR}/user-service-credentials-docker.json
 
+vault kv put secret/email-service/dev @${CONFIG_DIR}/email-service-credentials-dev.json
+
 vault kv put secret/product-service/dev @${CONFIG_DIR}/product-service-credentials-dev.json
 vault kv put secret/product-service/local @${CONFIG_DIR}/product-service-credentials-local.json
 vault kv put secret/product-service/docker @${CONFIG_DIR}/product-service-credentials-docker.json

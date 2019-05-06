@@ -3,6 +3,7 @@ package com.giteshdalal.emailservice.controller;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import javax.mail.MessagingException;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -33,8 +34,8 @@ public class EmailController {
 	private ObjectMapper mapper;
 
 	@PostMapping(value = "/{bean}", consumes = { MediaType.APPLICATION_JSON_VALUE })
-	@PreAuthorize("hasAnyRole('ADMIN','USER','EMPLOYEE')")
-	public ResponseEntity add(@PathVariable("bean") String bean, HttpEntity<String> httpEntity, Locale locale) {
+	@PreAuthorize("hasAnyRole('ROLE_TRUSTED_CLIENT')")
+	public ResponseEntity triggerEmail(@PathVariable("bean") String bean, HttpEntity<String> httpEntity, Locale locale) {
 		if (log.isDebugEnabled()) {
 			log.debug("Sending email using template bean : " + bean);
 			log.debug("Email Context : " + httpEntity.getBody());
@@ -47,9 +48,15 @@ public class EmailController {
 			EmailTemplate emailTemplate = (EmailTemplate) emailBean;
 			JsonNode jsonNode = mapper.readTree(httpEntity.getBody());
 			Map<String, Object> contextResource = mapper.convertValue(jsonNode, Map.class);
-			emailTemplate.send(contextResource, locale);
-		} catch (IOException | MessagingException e) {
-			log.error("Unable to send email : " + bean, e);
+			CompletableFuture.runAsync(() -> {
+				try {
+					emailTemplate.send(contextResource, locale);
+				} catch (MessagingException e) {
+					e.printStackTrace();
+					log.error("Unable to send email : " + bean, e);
+				}
+			});
+		} catch (IOException e) {
 			return ResponseEntity.badRequest().build();
 		}
 		return ResponseEntity.noContent().build();

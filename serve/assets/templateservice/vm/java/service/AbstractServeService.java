@@ -108,7 +108,8 @@ public abstract class AbstractServeService<T, RT, ID, REP extends BaseServeRepos
 		Optional<T> e = repo.findById(uid);
 		if (e.isPresent()) {
 			try {
-				T entity = mapToModel(resource);
+				T entity = e.get();
+				mapper.map(resource, entity);
 				return mapToResource(repo.save(entity));
 			} catch (HibernateException ex) {
 				throw new BadRequest${service.name.substring(0,1).toUpperCase()}${service.name.substring(1)}ServiceException("Invalid input data object.", ex);

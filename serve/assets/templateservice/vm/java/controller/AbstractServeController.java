@@ -67,8 +67,7 @@ public abstract class AbstractServeController<RT extends ResourceSupport, ID, S 
 
 	@GetMapping
 	@PreAuthorize("hasAnyRole('ADMIN','" + ALLOWED_ROLE + ":READ')")
-	public HttpEntity<Page<RT>> getAll(@PathVariable("uid") Pageable pageable,
-			@RequestParam(value = "q", required = false) String query, Locale locale) {
+	public HttpEntity<Page<RT>> getAll(Pageable pageable, @RequestParam(value = "q", required = false) String query, Locale locale) {
 		Page<RT> resources = service.findAll(generateSearchCriteria(query), pageable, locale);
 		this.supportHateoas(resources.getContent());
 		return new ResponseEntity<>(resources, HttpStatus.OK);

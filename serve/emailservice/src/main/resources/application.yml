@@ -13,3 +13,5 @@ email:
   from: admin@giteshdalal.com
   subject:
     activated-account: Account verified successfully
+    user-registered: Registered Successfully
+    forgot-password: Reset Password Token
