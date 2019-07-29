@@ -11,6 +11,9 @@ spring:
       server:
         git:
           uri: https://github.com/GiteshDalal/serve-configurations.git
- 
+
 server:
   port: 8088
+
+keycloak:
+  enabled: false

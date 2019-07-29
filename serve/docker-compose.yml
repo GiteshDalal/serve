@@ -38,6 +38,31 @@ services:
     restart: on-failure
     depends_on:
       - vault
+  auth:
+    image: jboss/keycloak:6.0.1
+    restart: on-failure
+    command:
+      - "-b"
+      - "0.0.0.0"
+      - "-Dkeycloak.migration.action=import"
+      - "-Dkeycloak.migration.provider=dir"
+      - "-Dkeycloak.migration.dir=/config/"
+      - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
+    volumes:
+      - './keycloak/config:/config'
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=nimda
+      - DB_VENDOR=mysql
+      - DB_USER=root
+      - DB_PASSWORD=root_password
+      - DB_ADDR=db
+      - DB_PORT=3306
+      - DB_DATABASE=serve
+    ports:
+      - "8090:8090"
+    depends_on:
+      - db
   discovery:
     image: serve_discovery
     build:
@@ -49,19 +74,6 @@ services:
       SPRING_PROFILES_ACTIVE: dev,docker
     ports:
       - "8761:8761"
-  config:
-    image: serve_config
-    build:
-      context: .
-      dockerfile: ./configservice/Dockerfile
-    container_name: serve_container_config
-    restart: on-failure
-    environment:
-      SPRING_PROFILES_ACTIVE: dev,docker
-    depends_on:
-      - discovery
-    ports:
-      - "8088:8088"
   edge:
     image: serve_edge
     build:
@@ -76,33 +88,6 @@ services:
       - vault
     ports:
       - "8080:8080"
-  auth:
-    image: serve_auth
-    build:
-      context: .
-      dockerfile: ./authservice/Dockerfile
-    container_name: serve_container_auth
-    restart: on-failure
-    environment:
-      SPRING_PROFILES_ACTIVE: dev,docker
-    depends_on:
-      - config
-      - db
-    ports:
-      - "8090:8090"
-  user:
-    image: serve_user
-    build:
-      context: .
-      dockerfile: ./userservice/Dockerfile
-    container_name: serve_container_user
-    restart: on-failure
-    environment:
-      SPRING_PROFILES_ACTIVE: dev,docker
-    depends_on:
-      - auth
-    ports:
-      - "8091:8091"
   email:
     image: serve_email
     build:
@@ -116,3 +101,16 @@ services:
       - auth
     ports:
       - "8084:8084"
+  config:
+    image: serve_config
+    build:
+      context: .
+      dockerfile: ./configservice/Dockerfile
+    container_name: serve_container_config
+    restart: on-failure
+    environment:
+      SPRING_PROFILES_ACTIVE: dev,docker
+    depends_on:
+      - discovery
+    ports:
+      - "8088:8088"

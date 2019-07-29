@@ -3,12 +3,14 @@ buildscript {
         lombockGradleVersion = '3.0.0'
         lombockVersion = '1.18.6'
         modelMapperVersion = '2.3.3'
-        springBootVersion = '2.1.4.RELEASE'
+        springBootVersion = '2.1.5.RELEASE'
         cloudVersion = 'Greenwich.RELEASE'
         serveVersion = '1.0.0'
         feignVersion = '1.4.6.RELEASE'
         lang3Version = '3.9'
         collections4Version = '4.3'
+        jjwtVersion = '0.9.0'
+        keycloakVersion = '6.0.1'
     }
     repositories {
         mavenCentral()
@@ -45,8 +47,8 @@ subprojects {
         compile("org.modelmapper:modelmapper:$modelMapperVersion")
         compile("org.modelmapper.extensions:modelmapper-jackson:$modelMapperVersion")
         compile('org.springframework.boot:spring-boot-starter')
-        compile("com.fasterxml.jackson.module:jackson-module-jsonSchema")
         compile("org.springframework.boot:spring-boot-starter-mail")
+        compile("com.fasterxml.jackson.module:jackson-module-jsonSchema")
         compile("commons-io:commons-io:2.6")
         testCompile("org.springframework.boot:spring-boot-starter-test")
     }

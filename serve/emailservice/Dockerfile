@@ -1,7 +1,7 @@
 ARG  JAVA_VERSION=8-jdk-alpine
 FROM openjdk:${JAVA_VERSION}
 VOLUME /tmp
-ADD build/libs/emailservice-1.0.jar app.jar
+ADD ./emailservice/build/libs/emailservice-1.0.jar app.jar
 ADD ./wait-for wait-for
 RUN chmod +x wait-for
 ENV JAVA_OPTS="-XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap  -XX:MaxRAMFraction=1 -XshowSettings:vm "

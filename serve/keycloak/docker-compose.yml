@@ -1,0 +1,67 @@
+version: '3.5'
+services:
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_DATABASE: serve_auth
+      MYSQL_USER: serve
+      MYSQL_PASSWORD: serve_password
+      MYSQL_ROOT_PASSWORD: root_password
+    container_name: serve_local_container_db
+    restart: on-failure
+    ports:
+      - "3300:3306"
+  vault:
+    image: vault
+    container_name: serve_local_container_vault
+    cap_add:
+      - IPC_LOCK
+    environment:
+      # This token will be used by vault to authenticate requests
+      VAULT_DEV_ROOT_TOKEN_ID: 47d1d790-0cce-384f-5a28-3cf2eb9e5489
+    ports:
+      - "8200:8200"
+  vault-init:
+    image: vault
+    volumes:
+      - './../vault:/config'
+      - './../wait-for:/wait-for'
+    container_name: serve_local_container_vault_init
+    environment:
+      VAULT_DEV_TOKEN: 47d1d790-0cce-384f-5a28-3cf2eb9e5489 # This token will be used by vault to authenticate on VAULT_ADDR
+      VAULT_ADDR: 'http://vault:8200' # This will be used to connect to vault server
+      CONFIG_DIR: '/config' # Used inside init.sh to locate data files
+    command:
+      - 'sh'
+      - '-c'
+      - '/wait-for vault:8200 -t 4 && /config/init.sh'
+    restart: on-failure
+    depends_on:
+      - vault
+  auth:
+    image: jboss/keycloak
+    container_name: serve_local_container_auth
+    restart: on-failure
+    command:
+      - "-b"
+      - "0.0.0.0"
+      - "-Dkeycloak.migration.action=import"
+      - "-Dkeycloak.migration.provider=dir"
+      - "-Dkeycloak.migration.dir=/config/"
+      - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
+    volumes:
+      - './config:/config'
+    environment:
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=nimda
+      - DB_VENDOR=mysql
+      - DB_USER=serve
+      - DB_PASSWORD=serve_password
+      - DB_ADDR=db
+      - DB_PORT=3306
+      - DB_DATABASE=serve_auth
+    ports:
+      - "8089:9990"
+      - "8090:8080"
+    depends_on:
+      - db

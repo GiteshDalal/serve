@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker run --rm --network=host    --name keycloak_exporter    -v $PWD:/tmp/keycloak-export    -e DB_USER=root    -e DB_PASSWORD=root_password    -e DB_VENDOR=mysql    -e DB_PORT=3300    -e DB_DATABASE=serve_auth    -e DB_ADDR=localhost    jboss/keycloak    -Dkeycloak.migration.action=export    -Dkeycloak.migration.provider=dir    -Dkeycloak.migration.dir=/tmp/keycloak-export    -Dkeycloak.migration.usersExportStrategy=SAME_FILE    -Dkeycloak.migration.realmName=serve

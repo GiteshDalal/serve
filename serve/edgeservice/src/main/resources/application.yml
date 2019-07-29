@@ -21,6 +21,16 @@ eureka:
 spring:
   profiles: local
 
+zuul:
+  sensitive-headers:
+    - Cookie
+    - Set-Cookie
+  prefix: /api
+  routes:
+    emailservice:
+      path: /emailservice/**
+      serviceId: email-service
+
 eureka:
   client:
     service-url:

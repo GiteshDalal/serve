@@ -17,6 +17,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +34,16 @@ public class EmailController {
 	@Autowired
 	private ObjectMapper mapper;
 
+
+	@GetMapping(value = "/{bean}")
+	@PreAuthorize("hasAnyRole('ADMIN','USER')")
+	public ResponseEntity testAPI(@PathVariable("bean") String bean, HttpEntity<String> httpEntity, Locale locale) {
+
+		return ResponseEntity.ok(bean);
+	}
+
 	@PostMapping(value = "/{bean}", consumes = { MediaType.APPLICATION_JSON_VALUE })
-	@PreAuthorize("hasAnyRole('ROLE_TRUSTED_CLIENT')")
+	@PreAuthorize("hasAnyRole('ADMIN','EMPLOYEE')")
 	public ResponseEntity triggerEmail(@PathVariable("bean") String bean, HttpEntity<String> httpEntity, Locale locale) {
 		if (log.isDebugEnabled()) {
 			log.debug("Sending email using template bean : " + bean);

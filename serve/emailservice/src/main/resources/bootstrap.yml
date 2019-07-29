@@ -15,7 +15,18 @@ management:
     web:
       exposure:
         include:
-        - "*"
+          - "*"
+
+#Security
+security:
+  oauth2:
+    client:
+      client-id: email-service-client
+      client-secret: 6f118d69-fb46-4f99-a147-0351ad6c968b
+    resource:
+      id: ${spring.application.name}
+      jwk:
+        key-set-uri: ${keycloak.issuer-url}/protocol/openid-connect/certs
 
 ---
 spring:
@@ -23,7 +34,7 @@ spring:
   cloud:
     config:
       discovery:
-        enabled: true 
+        enabled: true
         service-id: config-service
     vault:
       host: localhost
@@ -32,6 +43,12 @@ spring:
       authentication: TOKEN
       token: 47d1d790-0cce-384f-5a28-3cf2eb9e5489
 
+keycloak:
+  issuer-url: http://localhost:8090/auth/realms/serve
+
+logging:
+  level:
+    org.springframework.security: TRACE
 ---
 spring:
   profiles: docker
@@ -44,3 +61,6 @@ spring:
       scheme: http
       authentication: TOKEN
       token: 47d1d790-0cce-384f-5a28-3cf2eb9e5489
+
+keycloak:
+  issuer-url: http://auth:8090/auth/realms/serve

@@ -1,0 +1,178 @@
+{
+  "realm" : "serve",
+  "users" : [ {
+    "id" : "c96dd5b2-1c59-43ab-8a4a-6929623be65a",
+    "createdTimestamp" : 1558576699984,
+    "username" : "admin",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Serve",
+    "lastName" : "Administrator",
+    "email" : "admin@giteshdalal.com",
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "xtXdNYcloVIiz8Xs9PKguB1yxCdafDU7tW9FiIF77PGwa4iDY7wOimDYgHwVAo4Pwr3rzgJEO15/7xNZw67OiA==",
+      "salt" : "nkJ8iWHaRojdTc/nyxt3fA==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1558576708910,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "USER", "ADMIN" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ "/Administrators" ]
+  }, {
+    "id" : "e135d3a4-0263-41bd-842f-4f7de9c4db6f",
+    "createdTimestamp" : 1558577414654,
+    "username" : "ana",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "firstName" : "Ana",
+    "lastName" : "Stark",
+    "email" : "ana@giteshdalal.com",
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "82pAmsyUYIxB2LrSly4ScuOrhV0mIYoiif7wmHzyui1StV0iNHstUK7IFsi0ZpLTnic4ednObzn3SO8mMNVjUQ==",
+      "salt" : "vjbv5635BnDxq9lq2hFoSg==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1558577430712,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "USER" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ "/Users" ]
+  }, {
+    "id" : "24a47397-2c0c-4a7c-8e29-1bc1ce70f2a8",
+    "createdTimestamp" : 1558577121404,
+    "username" : "employee",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Customer",
+    "lastName" : "Support",
+    "email" : "support@giteshdalal.com",
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "P2NlMAgr71MsPdNfN6RLD5jSbbFu14K2hmJv1GJD/TJFINNvxHeNvc1Fl64Jw/krULzms1+IGW+f2veV9BaZhQ==",
+      "salt" : "LHxYV0f9fx8JBu5NPKXRNQ==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1558577134585,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "EMPLOYEE" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ "/Employees" ]
+  }, {
+    "id" : "661b6173-6757-4213-bd35-f71e00a01f02",
+    "createdTimestamp" : 1558580311042,
+    "username" : "service-account-admin-service-client",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "email" : "service-account-admin-service-client@placeholder.org",
+    "serviceAccountClientId" : "admin-service-client",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "clientRoles" : {
+      "admin-service-client" : [ "uma_protection" ],
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "65e13ffb-36ee-4deb-a49d-b30ec74c28f4",
+    "createdTimestamp" : 1564375051933,
+    "username" : "service-account-cart-service-client",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "email" : "service-account-cart-service-client@placeholder.org",
+    "serviceAccountClientId" : "cart-service-client",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "clientRoles" : {
+      "cart-service-client" : [ "uma_protection" ],
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "f56a800e-030f-44dc-831f-d4b39dc47a4c",
+    "createdTimestamp" : 1558580331712,
+    "username" : "service-account-email-service-client",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : false,
+    "email" : "service-account-email-service-client@placeholder.org",
+    "serviceAccountClientId" : "email-service-client",
+    "credentials" : [ ],
+    "disableableCredentialTypes" : [ ],
+    "requiredActions" : [ ],
+    "clientRoles" : {
+      "email-service-client" : [ "uma_protection" ],
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ ]
+  }, {
+    "id" : "bc68a03e-4c6e-47bc-8409-9b973e4b78e0",
+    "createdTimestamp" : 1529012775558,
+    "username" : "user",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Test",
+    "lastName" : "User",
+    "email" : "test@giteshdalal.com",
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "AFmXfIBsmN+JbCXXq/zvckd/wfqYrougyDTQyvyQy3UocUth9x+2uInN50EE/Nt3SHSDNWwDvxNkgXOpXgj8AA==",
+      "salt" : "2nXHxaZJOyRww+EX/RDuoA==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1558577460876,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "USER" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ "/Users" ]
+  } ]
+}
